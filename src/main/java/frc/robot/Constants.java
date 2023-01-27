@@ -13,6 +13,24 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
 
+    public static final class GripperConstants{
+        public static final double gripperKP = 0.0;//TODO change the PID values
+        public static final double gripperKI = 0.0;
+        public static final double gripperKD = 0.0;
+
+        public static final double gripperKs = 0.0;//TODO change th feed forward values
+        public static final double gripperKv = 0.0;
+
+        public static final double gripperGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
+
+        public static final int gripperMotorPort = 0;//TODO change the ports
+        public static final int gripperIncoderPortA = 0;
+        public static final int gripperIncoderPortB = 0;
+
+        public static final double cubeGrabingSetPoint = 0.0;//TODO change the set points
+        public static final double coneGrabingSetPoint = 0.0;
+    }
+
     public static final class SwerveConstants {
         /* Gyro ID (Changes Per Robot) */
         public static final int pigeonID = 3;
