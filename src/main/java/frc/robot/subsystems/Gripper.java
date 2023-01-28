@@ -19,15 +19,13 @@ public class Gripper extends PIDSubsystem {
 
   /** Creates a new gripper. */
   public Gripper() {
-    super(
-        // The PIDController used by the subsystem
-        new PIDController(GripperConstants.gripperKP, GripperConstants.gripperKI, GripperConstants.gripperKD));//TODO change constants
+    super(GripperConstants.gripperPID); // TODO: change constants
 
         gripperMotor = new WPI_TalonSRX(GripperConstants.gripperMotorPort);
         gripperMotorFeedforward = new SimpleMotorFeedforward(GripperConstants.gripperKs, GripperConstants.gripperKv);
 
         gripperEncoder = new Encoder(GripperConstants.gripperIncoderPortA, GripperConstants.gripperIncoderPortB);
-        gripperEncoder.setDistancePerPulse(0.0);//TODO add distancePerPulse
+        gripperEncoder.setDistancePerPulse(0.0); // TODO: add distancePerPulse
   }
 
   @Override
