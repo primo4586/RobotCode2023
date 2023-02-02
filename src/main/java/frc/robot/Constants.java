@@ -21,7 +21,7 @@ public final class Constants {
         public static final double gripperKD = 0.0;
         public static final PIDController gripperPID = new PIDController(gripperKP, gripperKI, gripperKD);
 
-        public static final double gripperKs = 0.0;//TODO change th feed forward values
+        public static final double gripperKs = 0.0;//TODO change the feed forward values
         public static final double gripperKv = 0.0;
         public static final SimpleMotorFeedforward gripperFeedforward = new SimpleMotorFeedforward(gripperKs, gripperKv);
 

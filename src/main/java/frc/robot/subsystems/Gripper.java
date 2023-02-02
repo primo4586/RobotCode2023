@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GripperConstants;
 
@@ -35,8 +36,16 @@ public class Gripper extends SubsystemBase {
     gripperMotor.setVoltage(gripperPID.calculate(gripperMotor.getSelectedSensorPosition() , setpoint)  + gripperMotorFeedforward.calculate(setpoint));
   }
 
+  public Command TurnToSetPoint(double setPoint){
+    return run(()->{
+      putGripperInPose(setPoint);
+    } );
+  }
 
-  @Override
-  public void periodic() {
+  public Command ChangeWhatWeGrip(){
+    return run(()->{
+      changeDoWeGripACone();
+    });
+    
   }
 }
