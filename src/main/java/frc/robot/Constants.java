@@ -28,11 +28,10 @@ public final class Constants {
         public static final double gripperGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
 
         public static final int gripperMotorPort = 0;//TODO change the ports
-        public static final int gripperIncoderPortA = 0;
-        public static final int gripperIncoderPortB = 0;
 
         public static final double cubeGrabingSetPoint = 0.0;//TODO change the set points
         public static final double coneGrabingSetPoint = 0.0;
+        public static final double openGripperSetPoint = 0.0;
     }
 
     public static final class SwerveConstants {
