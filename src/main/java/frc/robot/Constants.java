@@ -2,6 +2,8 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -12,6 +14,23 @@ import edu.wpi.first.math.util.Units;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
+
+    public static final class BigArmConstants{
+        private static final double BigArmKP = 0.0;//TODO change the PID values
+        private static final double BigArmKI = 0.0;
+        private static final double BigArmKD = 0.0;
+        public static final PIDController BigArmPID = new PIDController(BigArmKP, BigArmKI, BigArmKD);
+
+        private static final double BigArmKs = 0.0;//TODO change th feed forward values
+        private static final double BigArmKv = 0.0;
+        public static final SimpleMotorFeedforward BigArmFeedforward = new SimpleMotorFeedforward(BigArmKs, BigArmKv);
+
+        public static final double BigArmGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
+
+        public static final int BigArmMotorPort = 0;//TODO change the ports
+
+        //TODO: add setPoints
+    }
 
     public static final class SwerveConstants {
         /* Gyro ID (Changes Per Robot) */
