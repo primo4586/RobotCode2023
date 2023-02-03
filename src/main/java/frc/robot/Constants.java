@@ -170,7 +170,7 @@ public final class Constants {
         public static final int rightLilMotorID = 0;
 
         /* LilArm Motors Gear Ratio */
-        public static final double LilMotorGearRatio = 0;//TODO change the values
+        public static final double lilMotorGearRatio = 0;//TODO change the values
 
         /* LilArm Solenoid Ports */
         public static final int PCMID = 0;//TODO change the values
