@@ -176,6 +176,10 @@ public final class Constants {
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
         }
 
+        /* Charge Align Station Constants */
+        public static final double ALIGN_STATION_SPEED = .2;
+        public static final double STATION_PITCH_ANGLE_TOLERANCE = 2.5;
+
     }
 
     public static final class Misc {
