@@ -2,6 +2,8 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -15,6 +17,24 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
 
+    public static final class GripperConstants{
+        public static final double gripperKP = 0.0;//TODO change the PID values
+        public static final double gripperKI = 0.0;
+        public static final double gripperKD = 0.0;
+        public static final PIDController gripperPID = new PIDController(gripperKP, gripperKI, gripperKD);
+
+        public static final double gripperKs = 0.0;//TODO change the feed forward values
+        public static final double gripperKv = 0.0;
+        public static final SimpleMotorFeedforward gripperFeedforward = new SimpleMotorFeedforward(gripperKs, gripperKv);
+
+        public static final double gripperGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
+
+        public static final int gripperMotorPort = 0;//TODO change the ports
+
+        public static final double cubeGrabingSetPoint = 0.0;//TODO change the set points
+        public static final double coneGrabingSetPoint = 0.0;
+        public static final double openGripperSetPoint = 0.0;
+    }
     public static final class BigArmConstants{
         //bigArm PID values
         private static final double bigArmKP = 0.0;//TODO change the PID values
