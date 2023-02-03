@@ -202,6 +202,11 @@ public class Swerve extends SubsystemBase {
         return (Constants.SwerveConstants.invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0])
                 : Rotation2d.fromDegrees(ypr[0]);
     }
+    public double getPitch(){
+        double[] ypr = new double[3];
+        gyro.getYawPitchRoll(ypr);
+        return ypr[1];
+    }
 
     /**
      * Returns the current gyro's angle offset by the teleop rotation offset.
@@ -423,4 +428,27 @@ public class Swerve extends SubsystemBase {
         .until(() -> pid.atSetpoint())
         .finallyDo((interrupted) -> pid.close());
         }
+
+        
+    public Command chargeStationAlign(){
+        return run(()-> {
+            Translation2d moveDirection = new Translation2d();
+
+            if(getPitch() > SwerveConstants.STATION_PITCH_ANGLE_TOLERANCE)
+            {
+                moveDirection= new Translation2d(SwerveConstants.ALIGN_STATION_SPEED,0.0); //Vroom vroom positive
+            } else if (getPitch() < -SwerveConstants.STATION_PITCH_ANGLE_TOLERANCE)
+            {
+                moveDirection= new Translation2d(-SwerveConstants.ALIGN_STATION_SPEED,0.0);  // Vroom vroom negative
+
+            }
+            
+            drive(
+                    moveDirection,
+                    0,
+                    true,
+                    false);
+        })
+        .until(() -> Math.abs(getPitch()) < SwerveConstants.STATION_PITCH_ANGLE_TOLERANCE);
+    }
 }
