@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GripperConstants;
 
@@ -13,7 +12,7 @@ public class Gripper extends SubsystemBase {
   private WPI_TalonSRX  gripperMotor;
   private PIDController gripperPID;
   private SimpleMotorFeedforward gripperMotorFeedforward;
-  private boolean doWeGripACone;
+  private boolean shouldGripCone;
 
   /** Creates a new Gripper. */
   public Gripper() {
@@ -22,30 +21,30 @@ public class Gripper extends SubsystemBase {
 
     gripperMotor = new WPI_TalonSRX(GripperConstants.gripperMotorPort);
 
-    doWeGripACone = true;
+    shouldGripCone = true;
   }
 
-  public boolean getDoWeGripACone(){
-    return this.doWeGripACone;
+  public boolean getShouldGripCone(){
+    return this.shouldGripCone;
   }
 
-  public void changeDoWeGripACone(){
-    this.doWeGripACone = !doWeGripACone;
+  public void toggleDoWeGripACone(){
+    this.shouldGripCone = !shouldGripCone;
   }
 
   public void putGripperInPose( double setpoint){
     gripperMotor.setVoltage(gripperPID.calculate(gripperMotor.getSelectedSensorPosition() , setpoint)  + gripperMotorFeedforward.calculate(setpoint));
   }
 
-  public Command TurnToSetPoint(double setPoint){
+  public Command turnToSetPoint(double setPoint){
     return run(()->{
       putGripperInPose(setPoint);
     });
   }
 
-  public Command ChangeWhatWeGrip(){
+  public Command changeWhatWeGrip(){
     return runOnce(()->{
-      changeDoWeGripACone();
+      toggleDoWeGripACone();
     });
     
   }
