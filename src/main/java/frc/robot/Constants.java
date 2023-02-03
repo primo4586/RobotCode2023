@@ -43,7 +43,7 @@ public final class Constants {
         /* Invert gyro if necessary (Changes Per Robot) */
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
-        /* Drivetrain Constants (Changes Per Robot)*/
+        /* Drivetrain Constants (Changes Per Robot) */
         public static final double trackWidth = 0.61;
         public static final double wheelBase = 0.61;
 
