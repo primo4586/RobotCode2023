@@ -3,6 +3,7 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.auto.PIDConstants;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -159,8 +160,10 @@ public final class Constants {
     
         /* LilArm Feedforward Values */ 
         public static final double lilArmMotorsKs = 0.0;//TODO change the feedforward values
+        public static final double lilArmMotorsKg = 0.0;
         public static final double lilArmMotorsKv = 0.0;
-        public static final SimpleMotorFeedforward lilArmFeedforward = new SimpleMotorFeedforward(lilArmMotorsKs, lilArmMotorsKv);
+        public static final double lilArmFeedForwardVelocity = 0.0;
+        public static final ArmFeedforward lilArmFeedforward = new ArmFeedforward(lilArmMotorsKs, lilArmMotorsKg, lilArmMotorsKv);
     
         /* LilArm Motors ID */ 
         public static final int leftLilMotorID = 0;//TODO change the values

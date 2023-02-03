@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -24,7 +25,7 @@ public class LilArm extends SubsystemBase {
   private Solenoid lilArmSolenoid;
 
   private PIDController lilArmPID;
-  private SimpleMotorFeedforward lilArmFeedforward;
+  private ArmFeedforward lilArmFeedforward;
 
   private DigitalInput lilArmSensorInput;
   private int lilArmPose;
@@ -46,7 +47,7 @@ public class LilArm extends SubsystemBase {
     lastSensorInput = false;
   }
 
-  public void changeSolenoidState() {
+  public void toggleSolenoidState() {
     lilArmSolenoid.toggle();
   }
 
@@ -60,19 +61,19 @@ public class LilArm extends SubsystemBase {
 
     lastSensorInput = lilArmSensorInput.get();
 
-    leftLilArmMotor.setVoltage(lilArmPID.calculate(lilArmPose,setpoint) + lilArmFeedforward.calculate(setpoint));
-    rightLilArmMotor.setVoltage(lilArmPID.calculate(lilArmPose,setpoint) + lilArmFeedforward.calculate(setpoint));
+    leftLilArmMotor.setVoltage(lilArmPID.calculate(lilArmPose,setpoint) + lilArmFeedforward.calculate(setpoint, Constants.LilArmConstants.lilArmFeedForwardVelocity));
+    rightLilArmMotor.setVoltage(lilArmPID.calculate(lilArmPose,setpoint) + lilArmFeedforward.calculate(setpoint, Constants.LilArmConstants.lilArmFeedForwardVelocity));
   } 
 
-  public Command TurnToSetPoint(int setPoint){
+  public Command turnToSetPoint(int setPoint){
     return run(()->{
       putLilArmInPose(setPoint);
     } );
   }
 
-  public Command ToggleLilArmSolenoid() {
+  public Command toggleLilArmSolenoid() {
     return runOnce(()->{
-      ToggleLilArmSolenoid();
+      toggleSolenoidState();
     } );
   }
 }
