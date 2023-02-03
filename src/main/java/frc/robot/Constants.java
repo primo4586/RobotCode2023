@@ -17,6 +17,45 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
 
+    public static final class GripperConstants{
+        public static final double gripperKP = 0.0;//TODO change the PID values
+        public static final double gripperKI = 0.0;
+        public static final double gripperKD = 0.0;
+        public static final PIDController gripperPID = new PIDController(gripperKP, gripperKI, gripperKD);
+
+        public static final double gripperKs = 0.0;//TODO change the feed forward values
+        public static final double gripperKv = 0.0;
+        public static final SimpleMotorFeedforward gripperFeedforward = new SimpleMotorFeedforward(gripperKs, gripperKv);
+
+        public static final double gripperGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
+
+        public static final int gripperMotorPort = 0;//TODO change the ports
+
+        public static final double cubeGrabingSetPoint = 0.0;//TODO change the set points
+        public static final double coneGrabingSetPoint = 0.0;
+        public static final double openGripperSetPoint = 0.0;
+    }
+    public static final class BigArmConstants{
+        //bigArm PID values
+        private static final double bigArmKP = 0.0;//TODO change the PID values
+        private static final double bigArmKI = 0.0;
+        private static final double bigArmKD = 0.0;
+        public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
+
+        //bigArm feedforward values
+        public static final double feedForwardVelocity = 0.0;
+        private static final double bigArmKs = 0.0;//TODO change th feed forward values
+        private static final double bigArmKg = 0.0;
+        private static final double bigArmKv = 0.0;
+        public static final ArmFeedforward bigArmFeedforward = new ArmFeedforward(bigArmKs, bigArmKg, bigArmKv);
+
+        public static final double bigArmGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
+
+        public static final int bigArmMotorPort = 0;//TODO change the ports
+
+        //TODO: add setPoints
+    }
+
     public static final class SwerveConstants {
         /* Gyro ID (Changes Per Robot) */
         public static final int pigeonID = 3;
@@ -24,7 +63,7 @@ public final class Constants {
         /* Invert gyro if necessary (Changes Per Robot) */
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
-        /* Drivetrain Constants (Changes Per Robot)*/
+        /* Drivetrain Constants (Changes Per Robot) */
         public static final double trackWidth = 0.61;
         public static final double wheelBase = 0.61;
 
