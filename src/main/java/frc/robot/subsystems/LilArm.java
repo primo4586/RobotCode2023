@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.util.OpticEncoder;
 import frc.robot.Constants;
+import frc.robot.Constants.LilArmConstants;
 
 
 public class LilArm extends SubsystemBase {
@@ -27,9 +29,7 @@ public class LilArm extends SubsystemBase {
   private PIDController lilArmPID;
   private ArmFeedforward lilArmFeedforward;
 
-  private DigitalInput lilArmSensorInput;
-  private int lilArmPose;
-  private boolean lastSensorInput;
+  private OpticEncoder lilArmEncoder;
 
   /** Creates a new LilArm. */
   public LilArm() {
@@ -42,9 +42,13 @@ public class LilArm extends SubsystemBase {
 
     rightLilArmMotor.setInverted(true);
 
-    lilArmSensorInput = new DigitalInput(Constants.LilArmConstants.sensorID);
-    lilArmPose = 0;
-    lastSensorInput = false;
+    lilArmEncoder = new OpticEncoder(Constants.LilArmConstants.sensorID, ()-> leftLilArmMotor.get() > 0);
+
+  }
+
+  @Override
+  public void periodic() {
+      lilArmEncoder.update();
   }
 
   public void toggleSolenoidState() {
@@ -52,17 +56,8 @@ public class LilArm extends SubsystemBase {
   }
 
   public void putLilArmInPose( int setpoint) {
-    if(lilArmSensorInput.get() && lilArmPose < setpoint && lastSensorInput == false){
-      lilArmPose++;
-    }
-    else if(lilArmSensorInput.get() && lilArmPose > setpoint && lastSensorInput == false){
-      lilArmPose--;
-    }
-
-    lastSensorInput = lilArmSensorInput.get();
-
-    leftLilArmMotor.setVoltage(lilArmPID.calculate(lilArmPose,setpoint) + lilArmFeedforward.calculate(setpoint, Constants.LilArmConstants.lilArmFeedForwardVelocity));
-    rightLilArmMotor.setVoltage(lilArmPID.calculate(lilArmPose,setpoint) + lilArmFeedforward.calculate(setpoint, Constants.LilArmConstants.lilArmFeedForwardVelocity));
+    leftLilArmMotor.setVoltage(lilArmPID.calculate(lilArmEncoder.getPose(),setpoint) + lilArmFeedforward.calculate(setpoint, Constants.LilArmConstants.lilArmFeedForwardVelocity));
+    rightLilArmMotor.setVoltage(lilArmPID.calculate(lilArmEncoder.getPose(),setpoint) + lilArmFeedforward.calculate(setpoint, Constants.LilArmConstants.lilArmFeedForwardVelocity));
   } 
 
   public Command turnToSetPoint(int setPoint){
