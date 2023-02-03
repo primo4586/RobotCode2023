@@ -1,11 +1,11 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.pathplanner.lib.auto.PIDConstants;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -187,6 +187,36 @@ public final class Constants {
         
         // Deadband for joysticks. To deny too small of joystick values.
         public static final double stickDeadband = 0.1;
+    }
+
+    public static final class LilArmConstants {
+        /* LilArm PID Values */ 
+        private static final double lilArmMotorsKP = 0.0;//TODO change the PID values
+        private static final double lilArmMotorsKI = 0.0;
+        private static final double lilArmMotorsKD = 0.0;
+        
+        public static final PIDController lilArmPID = new PIDController(lilArmMotorsKP, lilArmMotorsKI, lilArmMotorsKD);
+    
+        /* LilArm Feedforward Values */ 
+        public static final double lilArmMotorsKs = 0.0;//TODO change the feedforward values
+        public static final double lilArmMotorsKg = 0.0;
+        public static final double lilArmMotorsKv = 0.0;
+        public static final double lilArmFeedForwardVelocity = 0.0;
+        public static final ArmFeedforward lilArmFeedforward = new ArmFeedforward(lilArmMotorsKs, lilArmMotorsKg, lilArmMotorsKv);
+    
+        /* LilArm Motors ID */ 
+        public static final int leftLilMotorID = 0;//TODO change the values
+        public static final int rightLilMotorID = 0;
+
+        /* LilArm Motors Gear Ratio */
+        public static final double lilMotorGearRatio = 0;//TODO change the values
+
+        /* LilArm Solenoid Ports */
+        public static final int PCMID = 0;//TODO change the values
+        public static final int lilArmSolenoidID = 0;
+
+        /* LilArm Sensor Port */
+        public static final int sensorID = 0;//TODO change the values
     }
 
   
