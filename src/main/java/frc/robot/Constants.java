@@ -17,21 +17,21 @@ public final class Constants {
 
     public static final class BigArmConstants{
         //bigArm PID values
-        private static final double BigArmKP = 0.0;//TODO change the PID values
-        private static final double BigArmKI = 0.0;
-        private static final double BigArmKD = 0.0;
-        public static final PIDController BigArmPID = new PIDController(BigArmKP, BigArmKI, BigArmKD);
+        private static final double bigArmKP = 0.0;//TODO change the PID values
+        private static final double bigArmKI = 0.0;
+        private static final double bigArmKD = 0.0;
+        public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
 
         //bigArm feedforward values
         public static final double feedForwardVelocity = 0.0;
-        private static final double BigArmKs = 0.0;//TODO change th feed forward values
-        private static final double BigArmKg = 0.0;
-        private static final double BigArmKv = 0.0;
-        public static final ArmFeedforward BigArmFeedforward = new ArmFeedforward(BigArmKs, BigArmKg, BigArmKv);
+        private static final double bigArmKs = 0.0;//TODO change th feed forward values
+        private static final double bigArmKg = 0.0;
+        private static final double bigArmKv = 0.0;
+        public static final ArmFeedforward bigArmFeedforward = new ArmFeedforward(bigArmKs, bigArmKg, bigArmKv);
 
-        public static final double BigArmGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
+        public static final double bigArmGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
 
-        public static final int BigArmMotorPort = 0;//TODO change the ports
+        public static final int bigArmMotorPort = 0;//TODO change the ports
 
         //TODO: add setPoints
     }

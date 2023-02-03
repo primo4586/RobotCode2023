@@ -14,10 +14,10 @@ public class BigArm extends SubsystemBase {
   private ArmFeedforward BigArmMotorFeedforward;
 
   public BigArm() {
-    BigArmPID = BigArmConstants.BigArmPID;
-    BigArmMotorFeedforward = BigArmConstants.BigArmFeedforward;
+    BigArmPID = BigArmConstants.bigArmPID;
+    BigArmMotorFeedforward = BigArmConstants.bigArmFeedforward;
 
-    BigArmMotor = new WPI_TalonSRX(BigArmConstants.BigArmMotorPort);
+    BigArmMotor = new WPI_TalonSRX(BigArmConstants.bigArmMotorPort);
   }
 
   public void putBigArmInPose( double setpoint){
