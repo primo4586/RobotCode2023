@@ -9,25 +9,25 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.BigArmConstants;
 
 public class BigArm extends SubsystemBase {
-  private WPI_TalonSRX  BigArmMotor;
-  private PIDController BigArmPID;
-  private ArmFeedforward BigArmMotorFeedforward;
+  private WPI_TalonSRX  bigArmMotor;
+  private PIDController bigArmPID;
+  private ArmFeedforward bigArmMotorFeedforward;
 
   public BigArm() {
-    BigArmPID = BigArmConstants.bigArmPID;
-    BigArmMotorFeedforward = BigArmConstants.bigArmFeedforward;
+    bigArmPID = BigArmConstants.bigArmPID;
+    bigArmMotorFeedforward = BigArmConstants.bigArmFeedforward;
 
-    BigArmMotor = new WPI_TalonSRX(BigArmConstants.bigArmMotorPort);
+    bigArmMotor = new WPI_TalonSRX(BigArmConstants.bigArmMotorPort);
   }
 
-  public void putBigArmInPose( double setpoint){
+  public void putbigArmInPose( double setpoint){
     //TODO: adjust shit to the gear ratio
-    BigArmMotor.setVoltage(BigArmPID.calculate(BigArmMotor.getSelectedSensorPosition() , setpoint)  + BigArmMotorFeedforward.calculate(setpoint,BigArmConstants.feedForwardVelocity));
+    bigArmMotor.setVoltage(bigArmPID.calculate(bigArmMotor.getSelectedSensorPosition() , setpoint)  + bigArmMotorFeedforward.calculate(setpoint,BigArmConstants.feedForwardVelocity));
   }
 
-  public Command TurnToSetPoint(double setPoint){
+  public Command turnToSetPoint(double setPoint){
     return run(()->{
-      putBigArmInPose(setPoint);
-    } );
+      putbigArmInPose(setPoint);
+    } ).until(() -> Math.abs(bigArmMotor.getSelectedSensorPosition()-setPoint) <= BigArmConstants.angleTolarance);
   }
 }

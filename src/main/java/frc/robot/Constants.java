@@ -34,6 +34,8 @@ public final class Constants {
         public static final double cubeGrabingSetPoint = 0.0;//TODO change the set points
         public static final double coneGrabingSetPoint = 0.0;
         public static final double openGripperSetPoint = 0.0;
+
+        public static final double grippingTolarance = 0.0;
     }
     public static final class BigArmConstants{
         //bigArm PID values
@@ -52,6 +54,11 @@ public final class Constants {
         public static final double bigArmGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
 
         public static final int bigArmMotorPort = 0;//TODO change the ports
+
+        public static final double angleTolarance = 0.0;
+
+        public static final double putItemInPlaceFirstSetPoint = 0.0;
+        public static final double putItemInPlaceSecondSetPoint = 0.0;
 
         //TODO: add setPoints
     }
@@ -217,6 +224,13 @@ public final class Constants {
 
         /* LilArm Sensor Port */
         public static final int sensorID = 0;//TODO change the values
+
+        public static final double angleTolarance = 0.0;
+
+        
+        public static final int putItemInPlaceFirstSetPoint = 0;
+        public static final int putItemInPlaceSecondSetPoint = 0;
+        //TODO: add setPoints
     }
 
   
