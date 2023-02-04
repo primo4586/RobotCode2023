@@ -1,12 +1,13 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.GripperConstants;
 
 public class Gripper extends SubsystemBase {
@@ -25,11 +26,11 @@ public class Gripper extends SubsystemBase {
     shouldGripCone = true;
   }
 
-  public boolean getShouldGripCone(){
-    return this.shouldGripCone;
+  public BooleanSupplier getShouldGripCone(){
+    return()-> this.shouldGripCone;
   }
 
-  public void toggleDoWeGripACone(){
+  public void toggleShouldWeGripACone(){
     this.shouldGripCone = !shouldGripCone;
   }
 
@@ -37,6 +38,7 @@ public class Gripper extends SubsystemBase {
     gripperMotor.setVoltage(gripperPID.calculate(gripperMotor.getSelectedSensorPosition() , setpoint)  + gripperMotorFeedforward.calculate(setpoint));
   }
 
+  //TODO: adjust shit to the gear ratio
   public Command turnToSetPoint(double setPoint){
     return run(()->{
       putGripperInPose(setPoint);
@@ -45,7 +47,7 @@ public class Gripper extends SubsystemBase {
 
   public Command changeWhatWeGrip(){
     return runOnce(()->{
-      toggleDoWeGripACone();
+      toggleShouldWeGripACone();
     });
     
   }

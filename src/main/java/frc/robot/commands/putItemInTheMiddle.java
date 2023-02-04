@@ -13,17 +13,23 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 
-public class putItemInPlace extends SequentialCommandGroup {
-  /** Creates a new putItemInPlace. */
-  public putItemInPlace(BigArm bigArm, LilArm lilArm, Gripper gripper) {
-    MoveArmsToSetPoints firstSetPoint = new MoveArmsToSetPoints(bigArm, BigArmConstants.putItemInPlaceFirstSetPoint, lilArm, LilArmConstants.putItemInPlaceFirstSetPoint);
-    MoveArmsToSetPoints secondSetPoint = new MoveArmsToSetPoints(bigArm, BigArmConstants.putItemInPlaceSecondSetPoint, lilArm, LilArmConstants.putItemInPlaceSecondSetPoint);
+public class putItemInTheMiddle extends SequentialCommandGroup {
+  public putItemInTheMiddle(LilArm lilArm, BigArm bigArm, Gripper gripper) {
+
+     //closes the solenoid
     ConditionalCommand closeSolenoid = new ConditionalCommand(lilArm.toggleLilArmSolenoid(), null, lilArm.isSolenoidOpen());
+
+    //cone and cube setPoints
+    MoveArmsToSetPoints coneMiddleSetPoint = new MoveArmsToSetPoints(bigArm, BigArmConstants.coneMiddleSetPoint, lilArm, LilArmConstants.coneMiddleSetPoint);
+    MoveArmsToSetPoints cubeMiddleSetPoint = new MoveArmsToSetPoints(bigArm, BigArmConstants.cubeMiddleSetPoint, lilArm, LilArmConstants.cubeMiddleSetPoint);
+
+    //check if we put cone or cube
+    ConditionalCommand putArmsInMiddleSetPoint = new ConditionalCommand(coneMiddleSetPoint, cubeMiddleSetPoint, gripper.getShouldGripCone());
+
     addCommands(
       closeSolenoid,
-      firstSetPoint,
+      putArmsInMiddleSetPoint,
       lilArm.toggleLilArmSolenoid(),
-      //secondSetPoint,//check if this is nedded
       gripper.turnToSetPoint(GripperConstants.openGripperSetPoint)
     );
   }

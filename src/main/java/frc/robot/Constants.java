@@ -1,8 +1,6 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.pathplanner.lib.auto.PIDConstants;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -37,6 +35,7 @@ public final class Constants {
 
         public static final double grippingTolarance = 0.0;
     }
+
     public static final class BigArmConstants{
         //bigArm PID values
         private static final double bigArmKP = 0.0;//TODO change the PID values
@@ -57,8 +56,11 @@ public final class Constants {
 
         public static final double angleTolarance = 0.0;
 
-        public static final double putItemInPlaceFirstSetPoint = 0.0;
-        public static final double putItemInPlaceSecondSetPoint = 0.0;
+        public static final double coneUpperSetPoint = 0;
+        public static final double coneMiddleSetPoint = 0;
+
+        public static final double cubeUpperSetPoint = 0;
+        public static final double cubeMiddleSetPoint = 0;
 
         //TODO: add setPoints
     }
@@ -228,8 +230,11 @@ public final class Constants {
         public static final double angleTolarance = 0.0;
 
         
-        public static final int putItemInPlaceFirstSetPoint = 0;
-        public static final int putItemInPlaceSecondSetPoint = 0;
+        public static final int coneUpperSetPoint = 0;
+        public static final int coneMiddleSetPoint = 0;
+
+        public static final int cubeUpperSetPoint = 0;
+        public static final int cubeMiddleSetPoint = 0;
         //TODO: add setPoints
     }
 

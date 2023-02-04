@@ -68,7 +68,8 @@ public class LilArm extends SubsystemBase {
     leftLilArmMotor.setVoltage(lilArmPID.calculate(lilArmPose,setpoint) + lilArmFeedforward.calculate(setpoint,LilArmConstants.lilArmFeedForwardVelocity));
     rightLilArmMotor.setVoltage(lilArmPID.calculate(lilArmPose,setpoint) + lilArmFeedforward.calculate(setpoint,LilArmConstants.lilArmFeedForwardVelocity));
   } 
-
+  
+//TODO: adjust shit to the gear ratio
   public Command turnToSetPoint(int setPoint){
     return run(()->{
       putLilArmInPose(setPoint);
