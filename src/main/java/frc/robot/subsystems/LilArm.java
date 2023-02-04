@@ -38,7 +38,7 @@ public class LilArm extends SubsystemBase {
 
     leftLilArmMotor = new WPI_TalonSRX(Constants.LilArmConstants.leftLilMotorID);
     rightLilArmMotor = new WPI_TalonSRX(Constants.LilArmConstants.rightLilMotorID);
-    lilArmSolenoid = new Solenoid(Constants.LilArmConstants.PCMID,PneumaticsModuleType.CTREPCM,Constants.LilArmConstants.lilArmSolenoidID);
+    lilArmSolenoid = new Solenoid(Constants.LilArmConstants.PHID,PneumaticsModuleType.REVPH,Constants.LilArmConstants.lilArmSolenoidID);
 
     rightLilArmMotor.setInverted(true);
 

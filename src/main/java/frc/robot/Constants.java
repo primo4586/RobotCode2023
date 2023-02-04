@@ -29,7 +29,7 @@ public final class Constants {
 
         public static final double gripperGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
 
-        public static final int gripperMotorPort = 0;//TODO change the ports
+        public static final int gripperMotorPort = 17;
 
         public static final double cubeGrabingSetPoint = 0.0;//TODO change the set points
         public static final double coneGrabingSetPoint = 0.0;
@@ -51,7 +51,7 @@ public final class Constants {
 
         public static final double bigArmGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
 
-        public static final int bigArmMotorPort = 0;//TODO change the ports
+        public static final int bigArmMotorPort = 5;
 
         //TODO: add setPoints
     }
@@ -205,14 +205,14 @@ public final class Constants {
         public static final ArmFeedforward lilArmFeedforward = new ArmFeedforward(lilArmMotorsKs, lilArmMotorsKg, lilArmMotorsKv);
     
         /* LilArm Motors ID */ 
-        public static final int leftLilMotorID = 0;//TODO change the values
-        public static final int rightLilMotorID = 0;
+        public static final int leftLilMotorID = 18;
+        public static final int rightLilMotorID = 3;
 
         /* LilArm Motors Gear Ratio */
         public static final double lilMotorGearRatio = 0;//TODO change the values
 
         /* LilArm Solenoid Ports */
-        public static final int PCMID = 0;//TODO change the values
+        public static final int PHID = 0;//TODO change the values
         public static final int lilArmSolenoidID = 0;
 
         /* LilArm Sensor Port */
