@@ -27,10 +27,6 @@ public class LilArm extends SubsystemBase {
   private PIDController lilArmPID;
   private ArmFeedforward lilArmFeedforward;
 
-  private DigitalInput lilArmSensorInput;
-  private int lilArmPose;
-  private boolean lastSensorInput;
-
   /** Creates a new LilArm. */
   public LilArm() {
     lilArmPID =LilArmConstants.lilArmPID;
@@ -41,10 +37,6 @@ public class LilArm extends SubsystemBase {
     lilArmSolenoid = new Solenoid(LilArmConstants.PCMID,PneumaticsModuleType.CTREPCM,LilArmConstants.lilArmSolenoidID);
 
     rightLilArmMotor.setInverted(true);
-
-    lilArmSensorInput = new DigitalInput(LilArmConstants.sensorID);
-    lilArmPose = 0;
-    lastSensorInput = false;
   }
 
   public void toggleSolenoidState() {
@@ -55,25 +47,16 @@ public class LilArm extends SubsystemBase {
     return ()-> lilArmSolenoid.get();
   }
 
-  public void putLilArmInPose( int setpoint) {
-    if(lilArmSensorInput.get() && lilArmPose < setpoint && lastSensorInput == false){
-      lilArmPose++;
-    }
-    else if(lilArmSensorInput.get() && lilArmPose > setpoint && lastSensorInput == false){
-      lilArmPose--;
-    }
-
-    lastSensorInput = lilArmSensorInput.get();
-
-    leftLilArmMotor.setVoltage(lilArmPID.calculate(lilArmPose,setpoint) + lilArmFeedforward.calculate(setpoint,LilArmConstants.lilArmFeedForwardVelocity));
-    rightLilArmMotor.setVoltage(lilArmPID.calculate(lilArmPose,setpoint) + lilArmFeedforward.calculate(setpoint,LilArmConstants.lilArmFeedForwardVelocity));
+  public void putLilArmInPose(double setpoint) {
+    leftLilArmMotor.setVoltage(lilArmPID.calculate(leftLilArmMotor.getSelectedSensorPosition(),setpoint) + lilArmFeedforward.calculate(setpoint,LilArmConstants.lilArmFeedForwardVelocity));
+    rightLilArmMotor.setVoltage(lilArmPID.calculate(leftLilArmMotor.getSelectedSensorPosition(),setpoint) + lilArmFeedforward.calculate(setpoint,LilArmConstants.lilArmFeedForwardVelocity));
   } 
   
 //TODO: adjust shit to the gear ratio
-  public Command turnToSetPoint(int setPoint){
+  public Command turnToSetPoint(double setPoint){
     return run(()->{
       putLilArmInPose(setPoint);
-    } ).until(()-> lilArmPose == setPoint);
+    } ).until(()-> leftLilArmMotor.getSelectedSensorPosition() == setPoint);
   }
 
   public Command toggleLilArmSolenoid() {

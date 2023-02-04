@@ -230,11 +230,11 @@ public final class Constants {
         public static final double angleTolarance = 0.0;
 
         
-        public static final int coneUpperSetPoint = 0;
-        public static final int coneMiddleSetPoint = 0;
+        public static final double coneUpperSetPoint = 0;
+        public static final double coneMiddleSetPoint = 0;
 
-        public static final int cubeUpperSetPoint = 0;
-        public static final int cubeMiddleSetPoint = 0;
+        public static final double cubeUpperSetPoint = 0;
+        public static final double cubeMiddleSetPoint = 0;
         //TODO: add setPoints
     }
 
