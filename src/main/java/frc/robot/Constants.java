@@ -1,8 +1,6 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.pathplanner.lib.auto.PIDConstants;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -34,7 +32,10 @@ public final class Constants {
         public static final double cubeGrabingSetPoint = 0.0;//TODO change the set points
         public static final double coneGrabingSetPoint = 0.0;
         public static final double openGripperSetPoint = 0.0;
+
+        public static final double grippingTolarance = 0.0;
     }
+
     public static final class BigArmConstants{
         //bigArm PID values
         private static final double bigArmKP = 0.0;//TODO change the PID values
@@ -52,6 +53,14 @@ public final class Constants {
         public static final double bigArmGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
 
         public static final int bigArmMotorPort = 5;
+
+        public static final double angleTolarance = 0.0;
+
+        public static final double coneUpperSetPoint = 0;
+        public static final double coneMiddleSetPoint = 0;
+
+        public static final double cubeUpperSetPoint = 0;
+        public static final double cubeMiddleSetPoint = 0;
 
         //TODO: add setPoints
     }
@@ -216,11 +225,21 @@ public final class Constants {
         public static final double lilMotorGearRatio = 0;//TODO change the values
 
         /* LilArm Solenoid Ports */
-        public static final int PHID = 0;//TODO change the values
+        public static final int PCMID = 0;//TODO change the values
         public static final int lilArmSolenoidID = 0;
 
         /* LilArm Sensor Port */
         public static final int sensorID = 0;//TODO change the values
+
+        public static final double angleTolarance = 0.0;
+
+        
+        public static final int coneUpperSetPoint = 0;
+        public static final int coneMiddleSetPoint = 0;
+
+        public static final int cubeUpperSetPoint = 0;
+        public static final int cubeMiddleSetPoint = 0;
+        //TODO: add setPoints
     }
 
   

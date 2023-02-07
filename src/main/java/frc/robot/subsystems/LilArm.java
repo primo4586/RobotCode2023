@@ -4,12 +4,10 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -33,12 +31,12 @@ public class LilArm extends SubsystemBase {
 
   /** Creates a new LilArm. */
   public LilArm() {
-    lilArmPID = Constants.LilArmConstants.lilArmPID;
-    lilArmFeedforward = Constants.LilArmConstants.lilArmFeedforward;
+    lilArmPID =LilArmConstants.lilArmPID;
+    lilArmFeedforward =LilArmConstants.lilArmFeedforward;
 
     leftLilArmMotor = new WPI_TalonSRX(Constants.LilArmConstants.leftLilMotorID);
     rightLilArmMotor = new WPI_TalonSRX(Constants.LilArmConstants.rightLilMotorID);
-    lilArmSolenoid = new Solenoid(Constants.LilArmConstants.PHID,PneumaticsModuleType.REVPH,Constants.LilArmConstants.lilArmSolenoidID);
+    lilArmSolenoid = new Solenoid(LilArmConstants.PCMID,PneumaticsModuleType.CTREPCM,LilArmConstants.lilArmSolenoidID);
 
     rightLilArmMotor.setInverted(true);
 
@@ -55,15 +53,20 @@ public class LilArm extends SubsystemBase {
     lilArmSolenoid.toggle();
   }
 
+  public boolean isSolenoidOpen(){
+    return lilArmSolenoid.get();
+  }
+
   public void putLilArmInPose( int setpoint) {
     leftLilArmMotor.setVoltage(lilArmPID.calculate(lilArmEncoder.getPose(),setpoint) + lilArmFeedforward.calculate(setpoint, Constants.LilArmConstants.lilArmFeedForwardVelocity));
     rightLilArmMotor.setVoltage(lilArmPID.calculate(lilArmEncoder.getPose(),setpoint) + lilArmFeedforward.calculate(setpoint, Constants.LilArmConstants.lilArmFeedForwardVelocity));
   } 
-
+  
+//TODO: adjust shit to the gear ratio
   public Command turnToSetPoint(int setPoint){
     return run(()->{
       putLilArmInPose(setPoint);
-    } );
+    } ).until(()-> lilArmEncoder.getPose() == setPoint);
   }
 
   public Command toggleLilArmSolenoid() {

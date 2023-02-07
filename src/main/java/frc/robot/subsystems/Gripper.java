@@ -28,7 +28,7 @@ public class Gripper extends SubsystemBase {
     return this.shouldGripCone;
   }
 
-  public void toggleDoWeGripACone(){
+  public void toggleShouldWeGripACone(){
     this.shouldGripCone = !shouldGripCone;
   }
 
@@ -36,15 +36,16 @@ public class Gripper extends SubsystemBase {
     gripperMotor.setVoltage(gripperPID.calculate(gripperMotor.getSelectedSensorPosition() , setpoint)  + gripperMotorFeedforward.calculate(setpoint));
   }
 
+  //TODO: adjust shit to the gear ratio
   public Command turnToSetPoint(double setPoint){
     return run(()->{
       putGripperInPose(setPoint);
-    });
+    }).until(() -> Math.abs(gripperMotor.getSelectedSensorPosition()-setPoint) <= GripperConstants.grippingTolarance);
   }
 
   public Command changeWhatWeGrip(){
     return runOnce(()->{
-      toggleDoWeGripACone();
+      toggleShouldWeGripACone();
     });
     
   }
