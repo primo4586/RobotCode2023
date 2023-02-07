@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -26,8 +24,8 @@ public class Gripper extends SubsystemBase {
     shouldGripCone = true;
   }
 
-  public BooleanSupplier getShouldGripCone(){
-    return()-> this.shouldGripCone;
+  public boolean getShouldGripCone(){
+    return this.shouldGripCone;
   }
 
   public void toggleShouldWeGripACone(){

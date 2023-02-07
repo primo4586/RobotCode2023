@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.BigArmConstants;
@@ -13,19 +14,19 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 
-public class putItemInTheUpper extends SequentialCommandGroup {
+public class PutItemInTheUpper extends SequentialCommandGroup {
   /** Creates a new putItemInPlace. */
-  public putItemInTheUpper(BigArm bigArm, LilArm lilArm, Gripper gripper) {
+  public PutItemInTheUpper(BigArm bigArm, LilArm lilArm, Gripper gripper) {
     
     //closes the solenoid
-    ConditionalCommand closeSolenoid = new ConditionalCommand(lilArm.toggleLilArmSolenoid(), null, lilArm.isSolenoidOpen());
+    ConditionalCommand closeSolenoid = new ConditionalCommand(lilArm.toggleLilArmSolenoid(), Commands.none(), lilArm::isSolenoidOpen);
 
     //cone and cube setPoints
     MoveArmsToSetPoints coneUpperSetPoint = new MoveArmsToSetPoints(bigArm, BigArmConstants.coneUpperSetPoint, lilArm, LilArmConstants.coneUpperSetPoint);
     MoveArmsToSetPoints cubeUpperSetPoint = new MoveArmsToSetPoints(bigArm, BigArmConstants.cubeUpperSetPoint, lilArm, LilArmConstants.cubeUpperSetPoint);
 
     //check if we put cone or cube
-    ConditionalCommand putArmsInUpperSetPoint = new ConditionalCommand(coneUpperSetPoint, cubeUpperSetPoint, gripper.getShouldGripCone());
+    ConditionalCommand putArmsInUpperSetPoint = new ConditionalCommand(coneUpperSetPoint, cubeUpperSetPoint, gripper::getShouldGripCone);
 
     addCommands(
       closeSolenoid,

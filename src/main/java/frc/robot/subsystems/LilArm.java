@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -51,8 +49,8 @@ public class LilArm extends SubsystemBase {
     lilArmSolenoid.toggle();
   }
 
-  public BooleanSupplier isSolenoidOpen(){
-    return ()-> lilArmSolenoid.get();
+  public boolean isSolenoidOpen(){
+    return lilArmSolenoid.get();
   }
 
   public void putLilArmInPose( int setpoint) {
