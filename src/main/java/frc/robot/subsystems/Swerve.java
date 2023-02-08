@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.fasterxml.jackson.annotation.JacksonInject.Value;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -15,6 +16,7 @@ import frc.robot.SwerveModule;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.Misc;
 import frc.robot.Constants.SwerveConstants;
+import frc.lib.util.SwerveModuleConstants;
 import frc.robot.Constants;
 import frc.robot.VisionPoseEstimator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -31,8 +33,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
@@ -450,5 +454,48 @@ public class Swerve extends SubsystemBase {
                     false);
         })
         .until(() -> Math.abs(getPitch()) < SwerveConstants.STATION_PITCH_ANGLE_TOLERANCE);
+    }
+
+    
+    public int whereToAlign(Gripper gripper){
+        Pose2d currentPose = getPose();
+        int closestXId = 0;
+        if(DriverStation.getAlliance()==DriverStation.Alliance.Red){
+            if(currentPose.getY()>SwerveConstants.redAreWeCloseEnough){
+                if(gripper.getShouldGripCone()){
+                    for(int i=1; i<SwerveConstants.coneAligningX.length; i++){
+                        if(Math.abs(currentPose.getX()-SwerveConstants.coneAligningX[i])<Math.abs(currentPose.getX()-SwerveConstants.coneAligningX[closestXId])){
+                            closestXId=i;
+                        }
+                    }
+                }
+                else{
+                    for(int i=1; i<SwerveConstants.cubeAligningX.length; i++){
+                        if(Math.abs(currentPose.getX()-SwerveConstants.cubeAligningX[i])<Math.abs(currentPose.getX()-SwerveConstants.cubeAligningX[closestXId])){
+                            closestXId=i;
+                        }
+                    }
+                }
+            }
+        }
+        else{
+            if(currentPose.getY()<SwerveConstants.blueAreWeCloseEnough){
+                if(gripper.getShouldGripCone()){
+                    for(int i=1; i<SwerveConstants.coneAligningX.length; i++){
+                        if(Math.abs(currentPose.getX()-SwerveConstants.coneAligningX[i])<Math.abs(currentPose.getX()-SwerveConstants.coneAligningX[closestXId])){
+                            closestXId=i;
+                        }
+                    }
+                }
+                else{
+                    for(int i=1; i<SwerveConstants.cubeAligningX.length; i++){
+                        if(Math.abs(currentPose.getX()-SwerveConstants.cubeAligningX[i])<Math.abs(currentPose.getX()-SwerveConstants.cubeAligningX[closestXId])){
+                            closestXId=i;
+                        }
+                    }
+                }
+            }
+        }
+        return closestXId;
     }
 }

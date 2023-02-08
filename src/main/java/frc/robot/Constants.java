@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.lang.reflect.Array;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
@@ -189,6 +191,14 @@ public final class Constants {
         public static final double ALIGN_STATION_SPEED = .2;
         public static final double STATION_PITCH_ANGLE_TOLERANCE = 2.5;
 
+
+        /* where to align Constants */
+        public static final double blueAreWeCloseEnough = 0.0;//TODO: decied what is conciderd close enough
+        public static final double redAreWeCloseEnough = 0.0;//TODO: decied what is conciderd close enough
+        public static final double[] coneAligningX = {0.0,0.0,0.0};
+        public static final double[] cubeAligningX = {0.0,0.0,0.0};
+        public static final double redAligningY = 0.0;
+        public static final double blueAligningY = 0.0;
     }
 
     public static final class Misc {
@@ -277,6 +287,6 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
             new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
-      }
+    }
 
 }
