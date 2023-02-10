@@ -1,7 +1,5 @@
 package frc.robot;
 
-import java.lang.reflect.Array;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
@@ -58,13 +56,15 @@ public final class Constants {
 
         public static final double angleTolarance = 0.0;
 
+        //TODO: add setPoints
         public static final double coneUpperSetPoint = 0;
         public static final double coneMiddleSetPoint = 0;
 
         public static final double cubeUpperSetPoint = 0;
         public static final double cubeMiddleSetPoint = 0;
 
-        //TODO: add setPoints
+        public static final double intakeSetPoint = 0.0;
+        public static final double middleOfRobotSetPoint = 0.0;
     }
 
     public static final class SwerveConstants {
@@ -193,12 +193,10 @@ public final class Constants {
 
 
         /* where to align Constants */
-        public static final double blueAreWeCloseEnough = 0.0;//TODO: decied what is conciderd close enough
-        public static final double redAreWeCloseEnough = 0.0;//TODO: decied what is conciderd close enough
+        public static final double areWeCloseEnough = 0.0;//TODO: decied what is conciderd close enough
         public static final double[] coneAligningX = {0.0,0.0,0.0};
         public static final double[] cubeAligningX = {0.0,0.0,0.0};
-        public static final double redAligningY = 0.0;
-        public static final double blueAligningY = 0.0;
+        public static final double aligningY = 0.0;
     }
 
     public static final class Misc {
@@ -243,13 +241,16 @@ public final class Constants {
 
         public static final double angleTolarance = 0.0;
 
-        
-        public static final int coneUpperSetPoint = 0;
-        public static final int coneMiddleSetPoint = 0;
+                //TODO: add setPoints
+        public static final double coneUpperSetPoint = 0.0;
+        public static final double coneMiddleSetPoint = 0.0;
 
-        public static final int cubeUpperSetPoint = 0;
-        public static final int cubeMiddleSetPoint = 0;
-        //TODO: add setPoints
+        public static final double cubeUpperSetPoint = 0.0;
+        public static final double cubeMiddleSetPoint = 0.0;
+
+        public static final double intakeSetPoint = 0.0;
+        public static final double middleOfRobotSetPoint = 0.0;
+
     }
 
   

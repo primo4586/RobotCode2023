@@ -8,7 +8,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -57,13 +56,13 @@ public class LilArm extends SubsystemBase {
     return lilArmSolenoid.get();
   }
 
-  public void putLilArmInPose( int setpoint) {
+  public void putLilArmInPose( Double setpoint) {
     leftLilArmMotor.setVoltage(lilArmPID.calculate(lilArmEncoder.getPose(),setpoint) + lilArmFeedforward.calculate(setpoint, Constants.LilArmConstants.lilArmFeedForwardVelocity));
     rightLilArmMotor.setVoltage(lilArmPID.calculate(lilArmEncoder.getPose(),setpoint) + lilArmFeedforward.calculate(setpoint, Constants.LilArmConstants.lilArmFeedForwardVelocity));
   } 
   
 //TODO: adjust shit to the gear ratio
-  public Command turnToSetPoint(int setPoint){
+  public Command turnToSetPoint(Double setPoint){
     return run(()->{
       putLilArmInPose(setPoint);
     } ).until(()-> lilArmEncoder.getPose() == setPoint);

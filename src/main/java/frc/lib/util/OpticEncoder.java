@@ -6,7 +6,6 @@ package frc.lib.util;
 
 import java.util.function.BooleanSupplier;
 
-import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
