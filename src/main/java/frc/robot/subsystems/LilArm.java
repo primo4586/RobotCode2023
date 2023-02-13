@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -12,7 +8,6 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.util.OpticEncoder;
 import frc.robot.Constants;
 import frc.robot.Constants.LilArmConstants;
 
@@ -26,8 +21,6 @@ public class LilArm extends SubsystemBase {
   private PIDController lilArmPID;
   private ArmFeedforward lilArmFeedforward;
 
-  private OpticEncoder lilArmEncoder;
-
   /** Creates a new LilArm. */
   public LilArm() {
     lilArmPID =LilArmConstants.lilArmPID;
@@ -39,13 +32,6 @@ public class LilArm extends SubsystemBase {
 
     rightLilArmMotor.setInverted(true);
 
-    lilArmEncoder = new OpticEncoder(Constants.LilArmConstants.sensorID, ()-> leftLilArmMotor.get() > 0);
-
-  }
-
-  @Override
-  public void periodic() {
-      lilArmEncoder.update();
   }
 
   public void toggleSolenoidState() {
@@ -57,15 +43,15 @@ public class LilArm extends SubsystemBase {
   }
 
   public void putLilArmInPose( Double setpoint) {
-    leftLilArmMotor.setVoltage(lilArmPID.calculate(lilArmEncoder.getPose(),setpoint) + lilArmFeedforward.calculate(setpoint, Constants.LilArmConstants.lilArmFeedForwardVelocity));
-    rightLilArmMotor.setVoltage(lilArmPID.calculate(lilArmEncoder.getPose(),setpoint) + lilArmFeedforward.calculate(setpoint, Constants.LilArmConstants.lilArmFeedForwardVelocity));
+    leftLilArmMotor.setVoltage(lilArmPID.calculate(leftLilArmMotor.getSelectedSensorPosition(),setpoint) + lilArmFeedforward.calculate(setpoint, Constants.LilArmConstants.lilArmFeedForwardVelocity));
+    rightLilArmMotor.setVoltage(lilArmPID.calculate(leftLilArmMotor.getSelectedSensorPosition(),setpoint) + lilArmFeedforward.calculate(setpoint, Constants.LilArmConstants.lilArmFeedForwardVelocity));
   } 
   
 //TODO: adjust shit to the gear ratio
   public Command turnToSetPoint(Double setPoint){
     return run(()->{
       putLilArmInPose(setPoint);
-    } ).until(()-> lilArmEncoder.getPose() == setPoint);
+    } ).until(()-> leftLilArmMotor.getSelectedSensorPosition() == setPoint);
   }
 
   public Command toggleLilArmSolenoid() {
