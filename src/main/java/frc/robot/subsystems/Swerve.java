@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -341,15 +342,35 @@ public class Swerve extends SubsystemBase {
                 List.of(robotPose, endPoint));
     }
 
-    public PathPlannerTrajectory generateTrajectoryToGoal(Translation2d goal){
+    public PathPlannerTrajectory generateTrajectoryToAligmentPose(Translation2d targetPose) {
+        if (targetPose == null)
+            return new PathPlannerTrajectory(); // Empty trajectory - 0 seconds duration.
+
         PathPoint robotPose = new PathPoint(getPose().getTranslation(), getYaw());
-        
-        PathPoint endPoint = new PathPoint(goal, Rotation2d.fromDegrees(0));
+        PathPoint endPoint = new PathPoint(targetPose, Rotation2d.fromDegrees(0));
 
         return PathPlanner.generatePath(
                 new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
                         AutoConstants.kMaxAccelerationMetersPerSecondSquared),
-                List.of(robotPose, endPoint));        
+                List.of(robotPose, endPoint));
+    }
+
+    public Command followTrajectoryToAligmentPose(BooleanSupplier shouldGripCone) {
+        if (visionPoseEstimator == null)
+            return new InstantCommand(); // Empty command incase VisionPoseEstimator is not set.
+
+        Supplier<Command> followCmdSupplier = () -> new PPSwerveControllerCommand(
+                generateTrajectoryToAligmentPose(whereToAlign(shouldGripCone)),
+                this::getPose,
+                SwerveConstants.swerveKinematics,
+                new PIDController(AutoConstants.kPXController, 0, 0),
+                new PIDController(AutoConstants.kPYController, 0, 0),
+                new PIDController(AutoConstants.kPThetaController, 0, 0),
+                this::setModuleStatesClosedLoop,
+                false,
+                this);
+
+        return new ProxyCommand(followCmdSupplier);
     }
 
     /**
@@ -464,25 +485,49 @@ public class Swerve extends SubsystemBase {
     }
 
     
-    public int whereToAlign(Gripper gripper){
+    public Translation2d whereToAlign(BooleanSupplier shouldGripCone){
         Pose2d currentPose = getPose();
-        int closestXId = 0;
-            if(currentPose.getY()<SwerveConstants.areWeCloseEnough){
-                if(gripper.getShouldGripCone()){
-                    for(int i=1; i<SwerveConstants.coneAligningX.length; i++){
-                        if(Math.abs(currentPose.getX()-SwerveConstants.coneAligningX[i])<Math.abs(currentPose.getX()-SwerveConstants.coneAligningX[closestXId])){
-                            closestXId=i;
+        Translation2d closestLoction = null;
+        if(DriverStation.getAlliance()==DriverStation.Alliance.Red){
+            if(currentPose.getY()>SwerveConstants.redAreWeCloseEnough){
+                if(shouldGripCone.getAsBoolean()){
+                closestLoction = SwerveConstants.redConeAligningLoctions[0];
+                    for(int i=1; i<SwerveConstants.redConeAligningLoctions.length; i++){
+                        if(Math.abs(currentPose.getX()-SwerveConstants.redConeAligningLoctions[i].getX())<Math.abs(currentPose.getX()-closestLoction.getX())){
+                            closestLoction = SwerveConstants.redConeAligningLoctions[i];
                         }
                     }
                 }
                 else{
-                    for(int i=1; i<SwerveConstants.cubeAligningX.length; i++){
-                        if(Math.abs(currentPose.getX()-SwerveConstants.cubeAligningX[i])<Math.abs(currentPose.getX()-SwerveConstants.cubeAligningX[closestXId])){
-                            closestXId=i;
+                closestLoction = SwerveConstants.redCubeAligningLoctions[0];
+                    for(int i=1; i<SwerveConstants.redCubeAligningLoctions.length; i++){
+                        if(Math.abs(currentPose.getX()-SwerveConstants.redCubeAligningLoctions[i].getX())<Math.abs(currentPose.getX()-closestLoction.getX())){
+                            closestLoction = SwerveConstants.redCubeAligningLoctions[i];
                         }
                     }
                 }
             }
-        return closestXId;
+        }
+        else{
+            if(currentPose.getY()<SwerveConstants.blueAreWeCloseEnough){
+                if(shouldGripCone.getAsBoolean()){
+                    closestLoction = SwerveConstants.blueConeAligningLoctions[0];
+                    for(int i=1; i<SwerveConstants.blueConeAligningLoctions.length; i++){
+                        if(Math.abs(currentPose.getX()-SwerveConstants.blueConeAligningLoctions[i].getX())<Math.abs(currentPose.getX()-closestLoction.getX())){
+                            closestLoction = SwerveConstants.blueConeAligningLoctions[i];
+                        }
+                    }
+                }
+                else{
+                    closestLoction = SwerveConstants.blueCubeAligningLoctions[0];
+                    for(int i=1; i<SwerveConstants.blueCubeAligningLoctions.length; i++){
+                        if(Math.abs(currentPose.getX()-SwerveConstants.blueCubeAligningLoctions[i].getX())<Math.abs(currentPose.getX()-closestLoction.getX())){
+                            closestLoction = SwerveConstants.blueCubeAligningLoctions[i];
+                        }
+                    }
+                }
+            }
+        }
+        return closestLoction;
     }
 }

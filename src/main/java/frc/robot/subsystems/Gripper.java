@@ -32,7 +32,7 @@ public class Gripper extends SubsystemBase {
     this.shouldGripCone = !shouldGripCone;
   }
 
-  private void putGripperInPose( double setpoint){
+  public void putGripperInPose( double setpoint){
     gripperMotor.setVoltage(gripperPID.calculate(gripperMotor.getSelectedSensorPosition() , setpoint)  + gripperMotorFeedforward.calculate(setpoint));
   }
 
@@ -51,11 +51,10 @@ public class Gripper extends SubsystemBase {
   }
 
   public Command gripItem(){
-    return runOnce(()->{
+
       if(shouldGripCone)
-        turnToSetPoint(GripperConstants.coneGrabingSetPoint);
+        return turnToSetPoint(GripperConstants.coneGrabingSetPoint);
       else
-        turnToSetPoint(GripperConstants.cubeGrabingSetPoint);
-    });
+        return turnToSetPoint(GripperConstants.cubeGrabingSetPoint);
   }
 }
