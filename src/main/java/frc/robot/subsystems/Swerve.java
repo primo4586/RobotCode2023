@@ -21,12 +21,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -241,15 +239,12 @@ public class Swerve extends SubsystemBase {
         field2d.getObject("Odometry").setPose(swerveOdometry.getPoseMeters());
 
         if (visionPoseEstimator != null) {
-            Pair<Pose3d, Double> result = visionPoseEstimator
+            var result = visionPoseEstimator
                     .getEstimatedGlobalPose(poseEstimation.getEstimatedPosition());
 
-            var camPose = result.getFirst();
-            var camPoseObsTime = result.getSecond();
-
-            if (camPose != null) {
-                poseEstimation.addVisionMeasurement(camPose.toPose2d(), camPoseObsTime);
-                field2d.getObject("Vision Position").setPose(camPose.toPose2d());
+            if (result != null) {
+                poseEstimation.addVisionMeasurement(result.estimatedPose.toPose2d(), result.timestampSeconds);
+                field2d.getObject("Vision Position").setPose(result.estimatedPose.toPose2d());
             }
         }
 

@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import org.photonvision.RobotPoseEstimator.PoseStrategy;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;

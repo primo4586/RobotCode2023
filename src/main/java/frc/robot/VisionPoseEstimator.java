@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
-import org.photonvision.RobotPoseEstimator;
-import org.photonvision.RobotPoseEstimator.PoseStrategy;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -24,7 +25,7 @@ import frc.robot.Constants.VisionConstants;
 public class VisionPoseEstimator {
 
     public PhotonCamera limeLight;
-    public RobotPoseEstimator robotPoseEstimator;
+    public PhotonPoseEstimator robotPoseEstimator;
     private AprilTagFieldLayout apriltagLayout;
 
     public VisionPoseEstimator(PoseStrategy strategy) {
@@ -41,7 +42,7 @@ public class VisionPoseEstimator {
 
             // Uses the given pose strategy to take the data from the vision camera and
             // according to the strategy, gives the estimated position from vision data.
-            robotPoseEstimator = new RobotPoseEstimator(apriltagLayout, strategy, camList);
+            robotPoseEstimator = new PhotonPoseEstimator(apriltagLayout, strategy, limeLight, VisionConstants.robotToCam);
         } catch (IOException e) {
             apriltagLayout = null;
             DriverStation.reportError("AprilTag Field was not able to load!!! Vision data is not able to be processed.",
@@ -58,22 +59,19 @@ public class VisionPoseEstimator {
      *                               strategies relevant to a reference pose)
      * @return The new estimated position using the latest vision
      */
-    public Pair<Pose3d, Double> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
+    public EstimatedRobotPose getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
         if (apriltagLayout == null) {
             DriverStation.reportError("AprilTagField was not able to load!! Cannot provide position!!", false);
-            return new Pair<Pose3d, Double>(null, 0.0);
+            return null;
         }
 
         robotPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-
-        // Gets the current time in seconds.
-        double currentTime = Timer.getFPGATimestamp();
 
         // Gets the latest best target result from the pose estimator, using the
         // PoseStrategy it's set to.
         // Returns a pair of the estimated position, and the latency it took to generate
         // it.
-        Optional<Pair<Pose3d, Double>> result = robotPoseEstimator.update();
+        Optional<EstimatedRobotPose> result = robotPoseEstimator.update();
 
         // Additional of the latest result, so we can have the pose ambguity data
         PhotonPipelineResult lastResult = limeLight.getLatestResult();
@@ -83,13 +81,11 @@ public class VisionPoseEstimator {
         if (result.isPresent() && lastResult.hasTargets() && lastResult.getBestTarget().getPoseAmbiguity() < 0.2) {
 
             SmartDashboard.putNumber("Best target ambguitiy", limeLight.getLatestResult().getBestTarget().getPoseAmbiguity());
-            double timestamp = (currentTime - (result.get().getSecond() / 1000));
-
-            // Returns the data with the Pose3d, and the timestamp relative to the robot's time of when the pose was estimated at.
-            return new Pair<Pose3d, Double>(
-                    result.get().getFirst(), timestamp);
+    
+            // Returns the data with the Pose3d, and the timestamp relative to the robot's time of when the pose was estimated at. (EstimatedRobotPose)
+            return result.get();
         } else {
-            return new Pair<Pose3d, Double>(null, 0.0);
+            return null;
         }
     }
 
