@@ -19,7 +19,7 @@ public class BigArm extends SubsystemBase {
 
     bigArmMotor = new WPI_TalonSRX(BigArmConstants.bigArmMotorPort);
   }
-
+//test test
   public void putbigArmInPose( double setpoint){
     //TODO: adjust shit to the gear ratio
     bigArmMotor.setVoltage(bigArmPID.calculate(bigArmMotor.getSelectedSensorPosition() , setpoint)  + bigArmMotorFeedforward.calculate(setpoint,BigArmConstants.feedForwardVelocity));
