@@ -237,9 +237,6 @@ public final class Constants {
         public static final int PCMID = 0;//TODO change the values
         public static final int lilArmSolenoidID = 0;
 
-        /* LilArm Sensor Port */
-        public static final int sensorID = 0;//TODO change the values
-
         public static final double angleTolarance = 0.0;
 
                 //TODO: add setPoints
