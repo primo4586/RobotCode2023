@@ -356,8 +356,6 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command followTrajectoryToAligmentPose(BooleanSupplier shouldGripCone) {
-        if (visionPoseEstimator == null)
-            return new InstantCommand(); // Empty command incase VisionPoseEstimator is not set.
 
         Supplier<Command> followCmdSupplier = () -> new PPSwerveControllerCommand(
                 generateTrajectoryToAligmentPose(whereToAlign(shouldGripCone)),
@@ -487,47 +485,10 @@ public class Swerve extends SubsystemBase {
     
     public Translation2d whereToAlign(BooleanSupplier shouldGripCone){
         Pose2d currentPose = getPose();
-        Translation2d closestLoction = null;
-        if(DriverStation.getAlliance()==DriverStation.Alliance.Red){
-            if(currentPose.getY()>SwerveConstants.redAreWeCloseEnough){
-                if(shouldGripCone.getAsBoolean()){
-                closestLoction = SwerveConstants.redConeAligningLoctions[0];
-                    for(int i=1; i<SwerveConstants.redConeAligningLoctions.length; i++){
-                        if(Math.abs(currentPose.getX()-SwerveConstants.redConeAligningLoctions[i].getX())<Math.abs(currentPose.getX()-closestLoction.getX())){
-                            closestLoction = SwerveConstants.redConeAligningLoctions[i];
-                        }
-                    }
-                }
-                else{
-                closestLoction = SwerveConstants.redCubeAligningLoctions[0];
-                    for(int i=1; i<SwerveConstants.redCubeAligningLoctions.length; i++){
-                        if(Math.abs(currentPose.getX()-SwerveConstants.redCubeAligningLoctions[i].getX())<Math.abs(currentPose.getX()-closestLoction.getX())){
-                            closestLoction = SwerveConstants.redCubeAligningLoctions[i];
-                        }
-                    }
-                }
-            }
-        }
-        else{
-            if(currentPose.getY()<SwerveConstants.blueAreWeCloseEnough){
-                if(shouldGripCone.getAsBoolean()){
-                    closestLoction = SwerveConstants.blueConeAligningLoctions[0];
-                    for(int i=1; i<SwerveConstants.blueConeAligningLoctions.length; i++){
-                        if(Math.abs(currentPose.getX()-SwerveConstants.blueConeAligningLoctions[i].getX())<Math.abs(currentPose.getX()-closestLoction.getX())){
-                            closestLoction = SwerveConstants.blueConeAligningLoctions[i];
-                        }
-                    }
-                }
-                else{
-                    closestLoction = SwerveConstants.blueCubeAligningLoctions[0];
-                    for(int i=1; i<SwerveConstants.blueCubeAligningLoctions.length; i++){
-                        if(Math.abs(currentPose.getX()-SwerveConstants.blueCubeAligningLoctions[i].getX())<Math.abs(currentPose.getX()-closestLoction.getX())){
-                            closestLoction = SwerveConstants.blueCubeAligningLoctions[i];
-                        }
-                    }
-                }
-            }
-        }
-        return closestLoction;
+
+        var scoringLocations = shouldGripCone.getAsBoolean() ? SwerveConstants.coneScoringLocations : SwerveConstants.cubeScoringLocations;
+        
+        return currentPose.getTranslation().nearest(scoringLocations);
     }
+        
 }

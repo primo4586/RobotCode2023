@@ -5,11 +5,12 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GripperConstants;
 
 public class Gripper extends SubsystemBase {
-  private WPI_TalonSRX  gripperMotor;
+  private WPI_TalonSRX gripperMotor;
   private PIDController gripperPID;
   private SimpleMotorFeedforward gripperMotorFeedforward;
   private boolean shouldGripCone;
@@ -24,37 +25,37 @@ public class Gripper extends SubsystemBase {
     shouldGripCone = true;
   }
 
-  public boolean getShouldGripCone(){
+  public boolean getShouldGripCone() {
     return this.shouldGripCone;
   }
 
-  public void toggleShouldWeGripACone(){
+  public void toggleShouldWeGripACone() {
     this.shouldGripCone = !shouldGripCone;
   }
 
-  public void putGripperInPose( double setpoint){
-    gripperMotor.setVoltage(gripperPID.calculate(gripperMotor.getSelectedSensorPosition() , setpoint)  + gripperMotorFeedforward.calculate(setpoint));
+  public void putGripperInPose(double setpoint) {
+    gripperMotor.setVoltage(gripperPID.calculate(gripperMotor.getSelectedSensorPosition(), setpoint)
+        + gripperMotorFeedforward.calculate(setpoint));
   }
 
-  //TODO: adjust shit to the gear ratio
-  public Command turnToSetPoint(double setPoint){
-    return run(()->{
+  // TODO: adjust shit to the gear ratio
+  public Command turnToSetPoint(double setPoint) {
+    return run(() -> {
       putGripperInPose(setPoint);
-    }).until(() -> Math.abs(gripperMotor.getSelectedSensorPosition()-setPoint) <= GripperConstants.grippingTolarance);
+    }).until(() -> Math.abs(gripperMotor.getSelectedSensorPosition() - setPoint) <= GripperConstants.grippingTolarance);
   }
 
-  public Command changeWhatWeGrip(){
-    return runOnce(()->{
+  public Command changeWhatWeGrip() {
+    return runOnce(() -> {
       toggleShouldWeGripACone();
     });
-    
+
   }
 
-  public Command gripItem(){
-
-      if(shouldGripCone)
-        return turnToSetPoint(GripperConstants.coneGrabingSetPoint);
-      else
-        return turnToSetPoint(GripperConstants.cubeGrabingSetPoint);
+  public Command gripItem() {
+    return new ConditionalCommand(
+        turnToSetPoint(GripperConstants.coneGrabingSetPoint),
+        turnToSetPoint(GripperConstants.cubeGrabingSetPoint),
+        () -> shouldGripCone);
   }
 }

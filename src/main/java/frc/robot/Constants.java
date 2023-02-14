@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.List;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
@@ -192,12 +194,33 @@ public final class Constants {
         public static final double STATION_PITCH_ANGLE_TOLERANCE = 2.5;
 
         /* where to align Constants */
-        public static final double blueAreWeCloseEnough = 0.0;//TODO: decied what is conciderd close enough
-        public static final double redAreWeCloseEnough = 0.0;//TODO: decied what is conciderd close enough
-        public static final Translation2d[] redConeAligningLoctions = {new Translation2d(0.0,0.0), new Translation2d(0.0,0.0)};
-        public static final Translation2d[] redCubeAligningLoctions = {new Translation2d(0.0,0.0), new Translation2d(0.0,0.0)};
-        public static final Translation2d[] blueConeAligningLoctions = {new Translation2d(0.0,0.0), new Translation2d(0.0,0.0)};
-        public static final Translation2d[] blueCubeAligningLoctions = {new Translation2d(0.0,0.0), new Translation2d(0.0,0.0)};
+        public static final double alignmentToleranceMeters = 0.0;//TODO: decied what is conciderd close enough
+
+        // 3 scoring locations on each side.
+        public static final List<Translation2d> cubeScoringLocations = List.of(new Translation2d[]{
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d()
+        });
+
+        // 6 scoring locations per side.
+        public static final List<Translation2d> coneScoringLocations = List.of(new Translation2d[]{
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+        });
     }
 
     public static final class Misc {
