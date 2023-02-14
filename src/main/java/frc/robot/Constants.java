@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.List;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
@@ -56,13 +58,15 @@ public final class Constants {
 
         public static final double angleTolarance = 0.0;
 
+        //TODO: add setPoints
         public static final double coneUpperSetPoint = 0;
         public static final double coneMiddleSetPoint = 0;
 
         public static final double cubeUpperSetPoint = 0;
         public static final double cubeMiddleSetPoint = 0;
 
-        //TODO: add setPoints
+        public static final double intakeSetPoint = 0.0;
+        public static final double middleOfRobotSetPoint = 0.0;
     }
 
     public static final class SwerveConstants {
@@ -189,6 +193,34 @@ public final class Constants {
         public static final double ALIGN_STATION_SPEED = .2;
         public static final double STATION_PITCH_ANGLE_TOLERANCE = 2.5;
 
+        /* where to align Constants */
+        public static final double alignmentToleranceMeters = 0.0;//TODO: decied what is conciderd close enough
+
+        // 3 scoring locations on each side.
+        public static final List<Translation2d> cubeScoringLocations = List.of(new Translation2d[]{
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d()
+        });
+
+        // 6 scoring locations per side.
+        public static final List<Translation2d> coneScoringLocations = List.of(new Translation2d[]{
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+            new Translation2d(),
+        });
     }
 
     public static final class Misc {
@@ -228,18 +260,18 @@ public final class Constants {
         public static final int PCMID = 0;//TODO change the values
         public static final int lilArmSolenoidID = 0;
 
-        /* LilArm Sensor Port */
-        public static final int sensorID = 0;//TODO change the values
-
         public static final double angleTolarance = 0.0;
 
-        
-        public static final int coneUpperSetPoint = 0;
-        public static final int coneMiddleSetPoint = 0;
+                //TODO: add setPoints
+        public static final double coneUpperSetPoint = 0.0;
+        public static final double coneMiddleSetPoint = 0.0;
 
-        public static final int cubeUpperSetPoint = 0;
-        public static final int cubeMiddleSetPoint = 0;
-        //TODO: add setPoints
+        public static final double cubeUpperSetPoint = 0.0;
+        public static final double cubeMiddleSetPoint = 0.0;
+
+        public static final double intakeSetPoint = 0.0;
+        public static final double middleOfRobotSetPoint = 0.0;
+
     }
 
   
@@ -277,6 +309,6 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
             new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
-      }
+    }
 
 }
