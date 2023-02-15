@@ -4,12 +4,14 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.BigArmConstants;
 
 public class BigArm extends SubsystemBase {
-  private WPI_TalonSRX  bigArmMotor;
+  private WPI_TalonSRX bigArmMotor;
   private PIDController bigArmPID;
   private ArmFeedforward bigArmMotorFeedforward;
 
@@ -20,14 +22,34 @@ public class BigArm extends SubsystemBase {
     bigArmMotor = new WPI_TalonSRX(BigArmConstants.bigArmMotorPort);
   }
 
-  public void putbigArmInPose( double setpoint){
-    //TODO: adjust shit to the gear ratio
-    bigArmMotor.setVoltage(bigArmPID.calculate(bigArmMotor.getSelectedSensorPosition() , setpoint)  + bigArmMotorFeedforward.calculate(setpoint,BigArmConstants.feedForwardVelocity));
+  public void putBigArmInState(TrapezoidProfile.State setpointState) {
+    // TODO: adjust shit to the gear ratio
+    bigArmMotor.setVoltage(bigArmPID.calculate(getCurrentArmAngle(), setpointState.position)
+        + bigArmMotorFeedforward.calculate(setpointState.position, setpointState.velocity));
   }
 
-  public Command turnToSetPoint(double setPoint){
-    return run(()->{
-      putbigArmInPose(setPoint);
-    } ).until(() -> Math.abs(bigArmMotor.getSelectedSensorPosition()-setPoint) <= BigArmConstants.angleTolarance);
+  /**
+   * Turns the arm to the given setpoint.
+   * 
+   * @param setPoint target angle, given in degrees.
+   * @return A command that turn the angle to the setpoint.
+   */
+  public Command turnToSetPoint(double setPoint) {
+    TrapezoidProfile profile = new TrapezoidProfile(BigArmConstants.bigArmProfileConstraints,
+        new TrapezoidProfile.State(setPoint, 0));
+    Timer timer = new Timer();
+    return run(() -> {
+      var state = profile.calculate(timer.get());
+
+      putBigArmInState(state);
+    })
+    .beforeStarting(timer::start, this)
+    .until(() -> Math.abs(this.getCurrentArmAngle() - setPoint) <= BigArmConstants.angleTolarance || profile.isFinished(timer.get()))
+    .finallyDo((interrupted) -> timer.stop());
+  }
+
+  // TODO: Setup conversions according to the encoder's CPR
+  public double getCurrentArmAngle() {
+    return bigArmMotor.getSelectedSensorPosition();
   }
 }

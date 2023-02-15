@@ -47,6 +47,11 @@ public final class Constants {
 
         //bigArm feedforward values
         public static final double feedForwardVelocity = 0.0;
+
+        // TODO: Update these to the arm's real physical constraints.
+        private static final double bigArmMaxSpeed = 0;
+        private static final double bigArmMaxAccel = 0;
+        public static final TrapezoidProfile.Constraints bigArmProfileConstraints = new TrapezoidProfile.Constraints(bigArmMaxSpeed, bigArmMaxAccel);
         private static final double bigArmKs = 0.0;//TODO change th feed forward values
         private static final double bigArmKg = 0.0;
         private static final double bigArmKv = 0.0;
@@ -243,10 +248,14 @@ public final class Constants {
         public static final PIDController lilArmPID = new PIDController(lilArmMotorsKP, lilArmMotorsKI, lilArmMotorsKD);
     
         /* LilArm Feedforward Values */ 
+        // TODO: Update these to the arm's real physical constraints.
+        private static final double lilArmMaxSpeed = 0;
+        private static final double lilArmMaxAccel = 0;
+        public static final TrapezoidProfile.Constraints lilArmProfileConstraints = new TrapezoidProfile.Constraints(lilArmMaxSpeed, lilArmMaxAccel);
+
         public static final double lilArmMotorsKs = 0.0;//TODO change the feedforward values
         public static final double lilArmMotorsKg = 0.0;
         public static final double lilArmMotorsKv = 0.0;
-        public static final double lilArmFeedForwardVelocity = 0.0;
         public static final ArmFeedforward lilArmFeedforward = new ArmFeedforward(lilArmMotorsKs, lilArmMotorsKg, lilArmMotorsKv);
     
         /* LilArm Motors ID */ 
