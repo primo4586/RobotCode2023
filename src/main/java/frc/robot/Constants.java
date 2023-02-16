@@ -72,6 +72,7 @@ public final class Constants {
 
         public static final double intakeSetPoint = 0.0;
         public static final double middleOfRobotSetPoint = 0.0;
+        public static final double groundSetPoint = 0.0;
     }
 
     public static final class SwerveConstants {
@@ -280,6 +281,7 @@ public final class Constants {
 
         public static final double intakeSetPoint = 0.0;
         public static final double middleOfRobotSetPoint = 0.0;
+        public static final double groundSetPoint = 0.0;
 
     }
 
