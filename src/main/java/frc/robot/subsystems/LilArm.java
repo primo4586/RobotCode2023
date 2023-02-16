@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,6 +35,8 @@ public class LilArm extends SubsystemBase {
 
     rightLilArmMotor.setInverted(true);
 
+    Preferences.initDouble(LilArmConstants.armPostionKey, 0.0);//TODO: change defult pose
+    leftLilArmMotor.setSelectedSensorPosition(Preferences.getDouble(LilArmConstants.armPostionKey, 0.0));
   }
 
   public void toggleSolenoidState() {
