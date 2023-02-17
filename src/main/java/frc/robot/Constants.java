@@ -29,7 +29,7 @@ public final class Constants {
 
         public static final double gripperGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
 
-        public static final int gripperMotorPort = 17;
+        public static final int gripperMotorPort = 11;
 
         public static final double cubeGrabingSetPoint = 0.0;//TODO change the set points
         public static final double coneGrabingSetPoint = 0.0;
@@ -59,7 +59,7 @@ public final class Constants {
 
         public static final double bigArmGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
 
-        public static final int bigArmMotorPort = 5;
+        public static final int bigArmMotorPort = 4;
 
         public static final double angleTolarance = 0.0;
 
@@ -76,7 +76,7 @@ public final class Constants {
 
     public static final class SwerveConstants {
         /* Gyro ID (Changes Per Robot) */
-        public static final int pigeonID = 3;
+        public static final int pigeonID = 18;
 
         /* Invert gyro if necessary (Changes Per Robot) */
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
@@ -166,7 +166,7 @@ public final class Constants {
         }
         /* Front Right Module - Module 1 */
         public static final class FrontRightModule {
-            public static final int driveMotorID = 0;
+            public static final int driveMotorID = 1;
             public static final int angleMotorID = 10;
             public static final int canCoderID = 13;
             public static final double angleOffset = 325.8;
@@ -259,15 +259,15 @@ public final class Constants {
         public static final ArmFeedforward lilArmFeedforward = new ArmFeedforward(lilArmMotorsKs, lilArmMotorsKg, lilArmMotorsKv);
     
         /* LilArm Motors ID */ 
-        public static final int leftLilMotorID = 18;
-        public static final int rightLilMotorID = 3;
+        public static final int leftLilMotorID = 3;
+        public static final int rightLilMotorID = 17;
 
         /* LilArm Motors Gear Ratio */
         public static final double lilMotorGearRatio = 0;//TODO change the values
 
         /* LilArm Solenoid Ports */
-        public static final int PCMID = 0;//TODO change the values
-        public static final int lilArmSolenoidID = 0;
+        public static final int PCMID = 1;
+        public static final int lilArmSolenoidID = 7;
 
         public static final double angleTolarance = 0.0;
 
