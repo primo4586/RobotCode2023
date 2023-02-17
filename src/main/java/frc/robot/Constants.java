@@ -27,7 +27,7 @@ public final class Constants {
         public static final double gripperKv = 0.0;
         public static final SimpleMotorFeedforward gripperFeedforward = new SimpleMotorFeedforward(gripperKs, gripperKv);
 
-        public static final double gripperGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
+        public static final double gripperGearRatio = 100 / 1;
 
         public static final int gripperMotorPort = 11;
 
@@ -57,7 +57,7 @@ public final class Constants {
         private static final double bigArmKv = 0.0;
         public static final ArmFeedforward bigArmFeedforward = new ArmFeedforward(bigArmKs, bigArmKg, bigArmKv);
 
-        public static final double bigArmGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
+        public static final double bigArmGearRatio = 3000 / 1;// (60 Gear to 50 gear = 60 * 50 = 3000 - god knows why) 
 
         public static final int bigArmMotorPort = 4;
 
@@ -164,7 +164,7 @@ public final class Constants {
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
         }
-        /* Front Right Module - Module 1 */
+        /* Front Right Module - Module 1  */
         public static final class FrontRightModule {
             public static final int driveMotorID = 1;
             public static final int angleMotorID = 10;
@@ -263,7 +263,7 @@ public final class Constants {
         public static final int rightLilMotorID = 17;
 
         /* LilArm Motors Gear Ratio */
-        public static final double lilMotorGearRatio = 0;//TODO change the values
+        public static final double lilMotorGearRatio = 2.5 / 1;//TODO change the values
 
         /* LilArm Solenoid Ports */
         public static final int PCMID = 1;
