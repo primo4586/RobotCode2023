@@ -35,7 +35,6 @@ public class LilArm extends SubsystemBase {
 
     rightLilArmMotor.setInverted(true);
 
-    Preferences.initDouble(LilArmConstants.armPostionKey, LilArmConstants.defultArmPose);//TODO: change defult pose
     leftLilArmMotor.setSelectedSensorPosition(Preferences.getDouble(LilArmConstants.armPostionKey, LilArmConstants.defultArmPose));
   }
 
