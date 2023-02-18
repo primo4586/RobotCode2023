@@ -1,6 +1,7 @@
 package frc.robot.commands.autoCommands;
 
-import java.util.function.BooleanSupplier;
+
+import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -10,20 +11,21 @@ import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
+import frc.robot.subsystems.Swerve;
 
 public class GamePieceThenDriveBack extends SequentialCommandGroup {
-  public GamePieceThenDriveBack(Gripper gripper, BigArm bigArm, LilArm lilArm, BooleanSupplier shouldPutInUpper) {
+  public GamePieceThenDriveBack(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm, Boolean shouldPutInUpper, PathPlannerTrajectory trajectory) {
 
     PutItemInTheMiddle putItemInTheMiddle = new PutItemInTheMiddle(lilArm, bigArm, gripper);
     PutItemInTheUpper putItemInTheUpper = new PutItemInTheUpper(bigArm, lilArm, gripper);
 
-    ConditionalCommand puttingItemInPlace = new ConditionalCommand(putItemInTheUpper, putItemInTheMiddle, shouldPutInUpper);
+    ConditionalCommand puttingItemInPlace = new ConditionalCommand(putItemInTheUpper, putItemInTheMiddle, () -> shouldPutInUpper);
 
     MoveArmsToTheGround moveArmsToTheGround = new MoveArmsToTheGround(gripper, lilArm, bigArm);
 
     addCommands(
       puttingItemInPlace,
-      //add driving back
+      swerve.followTrajectoryModifiedToAlliance(trajectory, true),
       moveArmsToTheGround
     );
   }

@@ -3,6 +3,8 @@ package frc.robot;
 import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.pathplanner.lib.PathConstraints;
+
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -307,9 +309,11 @@ public final class Constants {
     public static final class AutoConstants {
         // Self-explanatory, Limits for speed (linear velocity) and speed of rotation (angular velocity)
         public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 1.5;
         public static final double kMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared =  3* Math.PI;
+        public static final PathConstraints pathConstraints = new PathConstraints(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared);
+        
     
         public static final double kPXController = 1;
         public static final double kPYController = 1;
