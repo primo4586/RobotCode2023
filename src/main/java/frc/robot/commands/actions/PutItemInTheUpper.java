@@ -33,7 +33,7 @@ public class PutItemInTheUpper extends SequentialCommandGroup {
       closeSolenoid,
       putArmsInUpperSetPoint,
       lilArm.toggleLilArmSolenoid(),
-      gripper.turnToSetPoint(GripperConstants.openGripperSetPoint)
+      gripper.ToggleGripper()
     );
   }
 }

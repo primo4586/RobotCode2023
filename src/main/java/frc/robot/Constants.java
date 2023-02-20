@@ -36,6 +36,9 @@ public final class Constants {
         public static final double openGripperSetPoint = 0.0;
 
         public static final double grippingTolarance = 0.0;
+
+        public static final int solenoidID = 0;
+        public static final int PCMID = 1;
     }
 
     public static final class BigArmConstants{

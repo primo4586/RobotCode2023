@@ -32,7 +32,7 @@ public class PutItemInTheMiddle extends SequentialCommandGroup {
       closeSolenoid,
       putArmsInMiddleSetPoint,
       lilArm.toggleLilArmSolenoid(),
-      gripper.turnToSetPoint(GripperConstants.openGripperSetPoint)
+      gripper.ToggleGripper()
     );
   }
 }

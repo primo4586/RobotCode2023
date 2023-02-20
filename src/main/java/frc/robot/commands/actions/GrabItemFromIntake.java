@@ -22,10 +22,13 @@ public class GrabItemFromIntake extends SequentialCommandGroup {
    MoveArmsToSetPoints moveArmsToIntake = new MoveArmsToSetPoints(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint);
    MoveArmsToSetPoints moveArmsToMiddleOfBot = new MoveArmsToSetPoints(bigArm, BigArmConstants.middleOfRobotSetPoint, lilArm, LilArmConstants.middleOfRobotSetPoint);
 
+   ConditionalCommand openGripper = new ConditionalCommand(gripper.ToggleGripper(), Commands.none(),()-> gripper.isGripperOpen());
+
    addCommands(
      closeSolenoid,
+     openGripper,
      moveArmsToIntake,
-     gripper.gripItem(),
+     gripper.ToggleGripper(),
      moveArmsToMiddleOfBot
    );
   }
