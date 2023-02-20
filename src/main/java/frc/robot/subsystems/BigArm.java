@@ -1,10 +1,13 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,12 +17,15 @@ public class BigArm extends SubsystemBase {
   private WPI_TalonSRX bigArmMotor;
   private PIDController bigArmPID;
   private ArmFeedforward bigArmMotorFeedforward;
+  private DigitalInput honeSwitch;
 
   public BigArm() {
     bigArmPID = BigArmConstants.bigArmPID;
     bigArmMotorFeedforward = BigArmConstants.bigArmFeedforward;
 
     bigArmMotor = new WPI_TalonSRX(BigArmConstants.bigArmMotorPort);
+
+    honeSwitch = new DigitalInput(BigArmConstants.honeSwitchID);
   }
 
   public void putBigArmInState(TrapezoidProfile.State setpointState) {
@@ -51,5 +57,20 @@ public class BigArm extends SubsystemBase {
   // TODO: Setup conversions according to the encoder's CPR
   public double getCurrentArmAngle() {
     return bigArmMotor.getSelectedSensorPosition();
+  }
+
+  public Command HoneEnd(){
+    return runOnce(()->{ 
+      bigArmMotor.setSelectedSensorPosition(BigArmConstants.honeSetPoint);
+      bigArmMotor.set(0.0);
+    });
+  }
+
+  public Command Hone(){
+    return run(()->{
+      bigArmMotor.set(BigArmConstants.honeSpeed);
+    })
+    .until(()->honeSwitch.get())
+    .andThen(HoneEnd());
   }
 }

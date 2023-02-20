@@ -72,6 +72,10 @@ public final class Constants {
 
         public static final double intakeSetPoint = 0.0;
         public static final double middleOfRobotSetPoint = 0.0;
+
+        public static final double honeSpeed = 0.0;
+        public static final double honeSetPoint = 0.0;
+        public static final int honeSwitchID = 0;
     }
 
     public static final class SwerveConstants {
