@@ -485,5 +485,17 @@ public class Swerve extends SubsystemBase {
         
         return currentPose.getTranslation().nearest(scoringLocations);
     }
+
+    public void lockWheelsChargeStation() {
+        for (SwerveModule module : mSwerveMods) {
+            module.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), true);
+        }
+    }
+
+    public Command LockWheelsChargeStation(){
+        return run(()->{
+            lockWheelsChargeStation();
+        });
+    }
         
 }
