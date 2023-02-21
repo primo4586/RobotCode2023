@@ -201,7 +201,8 @@ public class Swerve extends SubsystemBase {
         return (Constants.SwerveConstants.invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0])
                 : Rotation2d.fromDegrees(ypr[0]);
     }
-    public double getPitch(){
+
+    public double getPitch() {
         double[] ypr = new double[3];
         gyro.getYawPitchRoll(ypr);
         return ypr[1];
@@ -315,9 +316,10 @@ public class Swerve extends SubsystemBase {
      * This depends on {@link VisionPoseEstimator}! Without a vision pose estimator
      * set, you cannot have a trajectory made to a tag!
      * 
-     * @param tagID         ID Number of the tag.
-     * @param goalOffsetFromTag Relative offset from the AprilTag's position as the goal
-     *                      position to arrive at.
+     * @param tagID             ID Number of the tag.
+     * @param goalOffsetFromTag Relative offset from the AprilTag's position as the
+     *                          goal
+     *                          position to arrive at.
      * @return A trajectory to follow from the robot's current position to the goal
      *         position
      */
@@ -405,23 +407,20 @@ public class Swerve extends SubsystemBase {
 
     /**
      * Follows a given trajectory from PathPlanner
+     * In 2023, the field is rotationally asymetric,
+     * as a cause of that trajectories have to flip if
+     * you're on the red side. This follow trajectory
+     * command accounts for that.
      * 
      * @param trajectory          Trajectory to follow
      * @param shouldResetOdometry Should odometry be reset before following the
      *                            trajectory or not
      * 
-     * @param useAllianceColor    Should the trajectory change based on alliance.
-     *                            In 2023, the field is rotationally asymetric,
-     *                            as a cause of that trajectories have to flip if
-     *                            you're on the red side. This follow trajectory
-     *                            command accounts for that.
-     * 
      * @return ProxyCommand which regenerates the command so that on
      *         the start auto, we would have the Driver Station data to know
      *         what alliance we are, and flip the trajectory if necessary.
      */
-    public Command followTrajectory(PathPlannerTrajectory trajectory, boolean shouldResetOdometry,
-            boolean useAllianceColor) {
+    public Command followTrajectoryModifiedToAlliance(PathPlannerTrajectory trajectory, boolean shouldResetOdometry) {
 
         Supplier<Command> followCommandSupplier = () -> {
             // Modifies trajectory in case we need to because of our alliance
@@ -433,9 +432,10 @@ public class Swerve extends SubsystemBase {
 
         return new ProxyCommand(followCommandSupplier);
     }
-    
-     /**
+
+    /**
      * Auto-aligns the robot to a given setpoint degree
+     * 
      * @param degrees degree to align the robot to
      * @return a command that aligns the robot until its' aligned.
      */
@@ -450,39 +450,36 @@ public class Swerve extends SubsystemBase {
                     false,
                     false);
         })
-        .until(() -> pid.atSetpoint())
-        .finallyDo((interrupted) -> pid.close());
-        }
+                .until(() -> pid.atSetpoint())
+                .finallyDo((interrupted) -> pid.close());
+    }
 
-        
-    public Command chargeStationAlign(){
-        return run(()-> {
+    public Command chargeStationAlign() {
+        return run(() -> {
             Translation2d moveDirection = new Translation2d();
 
-            if(getPitch() > SwerveConstants.STATION_PITCH_ANGLE_TOLERANCE)
-            {
-                moveDirection= new Translation2d(SwerveConstants.ALIGN_STATION_SPEED,0.0); //Vroom vroom positive
-            } else if (getPitch() < -SwerveConstants.STATION_PITCH_ANGLE_TOLERANCE)
-            {
-                moveDirection= new Translation2d(-SwerveConstants.ALIGN_STATION_SPEED,0.0);  // Vroom vroom negative
+            if (getPitch() > SwerveConstants.STATION_PITCH_ANGLE_TOLERANCE) {
+                moveDirection = new Translation2d(SwerveConstants.ALIGN_STATION_SPEED, 0.0); // Vroom vroom positive
+            } else if (getPitch() < -SwerveConstants.STATION_PITCH_ANGLE_TOLERANCE) {
+                moveDirection = new Translation2d(-SwerveConstants.ALIGN_STATION_SPEED, 0.0); // Vroom vroom negative
 
             }
-            
+
             drive(
                     moveDirection,
                     0,
                     true,
                     false);
         })
-        .until(() -> Math.abs(getPitch()) < SwerveConstants.STATION_PITCH_ANGLE_TOLERANCE);
+                .until(() -> Math.abs(getPitch()) < SwerveConstants.STATION_PITCH_ANGLE_TOLERANCE);
     }
 
-    
-    public Translation2d whereToAlign(BooleanSupplier shouldGripCone){
+    public Translation2d whereToAlign(BooleanSupplier shouldGripCone) {
         Pose2d currentPose = getPose();
 
-        var scoringLocations = shouldGripCone.getAsBoolean() ? SwerveConstants.coneScoringLocations : SwerveConstants.cubeScoringLocations;
-        
+        var scoringLocations = shouldGripCone.getAsBoolean() ? SwerveConstants.coneScoringLocations
+                : SwerveConstants.cubeScoringLocations;
+
         return currentPose.getTranslation().nearest(scoringLocations);
     }
     
