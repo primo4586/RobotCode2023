@@ -29,9 +29,9 @@ public final class Constants {
         public static final double gripperKv = 0.0;
         public static final SimpleMotorFeedforward gripperFeedforward = new SimpleMotorFeedforward(gripperKs, gripperKv);
 
-        public static final double gripperGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
+        public static final double gripperGearRatio = 100 / 1;
 
-        public static final int gripperMotorPort = 17;
+        public static final int gripperMotorPort = 11;
 
         public static final double cubeGrabingSetPoint = 0.0;//TODO change the set points
         public static final double coneGrabingSetPoint = 0.0;
@@ -59,9 +59,9 @@ public final class Constants {
         private static final double bigArmKv = 0.0;
         public static final ArmFeedforward bigArmFeedforward = new ArmFeedforward(bigArmKs, bigArmKg, bigArmKv);
 
-        public static final double bigArmGearRatio = 0.0;//TODO ask israel what is the gear ratio and change it
+        public static final double bigArmGearRatio = 3000 / 1;// (60 Gear to 50 gear = 60 * 50 = 3000 - god knows why) 
 
-        public static final int bigArmMotorPort = 5;
+        public static final int bigArmMotorPort = 4;
 
         public static final double angleTolarance = 0.0;
 
@@ -79,7 +79,7 @@ public final class Constants {
 
     public static final class SwerveConstants {
         /* Gyro ID (Changes Per Robot) */
-        public static final int pigeonID = 3;
+        public static final int pigeonID = 18;
 
         /* Invert gyro if necessary (Changes Per Robot) */
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
@@ -167,9 +167,9 @@ public final class Constants {
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
         }
-        /* Front Right Module - Module 1 */
+        /* Front Right Module - Module 1  */
         public static final class FrontRightModule {
-            public static final int driveMotorID = 0;
+            public static final int driveMotorID = 1;
             public static final int angleMotorID = 10;
             public static final int canCoderID = 13;
             public static final double angleOffset = 325.8;
@@ -262,15 +262,15 @@ public final class Constants {
         public static final ArmFeedforward lilArmFeedforward = new ArmFeedforward(lilArmMotorsKs, lilArmMotorsKg, lilArmMotorsKv);
     
         /* LilArm Motors ID */ 
-        public static final int leftLilMotorID = 18;
-        public static final int rightLilMotorID = 3;
+        public static final int leftLilMotorID = 3;
+        public static final int rightLilMotorID = 17;
 
         /* LilArm Motors Gear Ratio */
-        public static final double lilMotorGearRatio = 0;//TODO change the values
+        public static final double lilMotorGearRatio = 2.5 / 1;//TODO change the values
 
         /* LilArm Solenoid Ports */
-        public static final int PCMID = 0;//TODO change the values
-        public static final int lilArmSolenoidID = 0;
+        public static final int PCMID = 1;
+        public static final int lilArmSolenoidID = 7;
 
         public static final double angleTolarance = 0.0;
 
@@ -285,6 +285,8 @@ public final class Constants {
         public static final double middleOfRobotSetPoint = 0.0;
         public static final double groundSetPoint = 0.0;
 
+        public static final String armPostionKey = "lilArmPostionKey";
+        public static final double defultArmPose = 0.0;
     }
 
   
