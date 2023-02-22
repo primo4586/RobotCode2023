@@ -37,8 +37,11 @@ public final class Constants {
 
         public static final double grippingTolarance = 0.0;
 
-        public static final int solenoidID = 0;
+        public static final int solenoidOpenID = 3;
+        public static final int solenoidCloseID = 5;
         public static final int PCMID = 1;
+
+        public static final int isGripperOpenID = 2;//TODO
     }
 
     public static final class BigArmConstants{
@@ -262,7 +265,7 @@ public final class Constants {
         public static final ArmFeedforward lilArmFeedforward = new ArmFeedforward(lilArmMotorsKs, lilArmMotorsKg, lilArmMotorsKv);
     
         /* LilArm Motors ID */ 
-        public static final int leftLilMotorID = 3;
+        public static final int leftLilMotorID = 18;
         public static final int rightLilMotorID = 17;
 
         /* LilArm Motors Gear Ratio */
@@ -270,7 +273,7 @@ public final class Constants {
 
         /* LilArm Solenoid Ports */
         public static final int PCMID = 1;
-        public static final int lilArmSolenoidID = 7;
+        public static final int lilArmSolenoidID = 4;
 
         public static final double angleTolarance = 0.0;
 

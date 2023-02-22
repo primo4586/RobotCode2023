@@ -1,26 +1,37 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GripperConstants;
 
 public class Gripper extends SubsystemBase {
   private boolean shouldGripCone;
-  private Solenoid gripperSolenoid;
+  private Solenoid gripperOpenSolenoid;
+  private Solenoid gripperCloseSolenoid;
+  private DigitalInput isGripperOpen;
 
   /** Creates a new Gripper. */
   public Gripper() {
 
     shouldGripCone = true;
 
-    gripperSolenoid = new Solenoid(GripperConstants.PCMID, PneumaticsModuleType.CTREPCM, GripperConstants.solenoidID);
+    gripperOpenSolenoid = new Solenoid(GripperConstants.PCMID, PneumaticsModuleType.CTREPCM, GripperConstants.solenoidOpenID);
+    gripperCloseSolenoid = new Solenoid(GripperConstants.PCMID, PneumaticsModuleType.CTREPCM, GripperConstants.solenoidCloseID);
+    if (shouldGripCone){
+      gripperOpenSolenoid.set(false);
+      gripperCloseSolenoid.set(true);
+    }
+    else{
+      gripperOpenSolenoid.set(false);
+      gripperCloseSolenoid.set(false);
+    }
+
+    isGripperOpen = new DigitalInput(GripperConstants.isGripperOpenID);
+    
   }
 
   public boolean getShouldGripCone() {
@@ -32,12 +43,26 @@ public class Gripper extends SubsystemBase {
   }
 
   public boolean isGripperOpen(){
-    return gripperSolenoid.get();
+    return isGripperOpen.get();
   }
 
-  public Command ToggleGripper(){
+  public Command openGripper(){
     return runOnce(()->{
-      gripperSolenoid.toggle();
+        gripperCloseSolenoid.set(false);
+        gripperOpenSolenoid.set(true);
+    });
+  }
+
+  public Command closeGripper(){
+    return runOnce(()->{
+      if (this.shouldGripCone){
+        gripperCloseSolenoid.set(true);
+        gripperOpenSolenoid.set(false);
+      }
+      else{
+        gripperCloseSolenoid.set(false);
+        gripperOpenSolenoid.set(false);
+      }
     });
   }
 

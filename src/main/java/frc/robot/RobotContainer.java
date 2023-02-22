@@ -35,11 +35,10 @@ public class RobotContainer {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   /* Subsystems */
-  private final Swerve swerve = new Swerve();
-
+  private Swerve swerve = new Swerve();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
+  public RobotContainer(Gripper gripper, LilArm lilArm) {
     boolean fieldRelative = true;
     boolean openLoop = true;
 
@@ -49,7 +48,7 @@ public class RobotContainer {
     swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
 
     // Configure the button bindings
-    configureButtonBindings();
+    configureButtonBindings(gripper, lilArm);
   }
 
   /**
@@ -58,14 +57,17 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {
+  private void configureButtonBindings(Gripper gripper, LilArm lilArm ) {
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
 
     // Example tag ID position to go for, & the translation offset from the tag's position
-    driverController.b().onTrue(swerve.followTrajectoryToTag(1, new Translation2d(1, 0))); 
+    //driverController.b().onTrue(swerve.followTrajectoryToTag(1, new Translation2d(1, 0))); 
     // NOTE: This is not fully tested - will need tuning of the PID before using!
 	  driverController.leftTrigger().whileTrue(swerve.gyroAlignCommand(45));
+    driverController.x().onTrue(gripper.changeWhatWeGrip());
+    driverController.a().onTrue(gripper.openGripper());
+    driverController.b().onTrue(gripper.closeGripper());
   }
 
   /** 

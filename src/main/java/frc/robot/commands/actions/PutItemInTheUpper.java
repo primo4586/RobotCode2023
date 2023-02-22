@@ -18,10 +18,6 @@ import frc.robot.subsystems.LilArm;
 public class PutItemInTheUpper extends SequentialCommandGroup {
   /** Creates a new putItemInPlace.  */
   public PutItemInTheUpper(BigArm bigArm, LilArm lilArm, Gripper gripper) {
-    
-    //closes the solenoid
-    ConditionalCommand closeSolenoid = new ConditionalCommand(lilArm.toggleLilArmSolenoid(), Commands.none(), lilArm::isSolenoidOpen);
-
     //cone and cube setPoints
     MoveArmsToSetPoints coneUpperSetPoint = new MoveArmsToSetPoints(bigArm, BigArmConstants.coneUpperSetPoint, lilArm, LilArmConstants.coneUpperSetPoint);
     MoveArmsToSetPoints cubeUpperSetPoint = new MoveArmsToSetPoints(bigArm, BigArmConstants.cubeUpperSetPoint, lilArm, LilArmConstants.cubeUpperSetPoint);
@@ -30,10 +26,10 @@ public class PutItemInTheUpper extends SequentialCommandGroup {
     ConditionalCommand putArmsInUpperSetPoint = new ConditionalCommand(coneUpperSetPoint, cubeUpperSetPoint, gripper::getShouldGripCone);
 
     addCommands(
-      closeSolenoid,
+      lilArm.closeLilArmSolenoid(),
       putArmsInUpperSetPoint,
-      lilArm.toggleLilArmSolenoid(),
-      gripper.ToggleGripper()
+      lilArm.openLilArmSolenoid(),
+      gripper.openGripper()
     );
   }
 }
