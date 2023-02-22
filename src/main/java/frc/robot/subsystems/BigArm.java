@@ -62,7 +62,8 @@ public class BigArm extends SubsystemBase {
       bigArmMotor.set(BigArmConstants.honeSpeed);
     })
     .until(()->honeSwitch.get())
-    .andThen(()->bigArmMotor.set(0.0))
-    .andThen(()->bigArmMotor.setSelectedSensorPosition(BigArmConstants.honeSetPoint));
+    .andThen(()->{bigArmMotor.set(0.0);
+      bigArmMotor.setSelectedSensorPosition(BigArmConstants.honeSetPoint);
+    });
   }
 }
