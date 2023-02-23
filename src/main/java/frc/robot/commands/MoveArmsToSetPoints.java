@@ -11,9 +11,10 @@ import frc.robot.subsystems.LilArm;
 public class MoveArmsToSetPoints extends ParallelCommandGroup {
   public MoveArmsToSetPoints(BigArm bigArm, Double setPointBigArm, LilArm lilArm, Double setPointLilArm) {
 
+  
     addCommands(
-      bigArm.PutBigArmInPlace(setPointBigArm),
-     lilArm.turnToSetPoint(setPointLilArm)
-      );
+      bigArm.TurnBigArmToSetpoint(setPointBigArm),
+      lilArm.TurnLilArmToSetpoint(setPointLilArm)
+    );
   }
 }

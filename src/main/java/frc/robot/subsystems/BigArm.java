@@ -34,7 +34,7 @@ public class BigArm extends SubsystemBase {
     bigArmMotor.setVoltage(-bigArmPID.calculate(getCurrentArmAngle(), setPoint));
   }
 
-  public Command PutBigArmInPlace(double setPoint){
+  public Command TurnBigArmToSetpoint(double setPoint){
     return run(()->{
       putBigArmInPlace(setPoint);
     })

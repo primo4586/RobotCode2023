@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
+import org.opencv.core.Mat;
+
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -12,6 +15,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -36,7 +40,7 @@ public class LilArm extends SubsystemBase {
     lilArmSolenoid = new Solenoid(LilArmConstants.PCMID, PneumaticsModuleType.CTREPCM,
         LilArmConstants.lilArmSolenoidID);
 
-    lilArmMotor.setSelectedSensorPosition(Preferences.getDouble(LilArmConstants.armPostionKey, LilArmConstants.defultArmPose));
+    lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
   }
 
   public void toggleSolenoidState() {
@@ -54,31 +58,17 @@ public class LilArm extends SubsystemBase {
     });
   }
 
-  // TODO: adjust shit to the gear ratio
-  public void putLilArmInState(TrapezoidProfile.State setpointState) {
-    lilArmMotor.setVoltage(lilArmPID.calculate(getCurrentArmAngle(), setpointState.position)
-        + lilArmFeedforward.calculate(setpointState.position, setpointState.velocity));
+  public void putArmInPlace(double setpoint) {
+    SmartDashboard.putNumber("LilArm PID Output", lilArmPID.calculate(getCurrentArmAngle(), setpoint));
+    lilArmMotor.setVoltage(lilArmPID.calculate(getCurrentArmAngle(), setpoint));
   }
 
-  /**
-   * Turns the arm to the given setpoint.
-   * 
-   * @param setPoint target angle, given in degrees.
-   * @return A command that turn the angle to the setpoint.
-   */
-  public Command turnToSetPoint(double setPoint) {
-    TrapezoidProfile profile = new TrapezoidProfile(LilArmConstants.lilArmProfileConstraints,
-        new TrapezoidProfile.State(setPoint, 0));
-    Timer timer = new Timer();
+  public Command TurnLilArmToSetpoint(double setpoint) {
+    SmartDashboard.putNumber("LilArm Setpoint", setpoint);
     return run(() -> {
-      var state = profile.calculate(timer.get());
-
-      putLilArmInState(state);
+        putArmInPlace(setpoint);
     })
-        .beforeStarting(timer::start, this)
-        .until(() -> Math.abs(this.getCurrentArmAngle() - setPoint) <= LilArmConstants.angleTolarance
-            || profile.isFinished(timer.get()))
-        .finallyDo((interrupted) -> timer.stop());
+    .until(() -> (Math.abs(getCurrentArmAngle() - setpoint) <= LilArmConstants.ticksTolerance));
   }
 
   // TODO: Setup conversions according to the encoder's CPR
@@ -90,5 +80,10 @@ public class LilArm extends SubsystemBase {
     return runOnce(() -> {
       toggleSolenoidState();
     });
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Motor Encoder Talon", lilArmEncoder.getSelectedSensorPosition());
   }
 }
