@@ -42,9 +42,9 @@ public final class Constants {
 
     public static final class BigArmConstants{
         //bigArm PID values
-        private static final double bigArmKP = 0.0;//TODO change the PID values
+        private static final double bigArmKP = 0.001;//TODO change the PID values
         private static final double bigArmKI = 0.0;
-        private static final double bigArmKD = 0.0;
+        private static final double bigArmKD = 0.0001;
         public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
 
         //bigArm feedforward values
@@ -63,7 +63,7 @@ public final class Constants {
 
         public static final int bigArmMotorPort = 4;
 
-        public static final double angleTolarance = 0.0;
+        public static final double ticksTolerance = 1000;
 
         //TODO: add setPoints
         public static final double coneUpperSetPoint = 0;
@@ -266,11 +266,12 @@ public final class Constants {
         public static final ArmFeedforward lilArmFeedforward = new ArmFeedforward(lilArmMotorsKs, lilArmMotorsKg, lilArmMotorsKv);
     
         /* LilArm Motors ID */ 
-        public static final int leftLilMotorID = 3;
-        public static final int rightLilMotorID = 17;
+        public static final int lilArmMotorID = 18;
+
+        public static final int lilArmEncoderID = 3;
 
         /* LilArm Motors Gear Ratio */
-        public static final double lilMotorGearRatio = 2.5 / 1;//TODO change the values
+        public static final double lilMotorGearRatio = 6000 / 1;//TODO change the values
 
         /* LilArm Solenoid Ports */
         public static final int PCMID = 1;

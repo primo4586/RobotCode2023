@@ -1,10 +1,13 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -15,8 +18,8 @@ import frc.robot.Constants;
 import frc.robot.Constants.LilArmConstants;
 
 public class LilArm extends SubsystemBase {
-  private WPI_TalonSRX leftLilArmMotor;
-  private WPI_TalonSRX rightLilArmMotor;
+  private WPI_TalonSRX lilArmMotor;
+  private WPI_TalonSRX lilArmEncoder;
 
   private Solenoid lilArmSolenoid;
 
@@ -28,14 +31,12 @@ public class LilArm extends SubsystemBase {
     lilArmPID = LilArmConstants.lilArmPID;
     lilArmFeedforward = LilArmConstants.lilArmFeedforward;
 
-    leftLilArmMotor = new WPI_TalonSRX(Constants.LilArmConstants.leftLilMotorID);
-    rightLilArmMotor = new WPI_TalonSRX(Constants.LilArmConstants.rightLilMotorID);
+    lilArmEncoder = new WPI_TalonSRX(LilArmConstants.lilArmEncoderID);
+    lilArmMotor = new WPI_TalonSRX(LilArmConstants.lilArmMotorID);
     lilArmSolenoid = new Solenoid(LilArmConstants.PCMID, PneumaticsModuleType.CTREPCM,
         LilArmConstants.lilArmSolenoidID);
 
-    rightLilArmMotor.setInverted(true);
-
-    leftLilArmMotor.setSelectedSensorPosition(Preferences.getDouble(LilArmConstants.armPostionKey, LilArmConstants.defultArmPose));
+    lilArmMotor.setSelectedSensorPosition(Preferences.getDouble(LilArmConstants.armPostionKey, LilArmConstants.defultArmPose));
   }
 
   public void toggleSolenoidState() {
@@ -46,11 +47,16 @@ public class LilArm extends SubsystemBase {
     return lilArmSolenoid.get();
   }
 
+  public Command setMotorSpeed(DoubleSupplier supplier) {
+    return this.run(() -> {
+
+      lilArmMotor.set(supplier.getAsDouble() * 0.5);
+    });
+  }
+
   // TODO: adjust shit to the gear ratio
   public void putLilArmInState(TrapezoidProfile.State setpointState) {
-    leftLilArmMotor.setVoltage(lilArmPID.calculate(getCurrentArmAngle(), setpointState.position)
-        + lilArmFeedforward.calculate(setpointState.position, setpointState.velocity));
-    rightLilArmMotor.setVoltage(lilArmPID.calculate(getCurrentArmAngle(), setpointState.position)
+    lilArmMotor.setVoltage(lilArmPID.calculate(getCurrentArmAngle(), setpointState.position)
         + lilArmFeedforward.calculate(setpointState.position, setpointState.velocity));
   }
 
@@ -77,7 +83,7 @@ public class LilArm extends SubsystemBase {
 
   // TODO: Setup conversions according to the encoder's CPR
   public double getCurrentArmAngle() {
-    return leftLilArmMotor.getSelectedSensorPosition();
+    return lilArmEncoder.getSelectedSensorPosition();
   }
 
   public Command toggleLilArmSolenoid() {

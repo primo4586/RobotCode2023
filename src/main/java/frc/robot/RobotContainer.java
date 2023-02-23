@@ -39,17 +39,18 @@ public class RobotContainer {
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer(BigArm bigArm) {
+  public RobotContainer(BigArm bigArm, LilArm lilArm) {
     boolean fieldRelative = true;
     boolean openLoop = true;
 
     VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(PoseStrategy.LOWEST_AMBIGUITY);
     swerve.setVisionPoseEstimator(visionPoseEstimator);
+    bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> driverController.getRightY()));
 
-    swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
+    //swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
 
     // Configure the button bindings
-    configureButtonBindings(bigArm);
+    configureButtonBindings(bigArm, lilArm);
   }
 
   /**
@@ -58,14 +59,17 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings(BigArm bigArm) {
+  private void configureButtonBindings(BigArm bigArm, LilArm lilArm) {
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
 
     // Example tag ID position to go for, & the translation offset from the tag's position
-    driverController.b().onTrue(swerve.followTrajectoryToTag(1, new Translation2d(1, 0))); 
+    //driverController.b().onTrue(swerve.followTrajectoryToTag(1, new Translation2d(1, 0))); 
     // NOTE: This is not fully tested - will need tuning of the PID before using!
 	  driverController.leftTrigger().whileTrue(swerve.gyroAlignCommand(45));
+
+    driverController.b().onTrue(bigArm.Hone());
+    driverController.a().onTrue(bigArm.PutBigArmInPlace(44035));
   }
 
   /** 

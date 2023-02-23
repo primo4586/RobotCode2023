@@ -12,7 +12,7 @@ public class MoveArmsToSetPoints extends ParallelCommandGroup {
   public MoveArmsToSetPoints(BigArm bigArm, Double setPointBigArm, LilArm lilArm, Double setPointLilArm) {
 
     addCommands(
-      bigArm.turnToSetPoint(setPointBigArm),
+      bigArm.PutBigArmInPlace(setPointBigArm),
      lilArm.turnToSetPoint(setPointLilArm)
       );
   }
