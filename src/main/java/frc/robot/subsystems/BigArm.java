@@ -57,11 +57,15 @@ public class BigArm extends SubsystemBase {
     return bigArmMotor.getSelectedSensorPosition();
   }
 
+  public boolean getHoneSwitch(){
+    return !honeSwitch.get();
+  }
+
   public Command Hone(){
     return run(()->{
       bigArmMotor.set(BigArmConstants.honeSpeed);
     })
-    .until(()->honeSwitch.get())
+    .until(()->getHoneSwitch())
     .andThen(()->{bigArmMotor.set(0.0);
       bigArmMotor.setSelectedSensorPosition(BigArmConstants.honeSetPoint);
     });
