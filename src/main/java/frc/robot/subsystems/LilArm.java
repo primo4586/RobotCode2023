@@ -84,6 +84,6 @@ public class LilArm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Motor Encoder Talon", lilArmEncoder.getSelectedSensorPosition());
+    SmartDashboard.putNumber("LilArm Position", lilArmEncoder.getSelectedSensorPosition());
   }
 }

@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -25,20 +27,30 @@ public class BigArm extends SubsystemBase {
     bigArmMotorFeedforward = BigArmConstants.bigArmFeedforward;
 
     bigArmMotor = new WPI_TalonSRX(BigArmConstants.bigArmMotorPort);
+    ErrorCode code = bigArmMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+    System.out.println("BigArm: " + code);
+    code = bigArmMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+    System.out.println("BigArm: " + code);
+    code = bigArmMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+    System.out.println("BigArm: " + code);
+
+    // bigArmMotor.setInverted(true);
+    // bigArmMotor.setSensorPhase(false);
 
     honeSwitch = new DigitalInput(BigArmConstants.honeSwitchID);
   }
 
   public void putBigArmInPlace(double setPoint){
-    SmartDashboard.putNumber("PID",bigArmPID.calculate(getCurrentArmAngle(), setPoint));
+    SmartDashboard.putNumber("Big Arm PID Output",-bigArmPID.calculate(getCurrentArmAngle(), setPoint));
     bigArmMotor.setVoltage(-bigArmPID.calculate(getCurrentArmAngle(), setPoint));
   }
 
   public Command TurnBigArmToSetpoint(double setPoint){
+    SmartDashboard.putNumber("Big Arm Setpoint", setPoint);
     return run(()->{
       putBigArmInPlace(setPoint);
     })
-    .until(() -> Math.abs(this.getCurrentArmAngle() - setPoint) <= BigArmConstants.ticksTolerance);
+    .until(() -> Math.abs(this.getCurrentArmAngle() - setPoint) <= BigArmConstants.ticksTolerance && getHoneSwitch());
   }
 
   // TODO: Setup conversions according to the encoder's CPR
@@ -65,5 +77,10 @@ public class BigArm extends SubsystemBase {
     .andThen(()->{bigArmMotor.set(0.0);
       bigArmMotor.setSelectedSensorPosition(BigArmConstants.honeSetPoint);
     });
+  }
+
+  @Override
+  public void periodic() {
+      SmartDashboard.putNumber("Big Arm Position", bigArmMotor.getSelectedSensorPosition());
   }
 }

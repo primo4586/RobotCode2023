@@ -42,7 +42,7 @@ public final class Constants {
 
     public static final class BigArmConstants{
         //bigArm PID values
-        private static final double bigArmKP = 0.001;//TODO change the PID values
+        private static final double bigArmKP = 0.0008;//TODO change the PID values
         private static final double bigArmKI = 0.0;
         private static final double bigArmKD = 0.0001;
         public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);

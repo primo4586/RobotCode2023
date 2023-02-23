@@ -45,7 +45,7 @@ public class RobotContainer {
 
     VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(PoseStrategy.LOWEST_AMBIGUITY);
     swerve.setVisionPoseEstimator(visionPoseEstimator);
-    // bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> driverController.getRightY()));
+    bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> driverController.getRightY()));
     lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> driverController.getLeftY()));
 
     //swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
@@ -70,8 +70,8 @@ public class RobotContainer {
 	  driverController.leftTrigger().whileTrue(swerve.gyroAlignCommand(45));
 
     driverController.b().onTrue(bigArm.Hone());
-    // driverController.a().onTrue(bigArm.PutBigArmInPlace(44035));
-    driverController.a().onTrue(lilArm.TurnLilArmToSetpoint(1530));
+    driverController.a().onTrue(new MoveArmsToSetPoints(bigArm, 50150.0, lilArm, 1477.0));
+    // driverController.a().onTrue(lilArm.TurnLilArmToSetpoint(1530));
   }
 
   /** 
