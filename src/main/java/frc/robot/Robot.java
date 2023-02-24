@@ -47,7 +47,6 @@ public class Robot extends TimedRobot {
     //lilArm = new LilArm();
     ctreConfigs = new CTREConfigs();
     gripper = new Gripper();
-    bigArm = new BigArm();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer(bigArm, lilArm, gripper);
