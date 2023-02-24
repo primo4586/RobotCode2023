@@ -39,7 +39,7 @@ public final class Constants {
 
         public static final double grippingTolarance = 0.0;
 
-        public static final int solenoidOpenID = 3;
+        public static final int solenoidOpenID = 6;
         public static final int solenoidCloseID = 5;
         public static final int PCMID = 1;
 
@@ -280,7 +280,7 @@ public final class Constants {
 
         /* LilArm Solenoid Ports */
         public static final int PCMID = 1;
-        public static final int lilArmSolenoidID = 4;
+        public static final int lilArmSolenoidID = 3;
 
         public static final double angleTolarance = 0.0;
 

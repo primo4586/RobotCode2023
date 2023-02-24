@@ -68,6 +68,7 @@ public class RobotContainer {
     driverController.x().onTrue(gripper.changeWhatWeGrip());
     driverController.a().onTrue(gripper.openGripper());
     driverController.b().onTrue(gripper.closeGripper());
+    driverController.y().onTrue(lilArm.closeLilArmSolenoid());
   }
 
   /** 
