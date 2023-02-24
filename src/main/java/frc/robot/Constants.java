@@ -48,9 +48,9 @@ public final class Constants {
 
     public static final class BigArmConstants{
         //bigArm PID values
-        private static final double bigArmKP = 0.0;//TODO change the PID values
+        private static final double bigArmKP = 0.0008;//TODO change the PID values
         private static final double bigArmKI = 0.0;
-        private static final double bigArmKD = 0.0;
+        private static final double bigArmKD = 0.0001;
         public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
 
         //bigArm feedforward values
@@ -69,7 +69,7 @@ public final class Constants {
 
         public static final int bigArmMotorPort = 4;
 
-        public static final double angleTolarance = 0.0;
+        public static final double ticksTolerance = 1000;
 
         //TODO: add setPoints
         public static final double coneUpperSetPoint = 0;
@@ -254,7 +254,7 @@ public final class Constants {
 
     public static final class LilArmConstants {
         /* LilArm PID Values */ 
-        private static final double lilArmMotorsKP = 0.0;//TODO change the PID values
+        private static final double lilArmMotorsKP = 0.1;//TODO change the PID values
         private static final double lilArmMotorsKI = 0.0;
         private static final double lilArmMotorsKD = 0.0;
         
@@ -272,17 +272,18 @@ public final class Constants {
         public static final ArmFeedforward lilArmFeedforward = new ArmFeedforward(lilArmMotorsKs, lilArmMotorsKg, lilArmMotorsKv);
     
         /* LilArm Motors ID */ 
-        public static final int leftLilMotorID = 18;
-        public static final int rightLilMotorID = 17;
+        public static final int lilArmMotorID = 18;
+
+        public static final int lilArmEncoderID = 3;
 
         /* LilArm Motors Gear Ratio */
-        public static final double lilMotorGearRatio = 2.5 / 1;//TODO change the values
+        public static final double lilMotorGearRatio = 6000 / 1;//TODO change the values
 
         /* LilArm Solenoid Ports */
         public static final int PCMID = 1;
         public static final int lilArmSolenoidID = 3;
 
-        public static final double angleTolarance = 0.0;
+        public static final double ticksTolerance = 5;
 
                 //TODO: add setPoints
         public static final double coneUpperSetPoint = 0.0;
@@ -295,8 +296,6 @@ public final class Constants {
         public static final double middleOfRobotSetPoint = 0.0;
         public static final double groundSetPoint = 0.0;
 
-        public static final String armPostionKey = "lilArmPostionKey";
-        public static final double defultArmPose = 0.0;
     }
 
   

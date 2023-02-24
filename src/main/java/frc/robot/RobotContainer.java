@@ -38,17 +38,19 @@ public class RobotContainer {
   private Swerve swerve = new Swerve();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer(Gripper gripper, LilArm lilArm, BigArm bigArm) {
+  public RobotContainer(BigArm bigArm, LilArm lilArm) {
     boolean fieldRelative = true;
     boolean openLoop = true;
 
     VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(PoseStrategy.LOWEST_AMBIGUITY);
     swerve.setVisionPoseEstimator(visionPoseEstimator);
+    bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> driverController.getRightY()));
+    lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> driverController.getLeftY()));
 
-    swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
+    //swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
 
     // Configure the button bindings
-    configureButtonBindings(gripper, lilArm, bigArm);
+    configureButtonBindings(bigArm, lilArm);
   }
 
   /**
@@ -57,7 +59,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings(Gripper gripper, LilArm lilArm, BigArm bigArm) {
+  private void configureButtonBindings(BigArm bigArm, LilArm lilArm) {
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
 
@@ -65,10 +67,10 @@ public class RobotContainer {
     //driverController.b().onTrue(swerve.followTrajectoryToTag(1, new Translation2d(1, 0))); 
     // NOTE: This is not fully tested - will need tuning of the PID before using!
 	  driverController.leftTrigger().whileTrue(swerve.gyroAlignCommand(45));
-    driverController.x().onTrue(gripper.changeWhatWeGrip());
-    driverController.a().onTrue(gripper.openGripper());
-    driverController.b().onTrue(gripper.closeGripper());
-    driverController.y().onTrue(lilArm.closeLilArmSolenoid());
+
+    driverController.b().onTrue(bigArm.Hone());
+    driverController.a().onTrue(new MoveArmsToSetPoints(bigArm, 50150.0, lilArm, 1477.0));
+    // driverController.a().onTrue(lilArm.TurnLilArmToSetpoint(1530));
   }
 
   /** 
