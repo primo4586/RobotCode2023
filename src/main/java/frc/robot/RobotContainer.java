@@ -38,7 +38,7 @@ public class RobotContainer {
   private Swerve swerve = new Swerve();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer(BigArm bigArm, LilArm lilArm) {
+  public RobotContainer(BigArm bigArm, LilArm lilArm, Gripper gripper) {
     boolean fieldRelative = true;
     boolean openLoop = true;
 
@@ -50,7 +50,7 @@ public class RobotContainer {
     //swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
 
     // Configure the button bindings
-    configureButtonBindings(bigArm, lilArm);
+    configureButtonBindings(bigArm, lilArm, gripper);
   }
 
   /**
@@ -59,7 +59,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings(BigArm bigArm, LilArm lilArm) {
+  private void configureButtonBindings(BigArm bigArm, LilArm lilArm, Gripper gripper) {
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
 
@@ -68,8 +68,11 @@ public class RobotContainer {
     // NOTE: This is not fully tested - will need tuning of the PID before using!
 	  driverController.leftTrigger().whileTrue(swerve.gyroAlignCommand(45));
 
-    driverController.b().onTrue(bigArm.Hone());
     driverController.a().onTrue(new MoveArmsToSetPoints(bigArm, 50150.0, lilArm, 1477.0));
+    driverController.b().onTrue(bigArm.TurnBigArmToSetpoint(-10500));
+
+    driverController.x().onTrue(bigArm.Hone());
+    driverController.y().onTrue(gripper.closeGripper());
     // driverController.a().onTrue(lilArm.TurnLilArmToSetpoint(1530));
   }
 

@@ -50,7 +50,7 @@ public class BigArm extends SubsystemBase {
     return run(()->{
       putBigArmInPlace(setPoint);
     })
-    .until(() -> Math.abs(this.getCurrentArmAngle() - setPoint) <= BigArmConstants.ticksTolerance && getHoneSwitch());
+    .until(() -> Math.abs(this.getCurrentArmAngle() - setPoint) <= BigArmConstants.ticksTolerance);
   }
 
   // TODO: Setup conversions according to the encoder's CPR
@@ -82,5 +82,11 @@ public class BigArm extends SubsystemBase {
   @Override
   public void periodic() {
       SmartDashboard.putNumber("Big Arm Position", bigArmMotor.getSelectedSensorPosition());
+  }
+
+  public Command zeroEncoder() {
+    return runOnce(() -> 
+      bigArmMotor.setSelectedSensorPosition(0)
+    );
   }
 }
