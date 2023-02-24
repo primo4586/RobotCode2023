@@ -1,28 +1,37 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GripperConstants;
 
 public class Gripper extends SubsystemBase {
-  private WPI_TalonSRX gripperMotor;
-  private PIDController gripperPID;
-  private SimpleMotorFeedforward gripperMotorFeedforward;
   private boolean shouldGripCone;
+  private Solenoid gripperOpenSolenoid;
+  private Solenoid gripperCloseSolenoid;
+  private DigitalInput isGripperOpen;
 
   /** Creates a new Gripper. */
   public Gripper() {
-    gripperPID = GripperConstants.gripperPID;
-    gripperMotorFeedforward = GripperConstants.gripperFeedforward;
-
-    gripperMotor = new WPI_TalonSRX(GripperConstants.gripperMotorPort);
 
     shouldGripCone = true;
+
+    gripperOpenSolenoid = new Solenoid(GripperConstants.PCMID, PneumaticsModuleType.CTREPCM, GripperConstants.solenoidOpenID);
+    gripperCloseSolenoid = new Solenoid(GripperConstants.PCMID, PneumaticsModuleType.CTREPCM, GripperConstants.solenoidCloseID);
+    if (shouldGripCone){
+      gripperOpenSolenoid.set(false);
+      gripperCloseSolenoid.set(true);
+    }
+    else{
+      gripperOpenSolenoid.set(false);
+      gripperCloseSolenoid.set(false);
+    }
+
+    isGripperOpen = new DigitalInput(GripperConstants.isGripperOpenID);
+    
   }
 
   public boolean getShouldGripCone() {
@@ -33,29 +42,33 @@ public class Gripper extends SubsystemBase {
     this.shouldGripCone = !shouldGripCone;
   }
 
-  public void putGripperInPose(double setpoint) {
-    gripperMotor.setVoltage(gripperPID.calculate(gripperMotor.getSelectedSensorPosition(), setpoint)
-        + gripperMotorFeedforward.calculate(setpoint));
+  public boolean isGripperOpen(){
+    return isGripperOpen.get();
   }
 
-  // TODO: adjust shit to the gear ratio
-  public Command turnToSetPoint(double setPoint) {
-    return run(() -> {
-      putGripperInPose(setPoint);
-    }).until(() -> Math.abs(gripperMotor.getSelectedSensorPosition() - setPoint) <= GripperConstants.grippingTolarance);
+  public Command openGripper(){
+    return runOnce(()->{
+        gripperCloseSolenoid.set(false);
+        gripperOpenSolenoid.set(true);
+    });
+  }
+
+  public Command closeGripper(){
+    return runOnce(()->{
+      if (this.shouldGripCone){
+        gripperCloseSolenoid.set(true);
+        gripperOpenSolenoid.set(false);
+      }
+      else{
+        gripperCloseSolenoid.set(false);
+        gripperOpenSolenoid.set(false);
+      }
+    });
   }
 
   public Command changeWhatWeGrip() {
     return runOnce(() -> {
       toggleShouldWeGripACone();
     });
-
-  }
-
-  public Command gripItem() {
-    return new ConditionalCommand(
-        turnToSetPoint(GripperConstants.coneGrabingSetPoint),
-        turnToSetPoint(GripperConstants.cubeGrabingSetPoint),
-        () -> shouldGripCone);
   }
 }

@@ -38,10 +38,6 @@ public class LilArm extends SubsystemBase {
     leftLilArmMotor.setSelectedSensorPosition(Preferences.getDouble(LilArmConstants.armPostionKey, LilArmConstants.defultArmPose));
   }
 
-  public void toggleSolenoidState() {
-    lilArmSolenoid.toggle();
-  }
-
   public boolean isSolenoidOpen() {
     return lilArmSolenoid.get();
   }
@@ -80,9 +76,15 @@ public class LilArm extends SubsystemBase {
     return leftLilArmMotor.getSelectedSensorPosition();
   }
 
-  public Command toggleLilArmSolenoid() {
+  public Command openLilArmSolenoid() {
     return runOnce(() -> {
-      toggleSolenoidState();
+      lilArmSolenoid.set(true);
+    });
+  }
+
+  public Command closeLilArmSolenoid() {
+    return runOnce(() -> {
+      lilArmSolenoid.set(false);
     });
   }
 }

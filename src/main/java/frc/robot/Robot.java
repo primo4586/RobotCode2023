@@ -10,7 +10,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.LilArmConstants;
 import frc.robot.subsystems.BigArm;
+import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
+import frc.robot.subsystems.Swerve;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -29,19 +31,22 @@ public class Robot extends TimedRobot {
 
   private BigArm bigArm;
 
+  private Gripper gripper;
+
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
-    
-    bigArm = new BigArm();
+    gripper = new Gripper();
     lilArm = new LilArm();
     ctreConfigs = new CTREConfigs();
+    bigArm = new BigArm();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer(bigArm);
+    m_robotContainer = new RobotContainer(gripper ,lilArm, bigArm);
   }
 
   /**

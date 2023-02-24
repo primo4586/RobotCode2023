@@ -17,10 +17,6 @@ import frc.robot.subsystems.LilArm;
 
 public class PutItemInTheMiddle extends SequentialCommandGroup {
   public PutItemInTheMiddle(LilArm lilArm, BigArm bigArm, Gripper gripper) {
-
-     //closes the solenoid 
-    ConditionalCommand closeSolenoid = new ConditionalCommand(lilArm.toggleLilArmSolenoid(), Commands.none(), lilArm::isSolenoidOpen);
-
     //cone and cube setPoints
     MoveArmsToSetPoints coneMiddleSetPoint = new MoveArmsToSetPoints(bigArm, BigArmConstants.coneMiddleSetPoint, lilArm, LilArmConstants.coneMiddleSetPoint);
     MoveArmsToSetPoints cubeMiddleSetPoint = new MoveArmsToSetPoints(bigArm, BigArmConstants.cubeMiddleSetPoint, lilArm, LilArmConstants.cubeMiddleSetPoint);
@@ -29,10 +25,10 @@ public class PutItemInTheMiddle extends SequentialCommandGroup {
     ConditionalCommand putArmsInMiddleSetPoint = new ConditionalCommand(coneMiddleSetPoint, cubeMiddleSetPoint,gripper::getShouldGripCone);
 
     addCommands(
-      closeSolenoid,
+      lilArm.closeLilArmSolenoid(),
       putArmsInMiddleSetPoint,
-      lilArm.toggleLilArmSolenoid(),
-      gripper.turnToSetPoint(GripperConstants.openGripperSetPoint)
+      lilArm.openLilArmSolenoid(),
+      gripper.openGripper()
     );
   }
 }

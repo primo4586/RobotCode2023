@@ -17,15 +17,16 @@ import frc.robot.subsystems.LilArm;
 public class GrabItemFromIntake extends SequentialCommandGroup {
   public GrabItemFromIntake(LilArm lilArm, BigArm bigArm, Gripper gripper) {
    //closes the solenoid
-   ConditionalCommand closeSolenoid = new ConditionalCommand(lilArm.toggleLilArmSolenoid(), Commands.none(), lilArm::isSolenoidOpen);
-
    MoveArmsToSetPoints moveArmsToIntake = new MoveArmsToSetPoints(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint);
    MoveArmsToSetPoints moveArmsToMiddleOfBot = new MoveArmsToSetPoints(bigArm, BigArmConstants.middleOfRobotSetPoint, lilArm, LilArmConstants.middleOfRobotSetPoint);
 
+   
+
    addCommands(
-     closeSolenoid,
+     lilArm.closeLilArmSolenoid(),
+     gripper.openGripper(),
      moveArmsToIntake,
-     gripper.gripItem(),
+     gripper.closeGripper(),
      moveArmsToMiddleOfBot
    );
   }

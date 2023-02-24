@@ -12,10 +12,9 @@ import frc.robot.subsystems.LilArm;
 public class MoveArmsToTheGround extends SequentialCommandGroup {
   public MoveArmsToTheGround(Gripper gripper, LilArm lilArm, BigArm bigArm) {
 
-    ConditionalCommand OpenGripper = new ConditionalCommand(lilArm.toggleLilArmSolenoid(), Commands.none(), lilArm::isSolenoidOpen);
     MoveArmsToSetPoints moveArmsToGround = new MoveArmsToSetPoints(bigArm, BigArmConstants.groundSetPoint, lilArm, LilArmConstants.groundSetPoint);
     addCommands(
-      OpenGripper,
+      gripper.openGripper(),
       moveArmsToGround
     );
   }
