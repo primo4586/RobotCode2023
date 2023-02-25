@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Relay;
@@ -13,6 +15,8 @@ public class Gripper extends SubsystemBase {
   private Solenoid gripperOpenSolenoid;
   private Solenoid gripperCloseSolenoid;
   private DigitalInput isGripperOpen;
+  private AddressableLED m_led = new AddressableLED(4);
+  private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(55);
 
   /** Creates a new Gripper. */
   public Gripper() {
@@ -32,6 +36,7 @@ public class Gripper extends SubsystemBase {
 
     isGripperOpen = new DigitalInput(GripperConstants.isGripperOpenID);
     
+    m_led.setLength(m_ledBuffer.getLength());
   }
 
   public boolean getShouldGripCone() {
@@ -69,6 +74,29 @@ public class Gripper extends SubsystemBase {
   public Command changeWhatWeGrip() {
     return runOnce(() -> {
       toggleShouldWeGripACone();
+
+      if(shouldGripCone){
+        for (var i = 0; i < m_ledBuffer.getLength(); i++) 
+          m_ledBuffer.setRGB(i, 255, 100, 0);
+        }
+      else{
+        for (var i = 0; i < m_ledBuffer.getLength(); i++)
+          m_ledBuffer.setRGB(i,180,31,235);
+        }
+      
+     
+      m_led.setData(m_ledBuffer);
+      m_led.start();
     });
   }
+
+public Command turnOffLed() {
+  return runOnce(() -> {
+    for (var i = 0; i < m_ledBuffer.getLength(); i++)
+      m_ledBuffer.setRGB(i,0,0,0);
+    
+    m_led.setData(m_ledBuffer);
+    m_led.start();
+  });
+}
 }

@@ -39,7 +39,7 @@ public final class Constants {
 
         public static final double grippingTolarance = 0.0;
 
-        public static final int solenoidOpenID = 3;
+        public static final int solenoidOpenID = 6;
         public static final int solenoidCloseID = 5;
         public static final int PCMID = 1;
 
@@ -48,7 +48,7 @@ public final class Constants {
 
     public static final class BigArmConstants{
         //bigArm PID values
-        private static final double bigArmKP = 0.0008;//TODO change the PID values
+        private static final double bigArmKP = 0.001;//TODO change the PID values
         private static final double bigArmKI = 0.0;
         private static final double bigArmKD = 0.0001;
         public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
@@ -281,7 +281,7 @@ public final class Constants {
 
         /* LilArm Solenoid Ports */
         public static final int PCMID = 1;
-        public static final int lilArmSolenoidID = 4;
+        public static final int lilArmSolenoidID = 3;
 
         public static final double ticksTolerance = 5;
 

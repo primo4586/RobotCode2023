@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -26,6 +27,7 @@ public class LilArm extends SubsystemBase {
   private WPI_TalonSRX lilArmEncoder;
 
   private Solenoid lilArmSolenoid;
+  private DigitalInput solenoidOpenSensor;
 
   private PIDController lilArmPID;
   private ArmFeedforward lilArmFeedforward;
@@ -41,6 +43,7 @@ public class LilArm extends SubsystemBase {
         LilArmConstants.lilArmSolenoidID);
 
     lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+    solenoidOpenSensor = new DigitalInput(0);
   }
 
   public boolean isSolenoidOpen() {

@@ -42,10 +42,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    
+    bigArm = new BigArm();
     gripper = new Gripper();
     lilArm = new LilArm();
     ctreConfigs = new CTREConfigs();
-    bigArm = new BigArm();
+    gripper = new Gripper();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer(gripper ,lilArm, bigArm);
