@@ -245,8 +245,8 @@ public class Swerve extends SubsystemBase {
                     .getEstimatedGlobalPose(poseEstimation.getEstimatedPosition());
 
             if (result != null) {
-                poseEstimation.addVisionMeasurement(result.estimatedPose.toPose2d(), result.timestampSeconds);
-                field2d.getObject("Vision Position").setPose(result.estimatedPose.toPose2d());
+                poseEstimation.addVisionMeasurement(result.getFirst().toPose2d(), result.getSecond());
+                field2d.getObject("Vision Position").setPose(result.getFirst().toPose2d());
             }
         }
 

@@ -42,7 +42,7 @@ public class RobotContainer {
     boolean fieldRelative = true;
     boolean openLoop = true;
 
-    VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(PoseStrategy.LOWEST_AMBIGUITY);
+    VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator();
     swerve.setVisionPoseEstimator(visionPoseEstimator);
     bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> driverController.getRightY()));
     lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> driverController.getLeftY()));

@@ -29,7 +29,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private final LilArm lilArm = new LilArm();
+  private LilArm lilArm;
 
   private BigArm bigArm;
 
