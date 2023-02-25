@@ -17,6 +17,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.*;
+import frc.robot.commands.actions.GrabItemFromIntake;
+import frc.robot.commands.actions.MoveArmsToTheGround;
+import frc.robot.commands.actions.PutItemInTheMiddle;
+import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.subsystems.*;
 
 /**
@@ -28,6 +32,7 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
   /* Controllers */
   private final CommandXboxController driverController = new CommandXboxController(0);
+  private final CommandXboxController operatorController = new CommandXboxController(1);
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -62,14 +67,18 @@ public class RobotContainer {
   private void configureButtonBindings(Gripper gripper, LilArm lilArm, BigArm bigArm) {
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
+    driverController.x().onTrue(gripper.toggleGripper());
+    driverController.start().onTrue(swerve.LockWheelsChargeStation());
+    driverController.leftTrigger().whileTrue(swerve.followTrajectoryToAligmentPose(gripper::getShouldGripCone));
 
-    // Example tag ID position to go for, & the translation offset from the tag's position
-    //driverController.b().onTrue(swerve.followTrajectoryToTag(1, new Translation2d(1, 0))); 
-    // NOTE: This is not fully tested - will need tuning of the PID before using!
-	  driverController.leftTrigger().whileTrue(swerve.gyroAlignCommand(45));
-    driverController.x().onTrue(gripper.changeWhatWeGrip());
-    driverController.a().onTrue(gripper.openGripper());
-    driverController.b().onTrue(gripper.closeGripper());
+    /* Operator Buttons */
+    operatorController.y().onTrue(new PutItemInTheUpper(bigArm, lilArm, gripper));
+    operatorController.a().onTrue(new PutItemInTheMiddle(lilArm, bigArm, gripper));
+    operatorController.leftBumper().onTrue(gripper.changeWhatWeGrip());
+    operatorController.x().onTrue(new MoveArmsToTheGround(gripper, lilArm, bigArm));
+    operatorController.b().onTrue(new GrabItemFromIntake(lilArm, bigArm, gripper));
+    //TODO add emargancy button
+    //TODO add upper intake
   }
 
   /** 

@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GripperConstants;
 
@@ -49,6 +50,10 @@ public class Gripper extends SubsystemBase {
 
   public boolean isGripperOpen(){
     return isGripperOpen.get();
+  }
+
+  public Command toggleGripper(){
+    return new ConditionalCommand(closeGripper(), openGripper(), this::isGripperOpen);
   }
 
   public Command openGripper(){
