@@ -5,15 +5,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.LilArm;
 
-public class MoveArmsToSetPoints extends ParallelCommandGroup {
+public class MoveArmsToSetPoints extends SequentialCommandGroup {
   public MoveArmsToSetPoints(BigArm bigArm, Double setPointBigArm, LilArm lilArm, Double setPointLilArm) {
 
+  
     addCommands(
-      bigArm.turnToSetPoint(setPointBigArm),
-     lilArm.turnToSetPoint(setPointLilArm)
-      );
+      bigArm.TurnBigArmToSetpoint(setPointBigArm),
+      lilArm.TurnLilArmToSetpoint(setPointLilArm)
+    );
   }
 }
