@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.BigArmConstants;
 import frc.robot.Constants.GripperConstants;
 import frc.robot.Constants.LilArmConstants;
-import frc.robot.commands.MoveArmsToSetPoints;
+import frc.robot.commands.MoveArmsToSetPointsBigFirat;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -18,8 +18,8 @@ import frc.robot.subsystems.LilArm;
 public class PutItemInTheMiddle extends SequentialCommandGroup {
   public PutItemInTheMiddle(LilArm lilArm, BigArm bigArm, Gripper gripper) {
     //cone and cube setPoints
-    MoveArmsToSetPoints coneMiddleSetPoint = new MoveArmsToSetPoints(bigArm, BigArmConstants.coneMiddleSetPoint, lilArm, LilArmConstants.coneMiddleSetPoint);
-    MoveArmsToSetPoints cubeMiddleSetPoint = new MoveArmsToSetPoints(bigArm, BigArmConstants.cubeMiddleSetPoint, lilArm, LilArmConstants.cubeMiddleSetPoint);
+    MoveArmsToSetPointsLilFirst coneMiddleSetPoint = new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.coneMiddleSetPoint, lilArm, LilArmConstants.coneMiddleSetPoint);
+    MoveArmsToSetPointsLilFirst cubeMiddleSetPoint = new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.cubeMiddleSetPoint, lilArm, LilArmConstants.cubeMiddleSetPoint);
 
     //check if we put cone or cube
     ConditionalCommand putArmsInMiddleSetPoint = new ConditionalCommand(coneMiddleSetPoint, cubeMiddleSetPoint,gripper::getShouldGripCone);
@@ -27,8 +27,7 @@ public class PutItemInTheMiddle extends SequentialCommandGroup {
     addCommands(
       lilArm.closeLilArmSolenoid(),
       putArmsInMiddleSetPoint,
-      lilArm.openLilArmSolenoid(),
-      gripper.openGripper()
+      lilArm.openLilArmSolenoid()
     );
   }
 }

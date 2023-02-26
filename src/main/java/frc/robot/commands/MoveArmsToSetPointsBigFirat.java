@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.LilArm;
 
-public class MoveArmsToSetPoints extends SequentialCommandGroup {
-  public MoveArmsToSetPoints(BigArm bigArm, Double setPointBigArm, LilArm lilArm, Double setPointLilArm) {
+public class MoveArmsToSetPointsBigFirat extends SequentialCommandGroup {
+  public MoveArmsToSetPointsBigFirat(BigArm bigArm, Double setPointBigArm, LilArm lilArm, Double setPointLilArm) {
 
   
     addCommands(

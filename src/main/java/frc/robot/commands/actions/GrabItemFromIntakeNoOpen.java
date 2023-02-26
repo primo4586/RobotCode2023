@@ -14,8 +14,8 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 
-public class GrabItemFromIntake extends SequentialCommandGroup {
-  public GrabItemFromIntake(LilArm lilArm, BigArm bigArm, Gripper gripper) {
+public class GrabItemFromIntakeNoOpen extends SequentialCommandGroup {
+  public GrabItemFromIntakeNoOpen(LilArm lilArm, BigArm bigArm, Gripper gripper) {
    //closes the solenoid
    MoveArmsToSetPointsBigFirat moveArmsToIntake = new MoveArmsToSetPointsBigFirat(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint);
    MoveArmsToSetPointsBigFirat moveArmsToMiddleOfBot = new MoveArmsToSetPointsBigFirat(bigArm, BigArmConstants.middleOfRobotSetPoint, lilArm, LilArmConstants.middleOfRobotSetPoint);
@@ -28,7 +28,6 @@ public class GrabItemFromIntake extends SequentialCommandGroup {
     lilArm.closeLilArmSolenoid(),
     bigArm.TurnBigArmToSetpoint(BigArmConstants.cubeUpperFirstSetPoint).unless(()->bigArm.getCurrentArmAngle()<28000),
     lilArm.TurnLilArmToSetpoint(LilArmConstants.intakeSetPoint).unless(() -> lilArm.getCurrentArmAngle() > LilArmConstants.intakeSetPoint),//||bigArm.getCurrentArmAngle()>BigArmConstants.intakeReturnDeadZone),
-    gripper.openGripper(),
     moveArmsToIntake
      //gripper.openGripper()
      //gripper.closeGripper(

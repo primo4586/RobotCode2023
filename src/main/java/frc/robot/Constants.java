@@ -48,7 +48,7 @@ public final class Constants {
 
     public static final class BigArmConstants{
         //bigArm PID values
-        private static final double bigArmKP = 0.001;//TODO change the PID values
+        private static final double bigArmKP = 0.002;//TODO change the PID values
         private static final double bigArmKI = 0.0;
         private static final double bigArmKD = 0.0001;
         public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
@@ -71,16 +71,24 @@ public final class Constants {
 
         public static final double ticksTolerance = 1000;
 
+        public static final String bigArmPreferencesKey = "bigArmEncoder" ;
+
         //TODO: add setPoints
         public static final double coneUpperSetPoint = 0;
         public static final double coneMiddleSetPoint = 0;
 
-        public static final double cubeUpperSetPoint = 0;
-        public static final double cubeMiddleSetPoint = 0;
+        public static final double cubeUpperFirstSetPoint = 44000;
+        public static final double cubeUpperSecondSetPoint = 25000;
+        public static final double cubeUpperFinalSetPoint = 47800;
 
-        public static final double intakeSetPoint = 0.0;
+        public static final double cubeMiddleSetPoint = -17668;
+
+        public static final double intakeSetPoint = 16424;
+        public static final double intakeReturnSetPoint = 37000;
+        public static final double intakeReturnDeadZone = 48839;
+
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = 0.0;
+        public static final double groundSetPoint = -18105;
 
         public static final double honeSpeed = 0.4;
         public static final double honeSetPoint = 0.0;
@@ -271,6 +279,8 @@ public final class Constants {
         public static final double lilArmMotorsKv = 0.0;
         public static final ArmFeedforward lilArmFeedforward = new ArmFeedforward(lilArmMotorsKs, lilArmMotorsKg, lilArmMotorsKv);
     
+        public static final String lilArmPreferencesKey = "lilArmEncoder";
+
         /* LilArm Motors ID */ 
         public static final int lilArmMotorID = 18;
 
@@ -289,12 +299,19 @@ public final class Constants {
         public static final double coneUpperSetPoint = 0.0;
         public static final double coneMiddleSetPoint = 0.0;
 
-        public static final double cubeUpperSetPoint = 0.0;
-        public static final double cubeMiddleSetPoint = 0.0;
 
-        public static final double intakeSetPoint = 0.0;
+        public static final double cubeUpperFirstSetPoint = -700;
+        public static final double cubeUpperFinalSetPoint = -1740;
+
+        public static final double cubeMiddleSetPoint = 1111;
+
+        public static final double intakeSetPoint = 95;
+        public static final double intakeReturnDeadZone =2345;
+
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = 0.0;
+        public static final double groundSetPoint = 433;
+
+        public static final double resetPoint = -30;
 
     }
 

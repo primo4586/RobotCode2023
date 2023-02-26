@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,12 +28,7 @@ public class BigArm extends SubsystemBase {
     bigArmMotorFeedforward = BigArmConstants.bigArmFeedforward;
 
     bigArmMotor = new WPI_TalonSRX(BigArmConstants.bigArmMotorPort);
-    ErrorCode code = bigArmMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-    System.out.println("BigArm: " + code);
-    code = bigArmMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-    System.out.println("BigArm: " + code);
-    code = bigArmMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-    System.out.println("BigArm: " + code);
+    bigArmMotor.setSelectedSensorPosition(Preferences.getDouble(BigArmConstants.bigArmPreferencesKey, 0));
 
     // bigArmMotor.setInverted(true);
     // bigArmMotor.setSensorPhase(false);
@@ -63,6 +59,10 @@ public class BigArm extends SubsystemBase {
 
       bigArmMotor.set(supplier.getAsDouble() * 0.5);
     });
+  }
+
+  public void setPreference(){
+    Preferences.setDouble(BigArmConstants.bigArmPreferencesKey, getCurrentArmAngle());
   }
 
   public boolean getHoneSwitch(){

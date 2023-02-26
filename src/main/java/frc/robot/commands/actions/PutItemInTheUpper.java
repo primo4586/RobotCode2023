@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.BigArmConstants;
 import frc.robot.Constants.GripperConstants;
 import frc.robot.Constants.LilArmConstants;
-import frc.robot.commands.MoveArmsToSetPoints;
+import frc.robot.commands.MoveArmsToSetPointsBigFirat;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -19,17 +19,20 @@ public class PutItemInTheUpper extends SequentialCommandGroup {
   /** Creates a new putItemInPlace.  */
   public PutItemInTheUpper(BigArm bigArm, LilArm lilArm, Gripper gripper) {
     //cone and cube setPoints
-    MoveArmsToSetPoints coneUpperSetPoint = new MoveArmsToSetPoints(bigArm, BigArmConstants.coneUpperSetPoint, lilArm, LilArmConstants.coneUpperSetPoint);
-    MoveArmsToSetPoints cubeUpperSetPoint = new MoveArmsToSetPoints(bigArm, BigArmConstants.cubeUpperSetPoint, lilArm, LilArmConstants.cubeUpperSetPoint);
-
+    //MoveArmsToSetPointsLilFirst coneUpperSetPoint = new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.coneUpperSetPoint, lilArm, LilArmConstants.coneUpperSetPoint);
+    MoveArmsToSetPointsBigFirat cubeUpperFirstSetPoint = new MoveArmsToSetPointsBigFirat(bigArm, BigArmConstants.cubeUpperFirstSetPoint, lilArm, LilArmConstants.cubeUpperFirstSetPoint);
+    MoveArmsToSetPointsBigFirat cubeUpperSecondSetPoint = new MoveArmsToSetPointsBigFirat(bigArm, BigArmConstants.cubeUpperSecondSetPoint, lilArm, LilArmConstants.cubeUpperFirstSetPoint);
+    MoveArmsToSetPointsLilFirst cubeUpperFinalSetPoint = new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.cubeUpperFinalSetPoint, lilArm, LilArmConstants.cubeUpperFinalSetPoint);
     //check if we put cone or cube
-    ConditionalCommand putArmsInUpperSetPoint = new ConditionalCommand(coneUpperSetPoint, cubeUpperSetPoint, gripper::getShouldGripCone);
+    //ConditionalCommand putArmsInUpperSetPoint = new ConditionalCommand(coneUpperSetPoint, cubeUpperSetPoint, gripper::getShouldGripCone);
 
     addCommands(
       lilArm.closeLilArmSolenoid(),
-      putArmsInUpperSetPoint,
-      lilArm.openLilArmSolenoid(),
-      gripper.openGripper()
+      gripper.closeGripper(),
+      cubeUpperFirstSetPoint,
+      cubeUpperSecondSetPoint,
+      cubeUpperFinalSetPoint,
+      lilArm.openLilArmSolenoid()
     );
   }
 }

@@ -1,3 +1,4 @@
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -13,10 +14,16 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.*;
+import frc.robot.commands.actions.GrabItemFromIntake;
+import frc.robot.commands.actions.GrabItemFromIntakeNoOpen;
+import frc.robot.commands.actions.MoveArmsToTheGround;
+import frc.robot.commands.actions.PutItemInTheMiddle;
+import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.subsystems.*;
 
 /**
@@ -51,6 +58,7 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings(gripper, lilArm, bigArm);
+    //.buildCameras();
   }
 
   /**
@@ -60,16 +68,31 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings(Gripper gripper, LilArm lilArm, BigArm bigArm) {
+  
+  MoveArmsToTheGround moveArmsToGround = new MoveArmsToTheGround(gripper, lilArm, bigArm);
+  GrabItemFromIntake grabItemFromIntake = new GrabItemFromIntake(lilArm, bigArm, gripper);
+  GrabItemFromIntakeNoOpen grabItemFromIntakeNoOpen = new GrabItemFromIntakeNoOpen(lilArm, bigArm, gripper);
+  PutItemInTheMiddle putItemInTheMiddle = new PutItemInTheMiddle(lilArm, bigArm, gripper);
+  PutItemInTheUpper putItemInTheUpper = new PutItemInTheUpper(bigArm, lilArm, gripper);
+  ConditionalCommand intake = new ConditionalCommand(grabItemFromIntakeNoOpen, grabItemFromIntake,()-> gripper.getFakeIsGripperOpen());
+
+
     /* Driver Buttons */
-    driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
+    //driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
 
     // Example tag ID position to go for, & the translation offset from the tag's position
     //driverController.b().onTrue(swerve.followTrajectoryToTag(1, new Translation2d(1, 0))); 
     // NOTE: This is not fully tested - will need tuning of the PID before using!
-	  driverController.leftTrigger().whileTrue(swerve.gyroAlignCommand(45));
-    driverController.x().onTrue(gripper.changeWhatWeGrip());
+	  driverController.leftTrigger().onTrue(moveArmsToGround);
+    driverController.rightTrigger().onTrue(intake);
+    driverController.x().onTrue(lilArm.closeLilArmSolenoid());
     driverController.a().onTrue(gripper.openGripper());
-    driverController.b().onTrue(gripper.closeGripper());
+    driverController.y().onTrue(gripper.closeGripper());
+    driverController.b().onTrue(bigArm.Hone());
+    driverController.leftBumper().onTrue(gripper.changeWhatWeGrip());
+    driverController.rightBumper().onTrue(lilArm.openLilArmSolenoid());
+    driverController.start().onTrue(putItemInTheMiddle);
+    driverController.back().onTrue(putItemInTheUpper);
   }
 
   /** 

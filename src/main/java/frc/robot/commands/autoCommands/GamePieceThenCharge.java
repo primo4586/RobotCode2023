@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.BigArmConstants;
 import frc.robot.Constants.LilArmConstants;
-import frc.robot.commands.MoveArmsToSetPoints;
+import frc.robot.commands.MoveArmsToSetPointsBigFirat;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.subsystems.BigArm;
@@ -25,7 +25,7 @@ public class GamePieceThenCharge extends SequentialCommandGroup {
 
     ConditionalCommand puttingItemInPlace = new ConditionalCommand(putItemInTheUpper, putItemInTheMiddle,()-> shouldPutInUpper);
 
-    MoveArmsToSetPoints moveArmsToMiddleOfBot = new MoveArmsToSetPoints(bigArm, BigArmConstants.middleOfRobotSetPoint, lilArm, LilArmConstants.middleOfRobotSetPoint);
+    MoveArmsToSetPointsBigFirat moveArmsToMiddleOfBot = new MoveArmsToSetPointsBigFirat(bigArm, BigArmConstants.middleOfRobotSetPoint, lilArm, LilArmConstants.middleOfRobotSetPoint);
 
     PathPlannerTrajectory trajectory;
     

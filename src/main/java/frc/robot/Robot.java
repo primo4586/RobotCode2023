@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.time.Period;
+
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -42,15 +44,16 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    
     bigArm = new BigArm();
     gripper = new Gripper();
+    gripper.turnOnLed();
     lilArm = new LilArm();
     ctreConfigs = new CTREConfigs();
-    gripper = new Gripper();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer(gripper ,lilArm, bigArm);
+
+    gripper.turnOnLed();
   }
 
   /**
@@ -72,7 +75,9 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    
+    gripper.turnOffLed();
+    lilArm.setPreference();
+    bigArm.setPreference();
   }
 
   @Override

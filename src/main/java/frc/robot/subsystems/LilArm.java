@@ -32,6 +32,7 @@ public class LilArm extends SubsystemBase {
   private PIDController lilArmPID;
   private ArmFeedforward lilArmFeedforward;
 
+
   /** Creates a new LilArm. */
   public LilArm() {
     lilArmPID = LilArmConstants.lilArmPID;
@@ -42,7 +43,8 @@ public class LilArm extends SubsystemBase {
     lilArmSolenoid = new Solenoid(LilArmConstants.PCMID, PneumaticsModuleType.CTREPCM,
         LilArmConstants.lilArmSolenoidID);
 
-    lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+    
+        lilArmEncoder.setSelectedSensorPosition(Preferences.getDouble(LilArmConstants.lilArmPreferencesKey, 0));
     solenoidOpenSensor = new DigitalInput(0);
   }
 
@@ -68,6 +70,11 @@ public class LilArm extends SubsystemBase {
         putArmInPlace(setpoint);
     })
     .until(() -> (Math.abs(getCurrentArmAngle() - setpoint) <= LilArmConstants.ticksTolerance));
+  }
+
+  public void setPreference(){
+    Preferences.setDouble(LilArmConstants.lilArmPreferencesKey, getCurrentArmAngle());
+    //Preferences.setDouble(LilArmConstants.lilArmPreferencesKey, LilArmConstants.resetPoint);
   }
 
   // TODO: Setup conversions according to the encoder's CPR

@@ -15,8 +15,9 @@ public class Gripper extends SubsystemBase {
   private Solenoid gripperOpenSolenoid;
   private Solenoid gripperCloseSolenoid;
   private DigitalInput isGripperOpen;
-  private AddressableLED m_led = new AddressableLED(4);
+  private AddressableLED m_led = new AddressableLED(0);
   private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(55);
+  private boolean fakeIsGripperOpen;
 
   /** Creates a new Gripper. */
   public Gripper() {
@@ -37,6 +38,10 @@ public class Gripper extends SubsystemBase {
     isGripperOpen = new DigitalInput(GripperConstants.isGripperOpenID);
     
     m_led.setLength(m_ledBuffer.getLength());
+    
+    fakeIsGripperOpen = false;
+
+    turnOnLed();
   }
 
   public boolean getShouldGripCone() {
@@ -90,13 +95,31 @@ public class Gripper extends SubsystemBase {
     });
   }
 
-public Command turnOffLed() {
-  return runOnce(() -> {
+public void turnOffLed() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++)
       m_ledBuffer.setRGB(i,0,0,0);
     
     m_led.setData(m_ledBuffer);
     m_led.start();
-  });
 }
+
+public void turnOnLed() {
+    if(shouldGripCone){
+      for (var i = 0; i < m_ledBuffer.getLength(); i++) 
+        m_ledBuffer.setRGB(i, 255, 100, 0);
+      }
+    else{
+      for (var i = 0; i < m_ledBuffer.getLength(); i++)
+        m_ledBuffer.setRGB(i,180,31,235);
+      }
+    
+   
+    m_led.setData(m_ledBuffer);
+    m_led.start();
+}
+
+public boolean getFakeIsGripperOpen(){
+  return fakeIsGripperOpen;
+}
+
 }
