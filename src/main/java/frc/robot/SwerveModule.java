@@ -13,6 +13,7 @@ import frc.robot.Constants.SwerveConstants;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
@@ -162,5 +163,9 @@ public class SwerveModule {
 
     public SwerveModulePosition getPostion() {
         return new SwerveModulePosition(getMeterDistance(), getState().angle);
+    }
+
+    public void configLockForAngle() {
+       mAngleMotor.setNeutralMode(NeutralMode.Brake);
     }
 }

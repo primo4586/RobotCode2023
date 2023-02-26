@@ -493,5 +493,11 @@ public class Swerve extends SubsystemBase {
         return runOnce(()->{
             lockWheelsChargeStation();
         });
-    }        
+    }   
+    
+    public void lockAngleMotorsForSysID() {
+        for(SwerveModule module : mSwerveMods)
+            module.configLockForAngle();
+    }
+    
 }
