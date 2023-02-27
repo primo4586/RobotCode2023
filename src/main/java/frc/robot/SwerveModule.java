@@ -15,13 +15,14 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
 public class SwerveModule {
     public int moduleNumber;
     private double angleOffset;
     private TalonFX mAngleMotor;
-    private TalonFX mDriveMotor;
+    private WPI_TalonFX mDriveMotor;
     private CANCoder angleEncoder;
     private double lastAngle;
 
@@ -47,7 +48,7 @@ public class SwerveModule {
         configAngleMotor();
 
         /* Drive Motor Config */
-        mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
+        mDriveMotor = new WPI_TalonFX(moduleConstants.driveMotorID);
         configDriveMotor();
         configDriveMotor();
         configDriveMotor();
@@ -165,7 +166,12 @@ public class SwerveModule {
         return new SwerveModulePosition(getMeterDistance(), getState().angle);
     }
 
-    public void configLockForAngle() {
-       mAngleMotor.setNeutralMode(NeutralMode.Brake);
+    public void setStaticVoltageForSysID(double voltage) {
+        mAngleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(lastAngle, Constants.SwerveConstants.angleGearRatio));
+        mDriveMotor.setVoltage(voltage);
+    }
+
+    public double getDriveVoltage() {
+        return mDriveMotor.getMotorOutputVoltage();
     }
 }

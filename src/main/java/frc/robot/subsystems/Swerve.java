@@ -63,6 +63,9 @@ public class Swerve extends SubsystemBase {
     // order to better estimate the robot's position on the field.
     private final SwerveDrivePoseEstimator poseEstimation;
 
+
+    private double rawGyroAngle = 0;
+
     public Swerve() {
 
         gyro = new PigeonIMU(new TalonSRX(SwerveConstants.pigeonID));
@@ -493,11 +496,29 @@ public class Swerve extends SubsystemBase {
         return runOnce(()->{
             lockWheelsChargeStation();
         });
-    }   
+    }     
     
-    public void lockAngleMotorsForSysID() {
+    public void setCharacterizationVoltage(double voltage) {
         for(SwerveModule module : mSwerveMods)
-            module.configLockForAngle();
+            module.setStaticVoltageForSysID(voltage);
     }
-    
+
+    public double[] getDriveVoltages() {
+      double[] voltages = new double[4];
+      for(SwerveModule module: mSwerveMods) {
+        voltages[module.moduleNumber] =  module.getDriveVoltage();
+      }
+      return voltages;
+    }
+
+    public double getRawGyroYaw() {
+        rawGyroAngle = gyro.getYaw();
+        return rawGyroAngle;
+    }
+
+    public double getRawGyroRate() {
+        double[] rawGyroData = new double[3]; 
+        gyro.getRawGyro(rawGyroData);
+        return rawGyroData[0];
+    }
 }
