@@ -75,7 +75,7 @@ public final class Constants {
 
         //TODO: add setPoints
         public static final double coneUpperSetPoint = 0;
-        public static final double coneMiddleSetPoint = 0;
+        public static final double coneMiddleSetPoint = 1666;
 
         public static final double cubeUpperFirstSetPoint = 44000;
         public static final double cubeUpperSecondSetPoint = 25000;
@@ -88,7 +88,7 @@ public final class Constants {
         public static final double intakeReturnDeadZone = 48839;
 
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = -18105;
+        public static final double groundSetPoint = -18105;//-10626;
 
         public static final double honeSpeed = 0.4;
         public static final double honeSetPoint = 0.0;
@@ -297,7 +297,7 @@ public final class Constants {
 
                 //TODO: add setPoints
         public static final double coneUpperSetPoint = 0.0;
-        public static final double coneMiddleSetPoint = 0.0;
+        public static final double coneMiddleSetPoint = 1080;
 
 
         public static final double cubeUpperFirstSetPoint = -700;
@@ -309,7 +309,7 @@ public final class Constants {
         public static final double intakeReturnDeadZone =2345;
 
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = 433;
+        public static final double groundSetPoint = 433;//449;
 
         public static final double resetPoint = -30;
 

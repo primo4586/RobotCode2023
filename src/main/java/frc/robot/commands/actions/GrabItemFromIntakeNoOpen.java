@@ -24,7 +24,7 @@ public class GrabItemFromIntakeNoOpen extends SequentialCommandGroup {
    
 
    addCommands(
-    gripper.closeGripper(),
+    // gripper.closeGripper(),
     lilArm.closeLilArmSolenoid(),
     bigArm.TurnBigArmToSetpoint(BigArmConstants.cubeUpperFirstSetPoint).unless(()->bigArm.getCurrentArmAngle()<28000),
     lilArm.TurnLilArmToSetpoint(LilArmConstants.intakeSetPoint).unless(() -> lilArm.getCurrentArmAngle() > LilArmConstants.intakeSetPoint),//||bigArm.getCurrentArmAngle()>BigArmConstants.intakeReturnDeadZone),

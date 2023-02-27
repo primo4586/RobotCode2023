@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.BigArmConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.actions.GrabItemFromIntake;
 import frc.robot.commands.actions.GrabItemFromIntakeNoOpen;
@@ -50,11 +51,11 @@ public class RobotContainer {
     boolean openLoop = true;
 
     VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(PoseStrategy.LOWEST_AMBIGUITY);
-    swerve.setVisionPoseEstimator(visionPoseEstimator);
+    // swerve.setVisionPoseEstimator(visionPoseEstimator);
     bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> driverController.getRightY()));
     lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> driverController.getLeftY()));
 
-    //swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
+    // swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
 
     // Configure the button bindings
     configureButtonBindings(gripper, lilArm, bigArm);
@@ -78,7 +79,7 @@ public class RobotContainer {
 
 
     /* Driver Buttons */
-    //driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
+    // driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
 
     // Example tag ID position to go for, & the translation offset from the tag's position
     //driverController.b().onTrue(swerve.followTrajectoryToTag(1, new Translation2d(1, 0))); 
@@ -92,6 +93,8 @@ public class RobotContainer {
     driverController.leftBumper().onTrue(gripper.changeWhatWeGrip());
     driverController.rightBumper().onTrue(lilArm.openLilArmSolenoid());
     driverController.start().onTrue(putItemInTheMiddle);
+    //driverController.start().onTrue(lilArm.zeroLilArm());
+    //driverController.back().onTrue(bigArm.TurnBigArmToSetpoint(BigArmConstants.intakeSetPoint));
     driverController.back().onTrue(putItemInTheUpper);
   }
 
