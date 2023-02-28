@@ -11,8 +11,8 @@ import frc.robot.subsystems.LilArm;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Emargancy extends InstantCommand {
-  public Emargancy(LilArm lilArm, BigArm bigArm) {
+public class EmergencyStop extends InstantCommand {
+  public EmergencyStop(LilArm lilArm, BigArm bigArm) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(lilArm,bigArm);
   }

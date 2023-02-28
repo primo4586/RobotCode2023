@@ -22,7 +22,7 @@ import frc.robot.Constants.BigArmConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.actions.GrabItemFromIntake;
 import frc.robot.commands.actions.GrabItemFromIntakeNoOpen;
-import frc.robot.commands.actions.Emargancy;
+import frc.robot.commands.actions.EmergencyStop;
 import frc.robot.commands.actions.GrabItemFromIntake;
 import frc.robot.commands.actions.MoveArmsToTheGround;
 import frc.robot.commands.actions.PutItemInTheMiddle;
@@ -55,8 +55,8 @@ public class RobotContainer {
 
     VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(PoseStrategy.LOWEST_AMBIGUITY);
     // swerve.setVisionPoseEstimator(visionPoseEstimator);
-    bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> driverController.getRightY()));
-    lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> driverController.getLeftY()));
+    bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRightY()));
+    lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> operatorController.getLeftY()));
 
     // swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
 
@@ -73,11 +73,11 @@ public class RobotContainer {
    */
   private void configureButtonBindings(Gripper gripper, LilArm lilArm, BigArm bigArm) {
   
-  MoveArmsToTheGround moveArmsToGround = new MoveArmsToTheGround(gripper, lilArm, bigArm);
+  //MoveArmsToTheGround moveArmsToGround = new MoveArmsToTheGround(gripper, lilArm, bigArm);
   GrabItemFromIntake grabItemFromIntake = new GrabItemFromIntake(lilArm, bigArm, gripper);
   GrabItemFromIntakeNoOpen grabItemFromIntakeNoOpen = new GrabItemFromIntakeNoOpen(lilArm, bigArm, gripper);
-  PutItemInTheMiddle putItemInTheMiddle = new PutItemInTheMiddle(lilArm, bigArm, gripper);
-  PutItemInTheUpper putItemInTheUpper = new PutItemInTheUpper(bigArm, lilArm, gripper);
+  //PutItemInTheMiddle putItemInTheMiddle = new PutItemInTheMiddle(lilArm, bigArm, gripper);
+  //PutItemInTheUpper putItemInTheUpper = new PutItemInTheUpper(bigArm, lilArm, gripper);
   ConditionalCommand intake = new ConditionalCommand(grabItemFromIntakeNoOpen, grabItemFromIntake,()-> gripper.getFakeIsGripperOpen());
 
 
@@ -92,8 +92,8 @@ public class RobotContainer {
     operatorController.a().onTrue(new PutItemInTheMiddle(lilArm, bigArm, gripper));
     operatorController.leftBumper().onTrue(gripper.changeWhatWeGrip());
     operatorController.x().onTrue(new MoveArmsToTheGround(gripper, lilArm, bigArm));
-    operatorController.b().onTrue(new GrabItemFromIntake(lilArm, bigArm, gripper));
-    operatorController.start().onTrue(new Emargancy(lilArm,bigArm));
+    operatorController.b().onTrue(intake);
+    operatorController.start().onTrue(new EmergencyStop(lilArm,bigArm));
     //TODO add upper intake
   }
 
