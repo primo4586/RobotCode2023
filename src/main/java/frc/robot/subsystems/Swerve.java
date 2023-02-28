@@ -30,6 +30,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -147,6 +148,15 @@ public class Swerve extends SubsystemBase {
 
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(desiredStates[mod.moduleNumber], false);
+        }
+    }
+
+
+    public void setModulesStatesClosedLoopReveresed(SwerveModuleState[] desiredStates) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.maxSpeed);
+
+        for (SwerveModule mod : mSwerveMods) {
+            mod.setDesiredStateReveresed(desiredStates[mod.moduleNumber]);
         }
     }
 
@@ -420,18 +430,50 @@ public class Swerve extends SubsystemBase {
      *         the start auto, we would have the Driver Station data to know
      *         what alliance we are, and flip the trajectory if necessary.
      */
-    public Command followTrajectoryModifiedToAlliance(PathPlannerTrajectory trajectory, boolean shouldResetOdometry) {
+    public Command followTrajectoryModifiedToAlliance(PathPlannerTrajectory trajectory, boolean shouldResetOdometry, boolean reverseInputs) {
 
         Supplier<Command> followCommandSupplier = () -> {
             // Modifies trajectory in case we need to because of our alliance
             PathPlannerTrajectory modifiedTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory,
                     DriverStation.getAlliance());
 
-            return followTrajectory(modifiedTrajectory, shouldResetOdometry);
+            return reverseInputs ? followTrajectoryWithReveresedInputs(modifiedTrajectory, shouldResetOdometry) : followTrajectory(modifiedTrajectory, shouldResetOdometry);
         };
 
         return new ProxyCommand(followCommandSupplier);
     }
+
+    public Command driveForTimeAtSpeed(Translation2d speed, double timeSeconds) {
+        Timer timer = new Timer();
+        return run(() -> {
+            drive(speed, 0, true, true);
+        })
+        .beforeStarting(() -> timer.start())
+        .until(() -> timer.hasElapsed(timeSeconds));
+    }
+
+
+    public Command followTrajectoryWithReveresedInputs(PathPlannerTrajectory trajectory, boolean shouldResetOdometry) {
+
+        PPSwerveControllerCommand followTrajecotryControllerCommand = new PPSwerveControllerCommand(
+                trajectory,
+                this::getPose,
+                SwerveConstants.swerveKinematics,
+                new PIDController(AutoConstants.kPXController, 0, 0),
+                new PIDController(AutoConstants.kPYController, 0, 0),
+                new PIDController(AutoConstants.kPThetaController, 0, 0),
+                this::setModulesStatesClosedLoopReveresed,
+                false, // Assuming we don't need to flip the trajectory, we set this to false.
+                this);
+
+        InstantCommand resetOdometryBeforePath = new InstantCommand(() -> {
+            if (shouldResetOdometry)
+                resetPose(trajectory.getInitialHolonomicPose());
+        }, this);
+        return resetOdometryBeforePath.andThen(followTrajecotryControllerCommand);
+
+    }
+
 
     /**
      * Auto-aligns the robot to a given setpoint degree

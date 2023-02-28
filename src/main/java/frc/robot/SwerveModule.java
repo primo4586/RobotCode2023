@@ -54,6 +54,11 @@ public class SwerveModule {
         lastAngle = getState().angle.getDegrees();
     }
 
+
+    public void setDesiredStateReveresed(SwerveModuleState desiredState) {
+        setDesiredState(new SwerveModuleState(-desiredState.speedMetersPerSecond, desiredState.angle), true);
+    }
+
     /**
      * Drives the swerve module to be at the desired state
      * 

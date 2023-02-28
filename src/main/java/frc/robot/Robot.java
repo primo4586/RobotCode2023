@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.time.Period;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -46,18 +47,17 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    ctreConfigs = new CTREConfigs();
     bigArm = new BigArm();
     gripper = new Gripper();
     gripper.turnOnLed();
     lilArm = new LilArm();
     swerve = new Swerve();
-    ctreConfigs = new CTREConfigs();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer(swerve, gripper ,lilArm, bigArm);
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm);
 
-    gripper.turnOnLed();
   }
 
   /**
@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    gripper.turnOffLed();
+    // gripper.turnOffLed();
     lilArm.setPreference();
     bigArm.setPreference();
   }
@@ -91,7 +91,10 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = autoContainer.getAutonomousCommand();
+    
+    lilArm.zeroEncoderForIntake();
+    bigArm.zeroEncoderForIntake();
+    m_autonomousCommand = autoContainer.getAutonomousCommand();//swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 3.6);
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -125,7 +128,8 @@ public class Robot extends TimedRobot {
     lilArm.zeroEncoderForIntake();
     bigArm.zeroEncoderForIntake();
     // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
+    // CommandScheduler.getInstance().cancelAll();.
+
   }
 
   /** This function is called periodically during test mode. */

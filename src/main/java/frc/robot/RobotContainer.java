@@ -59,7 +59,7 @@ public class RobotContainer {
     bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRightY()));
     lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> operatorController.getLeftY()));
 
-    // swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
+    swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
 
     // Configure the button bindings
     configureButtonBindings(gripper, lilArm, bigArm);
@@ -86,6 +86,7 @@ public class RobotContainer {
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
     driverController.x().onTrue(gripper.toggleGripper());
     driverController.start().onTrue(swerve.LockWheelsChargeStation());
+    driverController.back().onTrue(lilArm.zeroLilArm());
     driverController.leftTrigger().whileTrue(swerve.followTrajectoryToAligmentPose(gripper::getShouldGripCone));
 
     /* Operator Buttons */
@@ -95,6 +96,7 @@ public class RobotContainer {
     operatorController.x().onTrue(new MoveArmsToTheGround(gripper, lilArm, bigArm));
     operatorController.b().onTrue(intake);
     operatorController.start().onTrue(new EmergencyStop(lilArm,bigArm));
+    operatorController.back().onTrue(bigArm.Hone());
     //TODO add upper intake
   }
 

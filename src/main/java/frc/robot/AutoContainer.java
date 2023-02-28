@@ -32,13 +32,15 @@ public class AutoContainer {
         this.autoPaths = new HashMap<String, Command>();
 
         this.gamePieceThenCharge = new GamePieceThenCharge(gripper, bigArm, lilArm, swerve, true);
-        this.gamePieceThenDriveBackFarFromLoading = new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, false);
-        this.gamePieceThenDriveBackNearLoading = new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, true);
+        this.gamePieceThenDriveBackFarFromLoading = new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, false, false);
+        this.gamePieceThenDriveBackNearLoading = new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, true, false);
 
         autoPaths.put("No Auto", new InstantCommand());
-        autoPaths.put("near loading", gamePieceThenDriveBackNearLoading);
-        autoPaths.put("far from loadind", gamePieceThenDriveBackFarFromLoading);
-        autoPaths.put("charge", gamePieceThenCharge);
+        
+        // autoPaths.put("near loading", gamePieceThenDriveBackNearLoading);
+        // autoPaths.put("far from loadind", gamePieceThenDriveBackFarFromLoading);
+        // autoPaths.put("charge", gamePieceThenCharge);
+        autoPaths.put("Upper Cube", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, false, true));
         this.autoSelector = new CommandSelector(autoPaths, PrimoShuffleboard.getInstance().getCompTabTitle());
     }
 

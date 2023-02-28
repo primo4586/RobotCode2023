@@ -54,11 +54,15 @@ public class Gripper extends SubsystemBase {
   }
 
   public boolean isGripperOpen(){
-    return isGripperOpen.get();
+    return fakeIsGripperOpen;
   }
 
   public Command toggleGripper(){
     return new ConditionalCommand(closeGripper(), openGripper(), this::isGripperOpen);
+  }
+
+  public void setShouldGripCone(boolean shouldGripCone) {
+    this.shouldGripCone = shouldGripCone;
   }
 
   public Command openGripper(){

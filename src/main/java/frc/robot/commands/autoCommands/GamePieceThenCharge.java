@@ -36,7 +36,7 @@ public class GamePieceThenCharge extends SequentialCommandGroup {
     addCommands(
       puttingItemInPlace,
       moveArmsToMiddleOfBot,
-      swerve.followTrajectoryModifiedToAlliance(trajectory, isFinished()),
+      swerve.followTrajectoryModifiedToAlliance(trajectory, true, false),
       swerve.chargeStationAlign()
     );
   }
