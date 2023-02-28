@@ -3,7 +3,12 @@ package frc.lib.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import frc.robot.subsystems.BigArm;
+import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.LilArm;
+import frc.robot.subsystems.Swerve;
 
 public class PrimoShuffleboard {
 
@@ -39,6 +44,20 @@ public class PrimoShuffleboard {
 
     public PrimoTab getCompetitonBoard() {
         return PrimoShuffleboard.getInstance().getPrimoTab("Competition Dashboard");
+    }
+
+    public void updateCompetition(Swerve swerve, LilArm lilArm, BigArm bigArm, Gripper gripper) {
+
+        PrimoTab tab = getCompetitonBoard();
+
+
+        tab.addEntry("Time left").setDouble(Timer.getMatchTime(), 0);
+        tab.addEntry("Gripper State").setBoolean(gripper.getFakeIsGripperOpen());
+        tab.addEntry("Gripper Mode").setBoolean(gripper.getShouldGripCone());
+    }
+
+    public String getCompTabTitle() {
+        return "Competition Dashboard";
     }
 
 }

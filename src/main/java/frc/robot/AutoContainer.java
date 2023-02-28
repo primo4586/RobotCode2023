@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.lib.util.PrimoShuffleboard;
 import frc.robot.autonomous.CommandSelector;
 import frc.robot.commands.autoCommands.GamePieceThenCharge;
 import frc.robot.commands.autoCommands.GamePieceThenDriveBack;
@@ -38,7 +39,7 @@ public class AutoContainer {
         autoPaths.put("near loading", gamePieceThenDriveBackNearLoading);
         autoPaths.put("far from loadind", gamePieceThenDriveBackFarFromLoading);
         autoPaths.put("charge", gamePieceThenCharge);
-        this.autoSelector = new CommandSelector(autoPaths, "Competiton Dashboard");
+        this.autoSelector = new CommandSelector(autoPaths, PrimoShuffleboard.getInstance().getCompTabTitle());
     }
 
     public Command getAutonomousCommand() {

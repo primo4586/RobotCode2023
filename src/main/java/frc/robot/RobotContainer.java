@@ -46,10 +46,11 @@ public class RobotContainer {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   /* Subsystems */
-  private Swerve swerve = new Swerve();
+  private Swerve swerve;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer(Gripper gripper, LilArm lilArm, BigArm bigArm) {
+  public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm) {
+    this.swerve = swerve;
     boolean fieldRelative = true;
     boolean openLoop = true;
 
