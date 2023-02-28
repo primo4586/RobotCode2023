@@ -28,9 +28,10 @@ public class BigArm extends SubsystemBase {
     bigArmMotorFeedforward = BigArmConstants.bigArmFeedforward;
 
     bigArmMotor = new WPI_TalonSRX(BigArmConstants.bigArmMotorPort);
-    bigArmMotor.setSelectedSensorPosition(Preferences.getDouble(BigArmConstants.bigArmPreferencesKey, 0));
+    //bigArmMotor.setSelectedSensorPosition(Preferences.getDouble(BigArmConstants.bigArmPreferencesKey, 0));
+    bigArmMotor.setSelectedSensorPosition(BigArmConstants.intakeSetPoint);
 
-    // bigArmMotor.setInverted(true);
+    bigArmMotor.setInverted(true);
     // bigArmMotor.setSensorPhase(false);
 
     honeSwitch = new DigitalInput(BigArmConstants.honeSwitchID);
@@ -39,6 +40,10 @@ public class BigArm extends SubsystemBase {
   public void putBigArmInPlace(double setPoint){
     SmartDashboard.putNumber("Big Arm PID Output",-bigArmPID.calculate(getCurrentArmAngle(), setPoint));
     bigArmMotor.setVoltage(-bigArmPID.calculate(getCurrentArmAngle(), setPoint));
+  }
+
+  public void zeroEncoderForIntake(){
+    this.bigArmMotor.setSelectedSensorPosition(BigArmConstants.intakeSetPoint);
   }
 
   public Command TurnBigArmToSetpoint(double setPoint){

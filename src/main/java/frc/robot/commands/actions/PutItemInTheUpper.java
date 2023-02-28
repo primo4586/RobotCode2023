@@ -23,15 +23,18 @@ public class PutItemInTheUpper extends SequentialCommandGroup {
     MoveArmsToSetPointsBigFirat cubeUpperFirstSetPoint = new MoveArmsToSetPointsBigFirat(bigArm, BigArmConstants.cubeUpperFirstSetPoint, lilArm, LilArmConstants.cubeUpperFirstSetPoint);
     MoveArmsToSetPointsBigFirat cubeUpperSecondSetPoint = new MoveArmsToSetPointsBigFirat(bigArm, BigArmConstants.cubeUpperSecondSetPoint, lilArm, LilArmConstants.cubeUpperFirstSetPoint);
     MoveArmsToSetPointsLilFirst cubeUpperFinalSetPoint = new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.cubeUpperFinalSetPoint, lilArm, LilArmConstants.cubeUpperFinalSetPoint);
+
+    
+    MoveArmsToSetPointsLilFirst coneUpperFinalSetPoint = new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.coneUpperFinalSetPoint, lilArm, LilArmConstants.coneUpperFinalSetPoint);
     //check if we put cone or cube
-    //ConditionalCommand putArmsInUpperSetPoint = new ConditionalCommand(coneUpperSetPoint, cubeUpperSetPoint, gripper::getShouldGripCone);
+    ConditionalCommand finalSetPoint = new ConditionalCommand(coneUpperFinalSetPoint, cubeUpperFinalSetPoint, gripper::getShouldGripCone);
 
     addCommands(
       lilArm.closeLilArmSolenoid(),
       gripper.closeGripper(),
       cubeUpperFirstSetPoint,
       cubeUpperSecondSetPoint,
-      cubeUpperFinalSetPoint,
+      finalSetPoint,
       lilArm.openLilArmSolenoid()
     );
   }

@@ -74,21 +74,21 @@ public final class Constants {
         public static final String bigArmPreferencesKey = "bigArmEncoder" ;
 
         //TODO: add setPoints
-        public static final double coneUpperSetPoint = 0;
-        public static final double coneMiddleSetPoint = 1666;
+        public static final double coneUpperFinalSetPoint = 63200;
+        public static final double coneMiddleSetPoint = -14700;
 
         public static final double cubeUpperFirstSetPoint = 44000;
         public static final double cubeUpperSecondSetPoint = 25000;
-        public static final double cubeUpperFinalSetPoint = 47800;
+        public static final double cubeUpperFinalSetPoint = 54000;
 
         public static final double cubeMiddleSetPoint = -17668;
 
-        public static final double intakeSetPoint = 16424;
+        public static final double intakeSetPoint = 15400;//16424;
         public static final double intakeReturnSetPoint = 37000;
         public static final double intakeReturnDeadZone = 48839;
 
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = -18105;//-10626;
+        public static final double groundSetPoint = -15466;//-10626;
 
         public static final double honeSpeed = 0.4;
         public static final double honeSetPoint = 0.0;
@@ -296,20 +296,20 @@ public final class Constants {
         public static final double ticksTolerance = 5;
 
                 //TODO: add setPoints
-        public static final double coneUpperSetPoint = 0.0;
-        public static final double coneMiddleSetPoint = 1080;
+        public static final double coneUpperFinalSetPoint = -2215;
+        public static final double coneMiddleSetPoint = 1445;
 
 
         public static final double cubeUpperFirstSetPoint = -700;
-        public static final double cubeUpperFinalSetPoint = -1740;
+        public static final double cubeUpperFinalSetPoint = -1730;
 
         public static final double cubeMiddleSetPoint = 1111;
 
         public static final double intakeSetPoint = 95;
         public static final double intakeReturnDeadZone =2345;
-
+ 
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = 433;//449;
+        public static final double groundSetPoint = 425;//449;
 
         public static final double resetPoint = -30;
 

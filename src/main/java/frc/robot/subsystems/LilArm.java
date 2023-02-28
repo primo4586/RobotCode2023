@@ -43,14 +43,19 @@ public class LilArm extends SubsystemBase {
     lilArmSolenoid = new Solenoid(LilArmConstants.PCMID, PneumaticsModuleType.CTREPCM,
         LilArmConstants.lilArmSolenoidID);
  
-    lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+    //lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     // lilArmEncoder.setSelectedSensorPosition(Preferences.getDouble(LilArmConstants.lilArmPreferencesKey, 0));
     // 
+    lilArmEncoder.setSelectedSensorPosition(LilArmConstants.intakeSetPoint);
     solenoidOpenSensor = new DigitalInput(0);
   }
 
   public boolean isSolenoidOpen() {
     return lilArmSolenoid.get();
+  }
+
+  public void zeroEncoderForIntake(){
+    this.lilArmEncoder.setSelectedSensorPosition(LilArmConstants.intakeSetPoint);
   }
 
   public Command setMotorSpeed(DoubleSupplier supplier) {

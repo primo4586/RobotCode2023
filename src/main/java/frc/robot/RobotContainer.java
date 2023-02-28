@@ -92,8 +92,9 @@ public class RobotContainer {
     driverController.b().onTrue(bigArm.Hone());
     driverController.leftBumper().onTrue(gripper.changeWhatWeGrip());
     driverController.rightBumper().onTrue(lilArm.openLilArmSolenoid());
-    driverController.start().onTrue(putItemInTheMiddle);
+     driverController.start().onTrue(putItemInTheMiddle);
     //driverController.start().onTrue(lilArm.zeroLilArm());
+    
     //driverController.back().onTrue(bigArm.TurnBigArmToSetpoint(BigArmConstants.intakeSetPoint));
     driverController.back().onTrue(putItemInTheUpper);
   }
