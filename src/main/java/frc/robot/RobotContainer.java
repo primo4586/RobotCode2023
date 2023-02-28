@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.*;
+import frc.robot.commands.actions.Emargancy;
 import frc.robot.commands.actions.GrabItemFromIntake;
 import frc.robot.commands.actions.MoveArmsToTheGround;
 import frc.robot.commands.actions.PutItemInTheMiddle;
@@ -77,7 +78,7 @@ public class RobotContainer {
     operatorController.leftBumper().onTrue(gripper.changeWhatWeGrip());
     operatorController.x().onTrue(new MoveArmsToTheGround(gripper, lilArm, bigArm));
     operatorController.b().onTrue(new GrabItemFromIntake(lilArm, bigArm, gripper));
-    //TODO add emargancy button
+    operatorController.start().onTrue(new Emargancy(lilArm,bigArm));
     //TODO add upper intake
   }
 
