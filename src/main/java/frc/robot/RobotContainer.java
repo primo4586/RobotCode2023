@@ -22,6 +22,8 @@ import frc.robot.Constants.BigArmConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.actions.GrabItemFromIntake;
 import frc.robot.commands.actions.GrabItemFromIntakeNoOpen;
+import frc.robot.commands.actions.Emargancy;
+import frc.robot.commands.actions.GrabItemFromIntake;
 import frc.robot.commands.actions.MoveArmsToTheGround;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
@@ -36,6 +38,7 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
   /* Controllers */
   private final CommandXboxController driverController = new CommandXboxController(0);
+  private final CommandXboxController operatorController = new CommandXboxController(1);
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -79,24 +82,19 @@ public class RobotContainer {
 
 
     /* Driver Buttons */
-    // driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
+    driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
+    driverController.x().onTrue(gripper.toggleGripper());
+    driverController.start().onTrue(swerve.LockWheelsChargeStation());
+    driverController.leftTrigger().whileTrue(swerve.followTrajectoryToAligmentPose(gripper::getShouldGripCone));
 
-    // Example tag ID position to go for, & the translation offset from the tag's position
-    //driverController.b().onTrue(swerve.followTrajectoryToTag(1, new Translation2d(1, 0))); 
-    // NOTE: This is not fully tested - will need tuning of the PID before using!
-	  driverController.leftTrigger().onTrue(moveArmsToGround);
-    driverController.rightTrigger().onTrue(intake);
-    driverController.x().onTrue(lilArm.closeLilArmSolenoid());
-    driverController.a().onTrue(gripper.openGripper());
-    driverController.y().onTrue(gripper.closeGripper());
-    driverController.b().onTrue(bigArm.Hone());
-    driverController.leftBumper().onTrue(gripper.changeWhatWeGrip());
-    driverController.rightBumper().onTrue(lilArm.openLilArmSolenoid());
-     driverController.start().onTrue(putItemInTheMiddle);
-    //driverController.start().onTrue(lilArm.zeroLilArm());
-    
-    //driverController.back().onTrue(bigArm.TurnBigArmToSetpoint(BigArmConstants.intakeSetPoint));
-    driverController.back().onTrue(putItemInTheUpper);
+    /* Operator Buttons */
+    operatorController.y().onTrue(new PutItemInTheUpper(bigArm, lilArm, gripper));
+    operatorController.a().onTrue(new PutItemInTheMiddle(lilArm, bigArm, gripper));
+    operatorController.leftBumper().onTrue(gripper.changeWhatWeGrip());
+    operatorController.x().onTrue(new MoveArmsToTheGround(gripper, lilArm, bigArm));
+    operatorController.b().onTrue(new GrabItemFromIntake(lilArm, bigArm, gripper));
+    operatorController.start().onTrue(new Emargancy(lilArm,bigArm));
+    //TODO add upper intake
   }
 
   /** 
