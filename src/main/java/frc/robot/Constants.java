@@ -83,7 +83,7 @@ public final class Constants {
 
         public static final double cubeMiddleSetPoint = -17668;
 
-        public static final double intakeSetPoint = 15400;//16424;
+        public static final double intakeSetPoint = 19493;//15400;//16424;
         public static final double intakeReturnSetPoint = 37000;
         public static final double intakeReturnDeadZone = 48839;
 
@@ -92,7 +92,7 @@ public final class Constants {
 
         public static final double honeSpeed = 0.4;
         public static final double honeSetPoint = 0.0;
-        public static final int honeSwitchID = 1;
+        public static final int honeSwitchID = 3;
     }
 
     public static final class SwerveConstants {
@@ -216,7 +216,7 @@ public final class Constants {
         }
 
         /* Charge Align Station Constants */
-        public static final double ALIGN_STATION_SPEED = .2;
+        public static final double ALIGN_STATION_SPEED = .5;
         public static final double STATION_PITCH_ANGLE_TOLERANCE = 2.5;
 
         /* where to align Constants */
@@ -297,7 +297,7 @@ public final class Constants {
 
                 //TODO: add setPoints
         public static final double coneUpperFinalSetPoint = -2215;
-        public static final double coneMiddleSetPoint = 1445;
+        public static final double coneMiddleSetPoint = 1326;//1445;
 
 
         public static final double cubeUpperFirstSetPoint = -700;

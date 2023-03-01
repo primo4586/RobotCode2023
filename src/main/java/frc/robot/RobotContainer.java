@@ -10,6 +10,8 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -47,6 +49,7 @@ public class RobotContainer {
 
   /* Subsystems */
   private Swerve swerve;
+  private CameraHandler handler;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm) {
@@ -54,7 +57,7 @@ public class RobotContainer {
     boolean fieldRelative = true;
     boolean openLoop = true;
 
-    VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(PoseStrategy.LOWEST_AMBIGUITY);
+    // VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(PoseStrategy.LOWEST_AMBIGUITY);
     // swerve.setVisionPoseEstimator(visionPoseEstimator);
     bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRightY()));
     lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> operatorController.getLeftY()));
@@ -64,6 +67,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings(gripper, lilArm, bigArm);
     //.buildCameras();
+    buildCameras();
   }
 
   /**
@@ -88,26 +92,35 @@ public class RobotContainer {
     driverController.start().onTrue(swerve.LockWheelsChargeStation());
     driverController.back().onTrue(lilArm.zeroLilArm());
     driverController.leftTrigger().whileTrue(swerve.followTrajectoryToAligmentPose(gripper::getShouldGripCone));
+    driverController.leftBumper().onTrue(new InstantCommand(() -> handler.switchCamera()));
 
     /* Operator Buttons */
-    operatorController.y().onTrue(new PutItemInTheUpper(bigArm, lilArm, gripper));
-    operatorController.a().onTrue(new PutItemInTheMiddle(lilArm, bigArm, gripper));
-    operatorController.leftBumper().onTrue(gripper.changeWhatWeGrip());
-    operatorController.x().onTrue(new MoveArmsToTheGround(gripper, lilArm, bigArm));
-    operatorController.b().onTrue(intake);
-    operatorController.start().onTrue(new EmergencyStop(lilArm,bigArm));
-    operatorController.back().onTrue(bigArm.Hone());
-    //TODO add upper intake
-  }
+      operatorController.y().onTrue(new PutItemInTheUpper(bigArm, lilArm, gripper));
+      operatorController.a().onTrue(new PutItemInTheMiddle(lilArm, bigArm, gripper));
+      operatorController.leftBumper().onTrue(gripper.changeWhatWeGrip());
+      operatorController.x().onTrue(new MoveArmsToTheGround(gripper, lilArm, bigArm));
+      operatorController.b().onTrue(intake);
+      operatorController.start().onTrue(new EmergencyStop(lilArm,bigArm));
+      operatorController.back().onTrue(bigArm.Hone());
+      //TODO add upper intake
+    }
 
-  /** 
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
+    /** 
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() {
 
-    PathConstraints constraints = new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared);
-    return swerve.followTrajectory(PathPlanner.loadPath("One Meter Forward", constraints), true);
-  }
-} 
+      PathConstraints constraints = new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared);
+      return swerve.followTrajectory(PathPlanner.loadPath("One Meter Forward", constraints), true);
+    }
+
+
+    public void buildCameras() {
+      UsbCamera forward = CameraServer.startAutomaticCapture("Forward", 0);
+      UsbCamera backward = CameraServer.startAutomaticCapture("Backward", 1);
+
+      handler = new CameraHandler(forward, backward);
+    }
+  }  

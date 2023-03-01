@@ -32,18 +32,18 @@ public class GamePieceThenDriveBack extends SequentialCommandGroup {
 
     PathPlannerTrajectory trajectory;
 
-    if(areWeCloseToLoadingStation){
-      if(gripCone)
-        trajectory = PathPlanner.loadPath("upperCone", AutoConstants.pathConstraints);
-      else
-        trajectory = PathPlanner.loadPath("upperCube", AutoConstants.pathConstraints);
-    }
-    else{
-      if(gripCone)
-        trajectory = PathPlanner.loadPath("lowerCone", AutoConstants.pathConstraints);
-      else
-        trajectory = PathPlanner.loadPath("lowerCube", AutoConstants.pathConstraints);
-    }
+    // if(areWeCloseToLoadingStation){
+    //   if(gripCone)
+    //     trajectory = PathPlanner.loadPath("upperCone", AutoConstants.pathConstraints);
+    //   else
+    //     trajectory = PathPlanner.loadPath("upperCube", AutoConstants.pathConstraints);
+    // }
+    // else{
+    //   if(gripCone)
+    //     trajectory = PathPlanner.loadPath("lowerCone", AutoConstants.pathConstraints);
+    //   else
+    //     trajectory = PathPlanner.loadPath("lowerCube", AutoConstants.pathConstraints);
+    // }
 
     addCommands(
       Commands.runOnce(() -> {
@@ -53,7 +53,9 @@ public class GamePieceThenDriveBack extends SequentialCommandGroup {
       puttingItemInPlace,
       gripper.openGripper(),
       Commands.waitSeconds(0.5),
-      swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 3.6)//.alongWith(moveToIntakeNoOpen)
+      lilArm.closeLilArmSolenoid(),
+      gripper.closeGripper(),
+      swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 2.5).alongWith(moveToIntakeNoOpen)
       // swerve.followTrajectoryModifiedToAlliance(trajectory, true, true).alongWith(moveToIntakeNoOpen),
       // moveArmsToTheGround
     );

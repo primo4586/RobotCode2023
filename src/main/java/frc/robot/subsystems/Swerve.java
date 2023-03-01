@@ -231,11 +231,16 @@ public class Swerve extends SubsystemBase {
         return getYaw().minus(Rotation2d.fromDegrees(teleopRotationOffset));
     }
 
+    public double getRoll() {
+        return gyro.getRoll();
+    }
+
     @Override
     public void periodic() {
         updateOdometry();
 
         SmartDashboard.putNumber("Gyro", getYaw().getDegrees());
+        SmartDashboard.putNumber("Pit", getRoll());
         SmartDashboard.putNumber("Teleop Gyro", getTeleopYaw().getDegrees());
 
         for (SwerveModule mod : mSwerveMods) {
@@ -261,6 +266,13 @@ public class Swerve extends SubsystemBase {
         }
 
         field2d.setRobotPose(getPose());
+    }
+
+    public Command driveForwardUntilMeters(double driveSpeed, double metersSetpoint) {
+        return run(() -> {
+            drive(new Translation2d(driveSpeed, 0), metersSetpoint, true, false);
+
+        }).until(() -> swerveOdometry.getPoseMeters().getTranslation().getX() == metersSetpoint);
     }
 
     /**
@@ -450,6 +462,22 @@ public class Swerve extends SubsystemBase {
         })
         .beforeStarting(() -> timer.start())
         .until(() -> timer.hasElapsed(timeSeconds));
+    }
+
+    public Command driveUntilPitchChangeAtSpeed(double speed, double angleDeltaTolerance, double delay) {
+        double[] startingPitch = {0};
+        Timer timer = new Timer();
+        return runOnce(() -> {
+            startingPitch[0] = getRoll();
+            timer.start();
+        }).andThen(
+            run(() -> 
+                drive(new Translation2d(speed, 0), 0, true, true)
+            )
+        ).until(() -> {
+            double deltaAngle = startingPitch[0] - getRoll();
+            return timer.hasElapsed(delay) && deltaAngle >= angleDeltaTolerance;
+        });
     }
 
 

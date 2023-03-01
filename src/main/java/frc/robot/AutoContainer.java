@@ -7,10 +7,12 @@ package frc.robot;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.lib.util.PrimoShuffleboard;
 import frc.robot.autonomous.CommandSelector;
 import frc.robot.commands.autoCommands.GamePieceThenCharge;
@@ -36,11 +38,25 @@ public class AutoContainer {
         this.gamePieceThenDriveBackNearLoading = new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, true, false);
 
         autoPaths.put("No Auto", new InstantCommand());
-        
+        autoPaths.put("Cube Timed", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, false, false));
+        autoPaths.put("Cone Timed", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, false, true));
+        autoPaths.put("Drive By Time", swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 2.5));
+
+        Command driveAndChargeOdometry = swerve.driveForwardUntilMeters(1, 2.5)
+                                        .andThen(swerve.chargeStationAlign());
+
+        autoPaths.put("Drive And Charge Odometry", driveAndChargeOdometry);
+
+        Command driveAndChargeTimed = swerve.driveForTimeAtSpeed(new Translation2d(1.0, 0), 2.0).andThen(swerve.chargeStationAlign());
+
+        autoPaths.put("Drive And Charge Timed", driveAndChargeTimed);
+
+        Command driveAndChargeAngle = swerve.driveForTimeAtSpeed(new Translation2d(-1.75, 0), 3);//.andThen(swerve.chargeStationAlign());
+
+        autoPaths.put("Drive And Charge Angle", driveAndChargeAngle);
         // autoPaths.put("near loading", gamePieceThenDriveBackNearLoading);
         // autoPaths.put("far from loadind", gamePieceThenDriveBackFarFromLoading);
         // autoPaths.put("charge", gamePieceThenCharge);
-        autoPaths.put("Upper Cube", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, false, true));
         this.autoSelector = new CommandSelector(autoPaths, PrimoShuffleboard.getInstance().getCompTabTitle());
     }
 
@@ -49,3 +65,4 @@ public class AutoContainer {
         return this.autoSelector.getCommand();
       }
 }
+    

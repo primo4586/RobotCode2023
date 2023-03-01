@@ -49,11 +49,12 @@ public class PrimoShuffleboard {
     public void updateCompetition(Swerve swerve, LilArm lilArm, BigArm bigArm, Gripper gripper) {
 
         PrimoTab tab = getCompetitonBoard();
-
+        tab.addEntry("Gripper Mode").setDefaultBoolean(false);
+        tab.addEntry("Gripper State").setDefaultBoolean(false);
 
         tab.addEntry("Time left").setDouble(Timer.getMatchTime(), 0);
-        tab.addEntry("Gripper State").setBoolean(gripper.getFakeIsGripperOpen());
-        tab.addEntry("Gripper Mode").setBoolean(gripper.getShouldGripCone());
+        tab.addEntry("Gripper State").setBoolean(gripper.getFakeIsGripperOpen(),0);
+        tab.addEntry("Gripper Mode").setBoolean(gripper.getShouldGripCone(),0);
     }
 
     public String getCompTabTitle() {

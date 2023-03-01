@@ -7,6 +7,7 @@ package frc.robot;
 import java.time.Period;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -41,6 +42,8 @@ public class Robot extends TimedRobot {
   private Gripper gripper;
   private Swerve swerve;
 
+  // private DigitalInput input = new DigitalInput(3);
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -53,8 +56,7 @@ public class Robot extends TimedRobot {
     gripper.turnOnLed();
     lilArm = new LilArm();
     swerve = new Swerve();
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
+
     m_robotContainer = new RobotContainer(swerve, gripper ,lilArm, bigArm);
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm);
 
@@ -69,18 +71,20 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    // gripper.turnOffLed();
+    // SmartDashboard.putBoolean("Port View", input.get());
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    PrimoShuffleboard.getInstance().updateCompetition(null, lilArm, bigArm, gripper);
+    PrimoShuffleboard.getInstance().updateCompetition(swerve, lilArm, bigArm, gripper);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    // gripper.turnOffLed();
+    gripper.turnOffLed();
     lilArm.setPreference();
     bigArm.setPreference();
   }
@@ -91,7 +95,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    
+       
     lilArm.zeroEncoderForIntake();
     bigArm.zeroEncoderForIntake();
     m_autonomousCommand = autoContainer.getAutonomousCommand();//swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 3.6);
@@ -115,6 +119,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    gripper.turnOnLed();
     
   }
 
