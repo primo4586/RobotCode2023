@@ -78,6 +78,12 @@ public class LilArm extends SubsystemBase {
     .until(() -> (Math.abs(getCurrentArmAngle() - setpoint) <= LilArmConstants.ticksTolerance));
   }
 
+  public Command speedByTime(double speed, double time) {
+    Timer timer = new Timer();
+    return setMotorSpeed(() -> speed).beforeStarting(() -> timer.start()).until(() -> timer.hasElapsed(time));
+  }
+
+
   public void setPreference(){
     //Preferences.setDouble(LilArmConstants.lilArmPreferencesKey, getCurrentArmAngle());
     Preferences.setDouble(LilArmConstants.lilArmPreferencesKey, LilArmConstants.resetPoint);

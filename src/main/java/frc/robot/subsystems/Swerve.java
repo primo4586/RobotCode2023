@@ -481,6 +481,20 @@ public class Swerve extends SubsystemBase {
     }
 
 
+    public Command driveUntilPitchChangeAtSpeed(double speed, double angleDeltaTolerance) {
+        double[] startingPitch = {0};
+        return runOnce(() -> {
+            startingPitch[0] = getRoll();
+        }).andThen(
+            run(() -> 
+                drive(new Translation2d(speed, 0), 0, true, false)
+            )
+        ).until(() -> {
+            double deltaAngle = startingPitch[0] - getRoll();
+            return Math.abs(deltaAngle) >= angleDeltaTolerance;
+        });
+    }
+
     public Command followTrajectoryWithReveresedInputs(PathPlannerTrajectory trajectory, boolean shouldResetOdometry) {
 
         PPSwerveControllerCommand followTrajecotryControllerCommand = new PPSwerveControllerCommand(

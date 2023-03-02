@@ -40,7 +40,7 @@ public final class Constants {
         public static final double grippingTolarance = 0.0;
 
         public static final int solenoidOpenID = 6;
-        public static final int solenoidCloseID = 5;
+        public static final int solenoidCloseID = 3;
         public static final int PCMID = 1;
 
         public static final int isGripperOpenID = 2;//TODO
@@ -67,7 +67,7 @@ public final class Constants {
 
         public static final double bigArmGearRatio = 3000 / 1;// (60 Gear to 50 gear = 60 * 50 = 3000 - god knows why) 
 
-        public static final int bigArmMotorPort = 4;
+        public static final int bigArmMotorPort = 17;
 
         public static final double ticksTolerance = 1000;
 
@@ -291,7 +291,7 @@ public final class Constants {
 
         /* LilArm Solenoid Ports */
         public static final int PCMID = 1;
-        public static final int lilArmSolenoidID = 3;
+        public static final int lilArmSolenoidID = 4;
 
         public static final double ticksTolerance = 5;
 

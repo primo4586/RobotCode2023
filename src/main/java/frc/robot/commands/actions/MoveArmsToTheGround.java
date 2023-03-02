@@ -15,7 +15,6 @@ public class MoveArmsToTheGround extends SequentialCommandGroup {
     addCommands(
       gripper.closeGripper(),
       grabItemFromIntake,
-      gripper.openGripper(),
       moveArmsToGround,
       lilArm.openLilArmSolenoid()
     );

@@ -92,7 +92,9 @@ public class RobotContainer {
     driverController.start().onTrue(swerve.LockWheelsChargeStation());
     driverController.back().onTrue(lilArm.zeroLilArm());
     driverController.leftTrigger().whileTrue(swerve.followTrajectoryToAligmentPose(gripper::getShouldGripCone));
-    driverController.leftBumper().onTrue(new InstantCommand(() -> handler.switchCamera()));
+    // driverController.leftBumper().onTrue(new InstantCommand(() -> handler.switchCamera()));
+    operatorController.rightBumper().onTrue(lilArm.closeLilArmSolenoid());
+    operatorController.rightTrigger().onTrue(lilArm.openLilArmSolenoid());
 
     /* Operator Buttons */
       operatorController.y().onTrue(new PutItemInTheUpper(bigArm, lilArm, gripper));

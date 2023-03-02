@@ -76,14 +76,12 @@ public class Gripper extends SubsystemBase {
   public Command closeGripper(){
     return runOnce(()->{
       fakeIsGripperOpen = false;
-      if (this.shouldGripCone){
         gripperCloseSolenoid.set(true);
         gripperOpenSolenoid.set(false);
-      }
-      else{
-        gripperCloseSolenoid.set(false);
-        gripperOpenSolenoid.set(false);
-      }
+      // else{
+      //   gripperCloseSolenoid.set(false);
+      //   gripperOpenSolenoid.set(false);
+      //}
     });
   }
 
