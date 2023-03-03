@@ -8,6 +8,8 @@ import java.time.Period;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PneumaticsControlModule;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -41,6 +43,7 @@ public class Robot extends TimedRobot {
 
   private Gripper gripper;
   private Swerve swerve;
+  private PneumaticsControlModule pcm;
 
   // private DigitalInput input = new DigitalInput(3);
 
@@ -50,6 +53,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    pcm = new PneumaticsControlModule(44);
+    pcm.enableCompressorDigital();
     ctreConfigs = new CTREConfigs();
     bigArm = new BigArm();
     gripper = new Gripper();
