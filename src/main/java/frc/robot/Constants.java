@@ -68,6 +68,7 @@ public final class Constants {
         public static final double bigArmGearRatio = 3000 / 1;// (60 Gear to 50 gear = 60 * 50 = 3000 - god knows why) 
 
         public static final int bigArmMotorPort = 17;
+        public static final int bigArmEncoderID = 5;
 
         public static final double ticksTolerance = 1000;
 

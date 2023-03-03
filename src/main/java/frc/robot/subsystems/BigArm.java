@@ -19,6 +19,7 @@ import frc.robot.Constants.BigArmConstants;
 
 public class BigArm extends SubsystemBase {
   private WPI_TalonSRX bigArmMotor;
+  private WPI_TalonSRX bigArmEncoder;
   private PIDController bigArmPID;
   private ArmFeedforward bigArmMotorFeedforward;
   private DigitalInput honeSwitch;
@@ -28,10 +29,13 @@ public class BigArm extends SubsystemBase {
     bigArmMotorFeedforward = BigArmConstants.bigArmFeedforward;
 
     bigArmMotor = new WPI_TalonSRX(BigArmConstants.bigArmMotorPort);
+    bigArmEncoder = new WPI_TalonSRX(BigArmConstants.bigArmEncoderID);
+    
     //bigArmMotor.setSelectedSensorPosition(Preferences.getDouble(BigArmConstants.bigArmPreferencesKey, 0));
-    bigArmMotor.setSelectedSensorPosition(BigArmConstants.intakeSetPoint);
+    bigArmEncoder.setSelectedSensorPosition(BigArmConstants.intakeSetPoint);
 
     bigArmMotor.setInverted(true);
+    bigArmEncoder.setInverted(true);
     // bigArmMotor.setSensorPhase(false);
 
     honeSwitch = new DigitalInput(BigArmConstants.honeSwitchID);
@@ -43,7 +47,7 @@ public class BigArm extends SubsystemBase {
   }
 
   public void zeroEncoderForIntake(){
-    this.bigArmMotor.setSelectedSensorPosition(BigArmConstants.intakeSetPoint);
+    this.bigArmEncoder.setSelectedSensorPosition(BigArmConstants.intakeSetPoint);
   }
 
   public Command TurnBigArmToSetpoint(double setPoint){
@@ -56,7 +60,7 @@ public class BigArm extends SubsystemBase {
 
   // TODO: Setup conversions according to the encoder's CPR
   public double getCurrentArmAngle() {
-    return bigArmMotor.getSelectedSensorPosition();
+    return bigArmEncoder.getSelectedSensorPosition();
   }
 
   public Command setMotorSpeed(DoubleSupplier supplier) {
@@ -80,18 +84,18 @@ public class BigArm extends SubsystemBase {
     })
     .until(()->getHoneSwitch())
     .andThen(()->{bigArmMotor.set(0.0);
-      bigArmMotor.setSelectedSensorPosition(BigArmConstants.honeSetPoint);
+      bigArmEncoder.setSelectedSensorPosition(BigArmConstants.honeSetPoint);
     });
   }
 
   @Override
   public void periodic() {
-      SmartDashboard.putNumber("Big Arm Position", bigArmMotor.getSelectedSensorPosition());
+      SmartDashboard.putNumber("Big Arm Position", bigArmEncoder.getSelectedSensorPosition());
   }
 
   public Command zeroEncoder() {
     return runOnce(() -> 
-      bigArmMotor.setSelectedSensorPosition(0)
+      bigArmEncoder.setSelectedSensorPosition(0)
     );
   }
 }
