@@ -4,6 +4,8 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -15,6 +17,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.BigArmConstants;
 
 public class BigArm extends SubsystemBase {
@@ -33,6 +36,7 @@ public class BigArm extends SubsystemBase {
     
     //bigArmMotor.setSelectedSensorPosition(Preferences.getDouble(BigArmConstants.bigArmPreferencesKey, 0));
     bigArmEncoder.setSelectedSensorPosition(BigArmConstants.intakeSetPoint);
+    bigArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
 
     bigArmMotor.setInverted(true);
     bigArmEncoder.setInverted(true);

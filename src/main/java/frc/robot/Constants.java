@@ -3,6 +3,9 @@ package frc.robot;
 import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.pathplanner.lib.PathConstraints;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -18,6 +21,8 @@ import edu.wpi.first.math.util.Units;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
+
+    public static final SupplyCurrentLimitConfiguration ARM_MOTOR_SUPPLY_CONFIG = new SupplyCurrentLimitConfiguration(true, 30, 35, 0.1); 
 
     public static final class GripperConstants{
         public static final double gripperKP = 0.0;//TODO change the PID values

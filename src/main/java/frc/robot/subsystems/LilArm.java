@@ -42,6 +42,7 @@ public class LilArm extends SubsystemBase {
     lilArmMotor = new WPI_TalonSRX(LilArmConstants.lilArmMotorID);
     lilArmSolenoid = new Solenoid(LilArmConstants.PCMID, PneumaticsModuleType.CTREPCM,
         LilArmConstants.lilArmSolenoidID);
+    lilArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);    
  
     //lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     // lilArmEncoder.setSelectedSensorPosition(Preferences.getDouble(LilArmConstants.lilArmPreferencesKey, 0));
