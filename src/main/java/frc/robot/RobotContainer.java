@@ -5,14 +5,12 @@
 
 package frc.robot;
 
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,12 +18,10 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.BigArmConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.actions.GrabItemFromIntake;
 import frc.robot.commands.actions.GrabItemFromIntakeNoOpen;
 import frc.robot.commands.actions.EmergencyStop;
-import frc.robot.commands.actions.GrabItemFromIntake;
 import frc.robot.commands.actions.MoveArmsToTheGround;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
@@ -57,8 +53,6 @@ public class RobotContainer {
     boolean fieldRelative = true;
     boolean openLoop = true;
 
-    // VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(PoseStrategy.LOWEST_AMBIGUITY);
-    // swerve.setVisionPoseEstimator(visionPoseEstimator);
     bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRightY()));
     lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> operatorController.getLeftY()));
 
@@ -66,7 +60,6 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings(gripper, lilArm, bigArm);
-    //.buildCameras();
     buildCameras();
   }
 
@@ -78,11 +71,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings(Gripper gripper, LilArm lilArm, BigArm bigArm) {
   
-  //MoveArmsToTheGround moveArmsToGround = new MoveArmsToTheGround(gripper, lilArm, bigArm);
   GrabItemFromIntake grabItemFromIntake = new GrabItemFromIntake(lilArm, bigArm, gripper);
   GrabItemFromIntakeNoOpen grabItemFromIntakeNoOpen = new GrabItemFromIntakeNoOpen(lilArm, bigArm, gripper);
-  //PutItemInTheMiddle putItemInTheMiddle = new PutItemInTheMiddle(lilArm, bigArm, gripper);
-  //PutItemInTheUpper putItemInTheUpper = new PutItemInTheUpper(bigArm, lilArm, gripper);
   ConditionalCommand intake = new ConditionalCommand(grabItemFromIntakeNoOpen, grabItemFromIntake,()-> gripper.getFakeIsGripperOpen());
 
 
@@ -104,7 +94,6 @@ public class RobotContainer {
       operatorController.b().onTrue(intake);
       operatorController.start().onTrue(new EmergencyStop(lilArm,bigArm));
       operatorController.back().onTrue(bigArm.Hone());
-      //TODO add upper intake
     }
 
     /** 

@@ -4,13 +4,11 @@
 
 package frc.robot.commands.actions;
 
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.BigArmConstants;
-import frc.robot.Constants.GripperConstants;
 import frc.robot.Constants.LilArmConstants;
-import frc.robot.commands.MoveArmsToSetPointsBigFirat;
+import frc.robot.commands.MoveArmsToSetPointsBigFirst;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -20,8 +18,8 @@ public class PutItemInTheUpper extends SequentialCommandGroup {
   public PutItemInTheUpper(BigArm bigArm, LilArm lilArm, Gripper gripper) {
     //cone and cube setPoints
     //MoveArmsToSetPointsLilFirst coneUpperSetPoint = new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.coneUpperSetPoint, lilArm, LilArmConstants.coneUpperSetPoint);
-    MoveArmsToSetPointsBigFirat cubeUpperFirstSetPoint = new MoveArmsToSetPointsBigFirat(bigArm, BigArmConstants.cubeUpperFirstSetPoint, lilArm, LilArmConstants.cubeUpperFirstSetPoint);
-    MoveArmsToSetPointsBigFirat cubeUpperSecondSetPoint = new MoveArmsToSetPointsBigFirat(bigArm, BigArmConstants.cubeUpperSecondSetPoint, lilArm, LilArmConstants.cubeUpperFirstSetPoint);
+    MoveArmsToSetPointsBigFirst cubeUpperFirstSetPoint = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.cubeUpperFirstSetPoint, lilArm, LilArmConstants.cubeUpperFirstSetPoint);
+    MoveArmsToSetPointsBigFirst cubeUpperSecondSetPoint = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.cubeUpperSecondSetPoint, lilArm, LilArmConstants.cubeUpperFirstSetPoint);
     MoveArmsToSetPointsLilFirst cubeUpperFinalSetPoint = new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.cubeUpperFinalSetPoint, lilArm, LilArmConstants.cubeUpperFinalSetPoint);
 
     

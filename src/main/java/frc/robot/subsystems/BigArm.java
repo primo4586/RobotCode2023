@@ -2,18 +2,11 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
-import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,23 +17,19 @@ public class BigArm extends SubsystemBase {
   private WPI_TalonSRX bigArmMotor;
   private WPI_TalonSRX bigArmEncoder;
   private PIDController bigArmPID;
-  private ArmFeedforward bigArmMotorFeedforward;
   private DigitalInput honeSwitch;
 
   public BigArm() {
     bigArmPID = BigArmConstants.bigArmPID;
-    bigArmMotorFeedforward = BigArmConstants.bigArmFeedforward;
 
     bigArmMotor = new WPI_TalonSRX(BigArmConstants.bigArmMotorPort);
     bigArmEncoder = new WPI_TalonSRX(BigArmConstants.bigArmEncoderID);
     
-    //bigArmMotor.setSelectedSensorPosition(Preferences.getDouble(BigArmConstants.bigArmPreferencesKey, 0));
     bigArmEncoder.setSelectedSensorPosition(BigArmConstants.intakeSetPoint);
     bigArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
 
     bigArmMotor.setInverted(true);
     bigArmEncoder.setInverted(true);
-    // bigArmMotor.setSensorPhase(false);
 
     honeSwitch = new DigitalInput(BigArmConstants.honeSwitchID);
   }
@@ -62,7 +51,6 @@ public class BigArm extends SubsystemBase {
     .until(() -> Math.abs(this.getCurrentArmAngle() - setPoint) <= BigArmConstants.ticksTolerance);
   }
 
-  // TODO: Setup conversions according to the encoder's CPR
   public double getCurrentArmAngle() {
     return bigArmEncoder.getSelectedSensorPosition();
   }

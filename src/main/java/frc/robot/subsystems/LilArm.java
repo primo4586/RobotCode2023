@@ -2,15 +2,10 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
-import org.opencv.core.Mat;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Preferences;
@@ -30,13 +25,11 @@ public class LilArm extends SubsystemBase {
   private DigitalInput solenoidOpenSensor;
 
   private PIDController lilArmPID;
-  private ArmFeedforward lilArmFeedforward;
 
 
   /** Creates a new LilArm. */
   public LilArm() {
     lilArmPID = LilArmConstants.lilArmPID;
-    lilArmFeedforward = LilArmConstants.lilArmFeedforward;
 
     lilArmEncoder = new WPI_TalonSRX(LilArmConstants.lilArmEncoderID);
     lilArmMotor = new WPI_TalonSRX(LilArmConstants.lilArmMotorID);
@@ -44,9 +37,6 @@ public class LilArm extends SubsystemBase {
         LilArmConstants.lilArmSolenoidID);
     lilArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);    
  
-    //lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-    // lilArmEncoder.setSelectedSensorPosition(Preferences.getDouble(LilArmConstants.lilArmPreferencesKey, 0));
-    // 
     lilArmEncoder.setSelectedSensorPosition(LilArmConstants.intakeSetPoint);
     solenoidOpenSensor = new DigitalInput(0);
   }
@@ -90,7 +80,6 @@ public class LilArm extends SubsystemBase {
     Preferences.setDouble(LilArmConstants.lilArmPreferencesKey, LilArmConstants.resetPoint);
   }
 
-  // TODO: Setup conversions according to the encoder's CPR
   public double getCurrentArmAngle() {
     return lilArmEncoder.getSelectedSensorPosition();
   }

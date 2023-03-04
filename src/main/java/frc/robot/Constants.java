@@ -3,14 +3,10 @@ package frc.robot;
 import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.pathplanner.lib.PathConstraints;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -25,35 +21,18 @@ public final class Constants {
     public static final SupplyCurrentLimitConfiguration ARM_MOTOR_SUPPLY_CONFIG = new SupplyCurrentLimitConfiguration(true, 30, 35, 0.1); 
 
     public static final class GripperConstants{
-        public static final double gripperKP = 0.0;//TODO change the PID values
-        public static final double gripperKI = 0.0;
-        public static final double gripperKD = 0.0;
-        public static final PIDController gripperPID = new PIDController(gripperKP, gripperKI, gripperKD);
-
-        public static final double gripperKs = 0.0;//TODO change the feed forward values
-        public static final double gripperKv = 0.0;
-        public static final SimpleMotorFeedforward gripperFeedforward = new SimpleMotorFeedforward(gripperKs, gripperKv);
-
-        public static final double gripperGearRatio = 100 / 1;
-
         public static final int gripperMotorPort = 11;
-
-        public static final double cubeGrabingSetPoint = 0.0;//TODO change the set points
-        public static final double coneGrabingSetPoint = 0.0;
-        public static final double openGripperSetPoint = 0.0;
-
-        public static final double grippingTolarance = 0.0;
 
         public static final int solenoidOpenID = 6;
         public static final int solenoidCloseID = 3;
         public static final int PCMID = 1;
 
-        public static final int isGripperOpenID = 2;//TODO
+        public static final int isGripperOpenID = 2;
     }
 
     public static final class BigArmConstants{
         //bigArm PID values
-        private static final double bigArmKP = 0.002;//TODO change the PID values
+        private static final double bigArmKP = 0.002;
         private static final double bigArmKI = 0.0;
         private static final double bigArmKD = 0.0001;
         public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
@@ -61,14 +40,6 @@ public final class Constants {
         //bigArm feedforward values
         public static final double feedForwardVelocity = 0.0;
 
-        // TODO: Update these to the arm's real physical constraints.
-        private static final double bigArmMaxSpeed = 0;
-        private static final double bigArmMaxAccel = 0;
-        public static final TrapezoidProfile.Constraints bigArmProfileConstraints = new TrapezoidProfile.Constraints(bigArmMaxSpeed, bigArmMaxAccel);
-        private static final double bigArmKs = 0.0;//TODO change th feed forward values
-        private static final double bigArmKg = 0.0;
-        private static final double bigArmKv = 0.0;
-        public static final ArmFeedforward bigArmFeedforward = new ArmFeedforward(bigArmKs, bigArmKg, bigArmKv);
 
         public static final double bigArmGearRatio = 3000 / 1;// (60 Gear to 50 gear = 60 * 50 = 3000 - god knows why) 
 
@@ -79,7 +50,6 @@ public final class Constants {
 
         public static final String bigArmPreferencesKey = "bigArmEncoder" ;
 
-        //TODO: add setPoints
         public static final double coneUpperFinalSetPoint = 63200;
         public static final double coneMiddleSetPoint = -14700;
 
@@ -89,12 +59,12 @@ public final class Constants {
 
         public static final double cubeMiddleSetPoint = -17668;
 
-        public static final double intakeSetPoint = 19493;//15400;//16424;
+        public static final double intakeSetPoint = 19493;
         public static final double intakeReturnSetPoint = 37000;
         public static final double intakeReturnDeadZone = 48839;
 
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = -15466;//-10626;
+        public static final double groundSetPoint = -15466;
 
         public static final double honeSpeed = 0.4;
         public static final double honeSetPoint = 0.0;
@@ -226,33 +196,12 @@ public final class Constants {
         public static final double STATION_PITCH_ANGLE_TOLERANCE = 2.5;
 
         /* where to align Constants */
-        public static final double alignmentToleranceMeters = 0.0;//TODO: decied what is conciderd close enough
 
-        // 3 scoring locations on each side.
-        public static final List<Translation2d> cubeScoringLocations = List.of(new Translation2d[]{
-            new Translation2d(),
-            new Translation2d(),
-            new Translation2d(),
-            new Translation2d(),
-            new Translation2d(),
-            new Translation2d()
-        });
+        // 3 scoring locations on each side. (Unused)
+        public static final List<Translation2d> cubeScoringLocations = List.of();
 
-        // 6 scoring locations per side.
-        public static final List<Translation2d> coneScoringLocations = List.of(new Translation2d[]{
-            new Translation2d(),
-            new Translation2d(),
-            new Translation2d(),
-            new Translation2d(),
-            new Translation2d(),
-            new Translation2d(),
-            new Translation2d(),
-            new Translation2d(),
-            new Translation2d(),
-            new Translation2d(),
-            new Translation2d(),
-            new Translation2d(),
-        });
+        // 6 scoring locations per side. (Unused)
+        public static final List<Translation2d> coneScoringLocations = List.of();
     }
 
     public static final class Misc {
@@ -268,23 +217,12 @@ public final class Constants {
 
     public static final class LilArmConstants {
         /* LilArm PID Values */ 
-        private static final double lilArmMotorsKP = 0.1;//TODO change the PID values
+        private static final double lilArmMotorsKP = 0.1;
         private static final double lilArmMotorsKI = 0.0;
         private static final double lilArmMotorsKD = 0.0;
         
         public static final PIDController lilArmPID = new PIDController(lilArmMotorsKP, lilArmMotorsKI, lilArmMotorsKD);
-    
-        /* LilArm Feedforward Values */ 
-        // TODO: Update these to the arm's real physical constraints.
-        private static final double lilArmMaxSpeed = 0;
-        private static final double lilArmMaxAccel = 0;
-        public static final TrapezoidProfile.Constraints lilArmProfileConstraints = new TrapezoidProfile.Constraints(lilArmMaxSpeed, lilArmMaxAccel);
 
-        public static final double lilArmMotorsKs = 0.0;//TODO change the feedforward values
-        public static final double lilArmMotorsKg = 0.0;
-        public static final double lilArmMotorsKv = 0.0;
-        public static final ArmFeedforward lilArmFeedforward = new ArmFeedforward(lilArmMotorsKs, lilArmMotorsKg, lilArmMotorsKv);
-    
         public static final String lilArmPreferencesKey = "lilArmEncoder";
 
         /* LilArm Motors ID */ 
@@ -293,7 +231,7 @@ public final class Constants {
         public static final int lilArmEncoderID = 3;
 
         /* LilArm Motors Gear Ratio */
-        public static final double lilMotorGearRatio = 6000 / 1;//TODO change the values
+        public static final double lilMotorGearRatio = 6000 / 1;
 
         /* LilArm Solenoid Ports */
         public static final int PCMID = 1;
@@ -301,9 +239,8 @@ public final class Constants {
 
         public static final double ticksTolerance = 5;
 
-                //TODO: add setPoints
         public static final double coneUpperFinalSetPoint = -2215;
-        public static final double coneMiddleSetPoint = 1326;//1445;
+        public static final double coneMiddleSetPoint = 1326;
 
 
         public static final double cubeUpperFirstSetPoint = -700;
@@ -315,7 +252,7 @@ public final class Constants {
         public static final double intakeReturnDeadZone =2345;
  
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = 425;//449;
+        public static final double groundSetPoint = 425;
 
         public static final double resetPoint = -30;
 

@@ -4,13 +4,12 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.LilArm;
 
-public class MoveArmsToSetPointsBigFirat extends SequentialCommandGroup {
-  public MoveArmsToSetPointsBigFirat(BigArm bigArm, Double setPointBigArm, LilArm lilArm, Double setPointLilArm) {
+public class MoveArmsToSetPointsBigFirst extends SequentialCommandGroup {
+  public MoveArmsToSetPointsBigFirst(BigArm bigArm, Double setPointBigArm, LilArm lilArm, Double setPointLilArm) {
 
   
     addCommands(

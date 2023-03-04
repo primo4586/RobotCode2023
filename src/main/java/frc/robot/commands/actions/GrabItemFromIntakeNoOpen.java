@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.BigArmConstants;
 import frc.robot.Constants.LilArmConstants;
-import frc.robot.commands.MoveArmsToSetPointsBigFirat;
+import frc.robot.commands.MoveArmsToSetPointsBigFirst;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -17,8 +17,8 @@ import frc.robot.subsystems.LilArm;
 public class GrabItemFromIntakeNoOpen extends SequentialCommandGroup {
   public GrabItemFromIntakeNoOpen(LilArm lilArm, BigArm bigArm, Gripper gripper) {
    //closes the solenoid
-   MoveArmsToSetPointsBigFirat moveArmsToIntake = new MoveArmsToSetPointsBigFirat(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint);
-   MoveArmsToSetPointsBigFirat moveArmsToMiddleOfBot = new MoveArmsToSetPointsBigFirat(bigArm, BigArmConstants.middleOfRobotSetPoint, lilArm, LilArmConstants.middleOfRobotSetPoint);
+   MoveArmsToSetPointsBigFirst moveArmsToIntake = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint);
+   MoveArmsToSetPointsBigFirst moveArmsToMiddleOfBot = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.middleOfRobotSetPoint, lilArm, LilArmConstants.middleOfRobotSetPoint);
 
   
    
