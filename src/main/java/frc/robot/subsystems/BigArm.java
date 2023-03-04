@@ -35,8 +35,8 @@ public class BigArm extends SubsystemBase {
   }
 
   public void putBigArmInPlace(double setPoint){
-    SmartDashboard.putNumber("Big Arm PID Output",-bigArmPID.calculate(getCurrentArmAngle(), setPoint));
-    bigArmMotor.setVoltage(-bigArmPID.calculate(getCurrentArmAngle(), setPoint));
+    SmartDashboard.putNumber("Big Arm PID Output",-bigArmPID.calculate(getCurrentArmPosition(), setPoint));
+    bigArmMotor.setVoltage(-bigArmPID.calculate(getCurrentArmPosition(), setPoint));
   }
 
   public void zeroEncoderForIntake(){
@@ -48,10 +48,10 @@ public class BigArm extends SubsystemBase {
     return run(()->{
       putBigArmInPlace(setPoint);
     })
-    .until(() -> Math.abs(this.getCurrentArmAngle() - setPoint) <= BigArmConstants.ticksTolerance);
+    .until(() -> Math.abs(this.getCurrentArmPosition() - setPoint) <= BigArmConstants.ticksTolerance);
   }
 
-  public double getCurrentArmAngle() {
+  public double getCurrentArmPosition() {
     return bigArmEncoder.getSelectedSensorPosition();
   }
 
@@ -63,7 +63,7 @@ public class BigArm extends SubsystemBase {
   }
 
   public void setPreference(){
-    Preferences.setDouble(BigArmConstants.bigArmPreferencesKey, getCurrentArmAngle());
+    Preferences.setDouble(BigArmConstants.bigArmPreferencesKey, getCurrentArmPosition());
   }
 
   public boolean getHoneSwitch(){

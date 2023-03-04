@@ -9,8 +9,8 @@ public class MoveArmsToTheGround extends SequentialCommandGroup {
   public MoveArmsToTheGround(Gripper gripper, LilArm lilArm, BigArm bigArm) {
 
     GrabItemFromIntake grabItemFromIntake = new GrabItemFromIntake(lilArm, bigArm, gripper);
-    //MoveArmsToSetPointsBigFirat moveArmsToGround = new MoveArmsToSetPointsBigFirat(bigArm, BigArmConstants.groundSetPoint, lilArm, LilArmConstants.groundSetPoint);
     MoveArmsToSetPointsLilFirst moveArmsToGround = new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.groundSetPoint, lilArm, LilArmConstants.groundSetPoint);
+  
     addCommands(
       gripper.closeGripper(),
       grabItemFromIntake,

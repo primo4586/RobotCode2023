@@ -24,14 +24,10 @@ public class GrabItemFromIntakeNoOpen extends SequentialCommandGroup {
    
 
    addCommands(
-    // gripper.closeGripper(),
     lilArm.closeLilArmSolenoid(),
-    bigArm.TurnBigArmToSetpoint(BigArmConstants.cubeUpperFirstSetPoint).unless(()->bigArm.getCurrentArmAngle()<28000),
-    lilArm.TurnLilArmToSetpoint(LilArmConstants.intakeSetPoint).unless(() -> lilArm.getCurrentArmAngle() > LilArmConstants.intakeSetPoint),//||bigArm.getCurrentArmAngle()>BigArmConstants.intakeReturnDeadZone),
+    bigArm.TurnBigArmToSetpoint(BigArmConstants.cubeUpperFirstSetPoint).unless(()->bigArm.getCurrentArmPosition()<28000),
+    lilArm.TurnLilArmToSetpoint(LilArmConstants.intakeSetPoint).unless(() -> lilArm.getCurrentArmPosition() > LilArmConstants.intakeSetPoint),//||bigArm.getCurrentArmAngle()>BigArmConstants.intakeReturnDeadZone),
     moveArmsToIntake
-     //gripper.openGripper()
-     //gripper.closeGripper(
-     //moveArmsToMiddleOfBot
    );
   }
 }

@@ -57,8 +57,8 @@ public class LilArm extends SubsystemBase {
   }
 
   public void putArmInPlace(double setpoint) {
-    SmartDashboard.putNumber("LilArm PID Output", lilArmPID.calculate(getCurrentArmAngle(), setpoint));
-    lilArmMotor.setVoltage(lilArmPID.calculate(getCurrentArmAngle(), setpoint));
+    SmartDashboard.putNumber("LilArm PID Output", lilArmPID.calculate(getCurrentArmPosition(), setpoint));
+    lilArmMotor.setVoltage(lilArmPID.calculate(getCurrentArmPosition(), setpoint));
   }
 
   public Command TurnLilArmToSetpoint(double setpoint) {
@@ -66,7 +66,7 @@ public class LilArm extends SubsystemBase {
     return run(() -> {
         putArmInPlace(setpoint);
     })
-    .until(() -> (Math.abs(getCurrentArmAngle() - setpoint) <= LilArmConstants.ticksTolerance));
+    .until(() -> (Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance));
   }
 
   public Command speedByTime(double speed, double time) {
@@ -76,11 +76,10 @@ public class LilArm extends SubsystemBase {
 
 
   public void setPreference(){
-    //Preferences.setDouble(LilArmConstants.lilArmPreferencesKey, getCurrentArmAngle());
     Preferences.setDouble(LilArmConstants.lilArmPreferencesKey, LilArmConstants.resetPoint);
   }
 
-  public double getCurrentArmAngle() {
+  public double getCurrentArmPosition() {
     return lilArmEncoder.getSelectedSensorPosition();
   }
 
