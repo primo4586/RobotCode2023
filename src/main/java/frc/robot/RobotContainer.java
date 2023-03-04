@@ -81,7 +81,6 @@ public class RobotContainer {
     driverController.x().onTrue(gripper.toggleGripper());
     driverController.start().onTrue(swerve.LockWheelsChargeStation());
     driverController.back().onTrue(lilArm.zeroLilArm());
-    driverController.leftTrigger().whileTrue(swerve.followTrajectoryToAligmentPose(gripper::getShouldGripCone));
     // driverController.leftBumper().onTrue(new InstantCommand(() -> handler.switchCamera()));
     operatorController.rightBumper().onTrue(lilArm.closeLilArmSolenoid());
     operatorController.rightTrigger().onTrue(lilArm.openLilArmSolenoid());

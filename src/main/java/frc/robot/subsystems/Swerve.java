@@ -1,15 +1,10 @@
 package frc.robot.subsystems;
 
-import java.util.List;
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import frc.robot.SwerveModule;
@@ -240,7 +235,7 @@ public class Swerve extends SubsystemBase {
         updateOdometry();
 
         SmartDashboard.putNumber("Gyro", getYaw().getDegrees());
-        SmartDashboard.putNumber("Pit", getRoll());
+        SmartDashboard.putNumber("Roll", getRoll());
         SmartDashboard.putNumber("Teleop Gyro", getTeleopYaw().getDegrees());
 
         for (SwerveModule mod : mSwerveMods) {
@@ -301,95 +296,7 @@ public class Swerve extends SubsystemBase {
         };
     }
 
-    /**
-     * Follows a path from the current robot's position to an offset position
-     * relative to an AprilTag on the field.
-     * This depends on {@link VisionPoseEstimator}! Without a vision pose estimator
-     * set, you cannot have a trajectory made to a tag!
-     * 
-     * @param tagID         ID Number of the tag.
-     * @param offsetFromTag Relative offset from the AprilTag's position as the goal
-     *                      position to arrive at.
-     * @return A ProxyCommand which regenerates the command when scheduled, to have
-     *         the trajectory be accurate to where the robot is at the point it's
-     *         called.
-     */
-    public Command followTrajectoryToTag(int tagID, Translation2d offsetFromTag) {
-        if (visionPoseEstimator == null)
-            return new InstantCommand(); // Empty command incase VisionPoseEstimator is not set.
-
-        Supplier<Command> followCmdSupplier = () -> new PPSwerveControllerCommand(
-                generateTrajectoryToTag(tagID, offsetFromTag),
-                this::getPose,
-                SwerveConstants.swerveKinematics,
-                new PIDController(AutoConstants.kPXController, 0, 0),
-                new PIDController(AutoConstants.kPYController, 0, 0),
-                new PIDController(AutoConstants.kPThetaController, 0, 0),
-                this::setModuleStatesClosedLoop,
-                false,
-                this);
-
-        return new ProxyCommand(followCmdSupplier);
-    }
-
-    /**
-     * Generates a trajectory from the robot's current position to a position on the
-     * field relative to an AprilTag marker.
-     * This depends on {@link VisionPoseEstimator}! Without a vision pose estimator
-     * set, you cannot have a trajectory made to a tag!
-     * 
-     * @param tagID             ID Number of the tag.
-     * @param goalOffsetFromTag Relative offset from the AprilTag's position as the
-     *                          goal
-     *                          position to arrive at.
-     * @return A trajectory to follow from the robot's current position to the goal
-     *         position
-     */
-    public PathPlannerTrajectory generateTrajectoryToTag(int tagID, Translation2d goalOffsetFromTag) {
-        if (visionPoseEstimator == null)
-            return new PathPlannerTrajectory(); // Empty trajectory - 0 seconds duration.
-
-        PathPoint robotPose = new PathPoint(getPose().getTranslation(), getYaw());
-        Pose2d targetPosition = visionPoseEstimator.getApriltagLayout().getTagPose(tagID).get().toPose2d();
-
-        var goalPosition = targetPosition.getTranslation().minus(goalOffsetFromTag);
-        PathPoint endPoint = new PathPoint(goalPosition, Rotation2d.fromDegrees(0));
-
-        return PathPlanner.generatePath(
-                new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
-                        AutoConstants.kMaxAccelerationMetersPerSecondSquared),
-                List.of(robotPose, endPoint));
-    }
-
-    public PathPlannerTrajectory generateTrajectoryToAligmentPose(Translation2d targetPose) {
-        if (targetPose == null)
-            return new PathPlannerTrajectory(); // Empty trajectory - 0 seconds duration.
-
-        PathPoint robotPose = new PathPoint(getPose().getTranslation(), getYaw());
-        PathPoint endPoint = new PathPoint(targetPose, Rotation2d.fromDegrees(0));
-
-        return PathPlanner.generatePath(
-                new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
-                        AutoConstants.kMaxAccelerationMetersPerSecondSquared),
-                List.of(robotPose, endPoint));
-    }
-
-    public Command followTrajectoryToAligmentPose(BooleanSupplier shouldGripCone) {
-
-        Supplier<Command> followCmdSupplier = () -> new PPSwerveControllerCommand(
-                generateTrajectoryToAligmentPose(whereToAlign(shouldGripCone)),
-                this::getPose,
-                SwerveConstants.swerveKinematics,
-                new PIDController(AutoConstants.kPXController, 0, 0),
-                new PIDController(AutoConstants.kPYController, 0, 0),
-                new PIDController(AutoConstants.kPThetaController, 0, 0),
-                this::setModuleStatesClosedLoop,
-                false,
-                this);
-
-        return new ProxyCommand(followCmdSupplier);
-    }
-
+    
     /**
      * Follows a given trajectory from PathPlanner
      * 
@@ -556,15 +463,6 @@ public class Swerve extends SubsystemBase {
                     false);
         })
                 .until(() -> Math.abs(getPitch()) < SwerveConstants.STATION_PITCH_ANGLE_TOLERANCE);
-    }
-
-    public Translation2d whereToAlign(BooleanSupplier shouldGripCone) {
-        Pose2d currentPose = getPose();
-
-        var scoringLocations = shouldGripCone.getAsBoolean() ? SwerveConstants.coneScoringLocations
-                : SwerveConstants.cubeScoringLocations;
-
-        return currentPose.getTranslation().nearest(scoringLocations);
     }
     
     public void lockWheelsChargeStation() {
