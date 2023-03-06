@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
-
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.BigArmConstants;
 import frc.robot.Constants.LilArmConstants;
 
 public class LilArm extends SubsystemBase {
@@ -22,7 +23,6 @@ public class LilArm extends SubsystemBase {
   private WPI_TalonSRX lilArmEncoder;
 
   private Solenoid lilArmSolenoid;
-  private DigitalInput solenoidOpenSensor;
 
   private PIDController lilArmPID;
 
@@ -36,9 +36,9 @@ public class LilArm extends SubsystemBase {
     lilArmSolenoid = new Solenoid(LilArmConstants.PCMID, PneumaticsModuleType.CTREPCM,
         LilArmConstants.lilArmSolenoidID);
     lilArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);    
- 
-    lilArmEncoder.setSelectedSensorPosition(LilArmConstants.intakeSetPoint);
-    solenoidOpenSensor = new DigitalInput(0);
+    lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+
+    // lilArmEncoder.setSelectedSensorPosition(LilArmConstants.intakeSetPoint);
   }
 
   public boolean isSolenoidOpen() {
@@ -52,7 +52,7 @@ public class LilArm extends SubsystemBase {
   public Command setMotorSpeed(DoubleSupplier supplier) {
     return this.run(() -> {
 
-      lilArmMotor.set(supplier.getAsDouble() * 0.5);
+      lilArmMotor.set(supplier.getAsDouble());
     });
   }
 
@@ -61,10 +61,23 @@ public class LilArm extends SubsystemBase {
     lilArmMotor.setVoltage(lilArmPID.calculate(getCurrentArmPosition(), setpoint));
   }
 
+  public void putArmInPlaceWithCustomPID(double setpoint, PIDController pid) {
+    SmartDashboard.putNumber("LilArm PID Output", pid.calculate(getCurrentArmPosition(), setpoint));
+    lilArmMotor.setVoltage(pid.calculate(getCurrentArmPosition(), setpoint));
+  }
+
   public Command TurnLilArmToSetpoint(double setpoint) {
     SmartDashboard.putNumber("LilArm Setpoint", setpoint);
     return run(() -> {
         putArmInPlace(setpoint);
+    })
+    .until(() -> (Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance));
+  }
+
+  public Command TurnLilArmToSetpointWithCustomPID(double setpoint, PIDController pid) {
+    SmartDashboard.putNumber("LilArm Setpoint", setpoint);
+    return run(() -> {
+        putArmInPlaceWithCustomPID(setpoint, pid);
     })
     .until(() -> (Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance));
   }
@@ -97,7 +110,7 @@ public class LilArm extends SubsystemBase {
 
   public Command zeroLilArm() {
     return runOnce(() -> {
-      lilArmEncoder.setSelectedSensorPosition(-30);
+      lilArmEncoder.setSelectedSensorPosition(0);
     });
   }
 

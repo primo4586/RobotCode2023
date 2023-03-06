@@ -23,8 +23,7 @@ public class PutItemInTheMiddle extends SequentialCommandGroup {
 
     addCommands(
       lilArm.closeLilArmSolenoid(),
-      putArmsInMiddleSetPoint,
-      lilArm.openLilArmSolenoid()
+      putArmsInMiddleSetPoint
     );
   }
 }

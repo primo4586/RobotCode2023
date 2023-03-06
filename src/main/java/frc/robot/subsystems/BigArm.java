@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -28,15 +29,12 @@ public class BigArm extends SubsystemBase {
     bigArmEncoder.setSelectedSensorPosition(BigArmConstants.intakeSetPoint);
     bigArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
 
-    bigArmMotor.setInverted(true);
-    bigArmEncoder.setInverted(true);
-
     honeSwitch = new DigitalInput(BigArmConstants.honeSwitchID);
   }
 
   public void putBigArmInPlace(double setPoint){
-    SmartDashboard.putNumber("Big Arm PID Output",-bigArmPID.calculate(getCurrentArmPosition(), setPoint));
-    bigArmMotor.setVoltage(-bigArmPID.calculate(getCurrentArmPosition(), setPoint));
+    SmartDashboard.putNumber("Big Arm PID Output",bigArmPID.calculate(getCurrentArmPosition(), setPoint));
+    bigArmMotor.setVoltage(bigArmPID.calculate(getCurrentArmPosition(), setPoint));
   }
 
   public void zeroEncoderForIntake(){
@@ -58,7 +56,7 @@ public class BigArm extends SubsystemBase {
   public Command setMotorSpeed(DoubleSupplier supplier) {
     return this.run(() -> {
 
-      bigArmMotor.set(supplier.getAsDouble() * 0.5);
+      bigArmMotor.set(supplier.getAsDouble());
     });
   }
 
@@ -83,6 +81,7 @@ public class BigArm extends SubsystemBase {
   @Override
   public void periodic() {
       SmartDashboard.putNumber("Big Arm Position", bigArmEncoder.getSelectedSensorPosition());
+      SmartDashboard.putBoolean("Hone Switch value", getHoneSwitch());
   }
 
   public Command zeroEncoder() {

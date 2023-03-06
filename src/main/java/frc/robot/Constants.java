@@ -25,16 +25,16 @@ public final class Constants {
 
         public static final int solenoidOpenID = 6;
         public static final int solenoidCloseID = 3;
-        public static final int PCMID = 1;
+        public static final int PCMID = 44;
 
         public static final int isGripperOpenID = 2;
     }
 
     public static final class BigArmConstants{
         //bigArm PID values
-        private static final double bigArmKP = 0.002;
+        private static final double bigArmKP = 0.00175;
         private static final double bigArmKI = 0.0;
-        private static final double bigArmKD = 0.0001;
+        private static final double bigArmKD = 0.0;
         public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
 
         //bigArm feedforward values
@@ -46,29 +46,30 @@ public final class Constants {
         public static final int bigArmMotorPort = 17;
         public static final int bigArmEncoderID = 5;
 
-        public static final double ticksTolerance = 1000;
+        public static final double ticksTolerance = 500;
 
         public static final String bigArmPreferencesKey = "bigArmEncoder" ;
 
-        public static final double coneUpperFinalSetPoint = 63200;
-        public static final double coneMiddleSetPoint = -14700;
+        public static final double coneUpperFinalSetPoint = -54806;//-61857;
+        public static final double coneMiddleSetPoint = -31028;
 
-        public static final double cubeUpperFirstSetPoint = 44000;
-        public static final double cubeUpperSecondSetPoint = 25000;
-        public static final double cubeUpperFinalSetPoint = 54000;
 
-        public static final double cubeMiddleSetPoint = -17668;
+        public static final double cubeUpperFinalSetPoint = -47817;
 
-        public static final double intakeSetPoint = 19493;
+        public static final double cubeMiddleSetPoint = -39313;
+
+        public static final double intakeSetPoint = -6937;//-22270;
         public static final double intakeReturnSetPoint = 37000;
         public static final double intakeReturnDeadZone = 48839;
+
+        public static final double highIntakeSetpoint = -19155;
 
         public static final double middleOfRobotSetPoint = 0.0;
         public static final double groundSetPoint = -15466;
 
-        public static final double honeSpeed = 0.4;
+        public static final double honeSpeed = 0.2;
         public static final double honeSetPoint = 0.0;
-        public static final int honeSwitchID = 3;
+        public static final int honeSwitchID = 0;
     }
 
     public static final class SwerveConstants {
@@ -217,11 +218,16 @@ public final class Constants {
 
     public static final class LilArmConstants {
         /* LilArm PID Values */ 
-        private static final double lilArmMotorsKP = 0.1;
+        private static final double lilArmMotorsKP = 0.09;
         private static final double lilArmMotorsKI = 0.0;
         private static final double lilArmMotorsKD = 0.0;
         
         public static final PIDController lilArmPID = new PIDController(lilArmMotorsKP, lilArmMotorsKI, lilArmMotorsKD);
+
+        public static final double lilArmUpperConeKP = 0.14;
+        public static final double lilArmUpperConeKI = 0.0;
+        public static final double lilArmUpperConeKD = 0.0;
+        public static final PIDController lilArmUpperConePID = new PIDController(lilArmUpperConeKP, lilArmUpperConeKI, lilArmUpperConeKD);
 
         public static final String lilArmPreferencesKey = "lilArmEncoder";
 
@@ -234,22 +240,23 @@ public final class Constants {
         public static final double lilMotorGearRatio = 6000 / 1;
 
         /* LilArm Solenoid Ports */
-        public static final int PCMID = 1;
+        public static final int PCMID = 44;
         public static final int lilArmSolenoidID = 4;
 
         public static final double ticksTolerance = 5;
 
-        public static final double coneUpperFinalSetPoint = -2215;
-        public static final double coneMiddleSetPoint = 1326;
+        public static final double coneUpperFinalSetPoint = -1793;
+        public static final double coneMiddleSetPoint = -1245;
 
 
-        public static final double cubeUpperFirstSetPoint = -700;
-        public static final double cubeUpperFinalSetPoint = -1730;
+        public static final double  cubeUpperFinalSetPoint = -1290;
 
-        public static final double cubeMiddleSetPoint = 1111;
+        public static final double cubeMiddleSetPoint = -839;
 
-        public static final double intakeSetPoint = 95;
+        public static final double intakeSetPoint = -298;//328;
         public static final double intakeReturnDeadZone =2345;
+
+        public static final double highIntakeSetpoint = -1000;
  
         public static final double middleOfRobotSetPoint = 0.0;
         public static final double groundSetPoint = 425;

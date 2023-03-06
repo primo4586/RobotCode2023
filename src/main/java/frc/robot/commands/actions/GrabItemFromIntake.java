@@ -16,16 +16,17 @@ public class GrabItemFromIntake extends SequentialCommandGroup {
   public GrabItemFromIntake(LilArm lilArm, BigArm bigArm, Gripper gripper) {
    //closes the solenoid
    MoveArmsToSetPointsBigFirst moveArmsToIntake = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint);
-   MoveArmsToSetPointsBigFirst moveArmsToMiddleOfBot = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.middleOfRobotSetPoint, lilArm, LilArmConstants.middleOfRobotSetPoint);
-
+   MoveArmsToSetPointsBigFirst moveArmsToIntake2 = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint);
+  
   
    
 
    addCommands(
     // gripper.closeGripper(),
     lilArm.closeLilArmSolenoid(),
-    bigArm.TurnBigArmToSetpoint(BigArmConstants.cubeUpperFirstSetPoint).unless(()->bigArm.getCurrentArmPosition()<28000),
+    /*bigArm.TurnBigArmToSetpoint(BigArmConstants.cubeUpperFirstSetPoint).unless(()->bigArm.getCurrentArmPosition()<28000),
     lilArm.TurnLilArmToSetpoint(LilArmConstants.intakeSetPoint).unless(() -> lilArm.getCurrentArmPosition() > LilArmConstants.intakeSetPoint),//||bigArm.getCurrentArmAngle()>BigArmConstants.intakeReturnDeadZone),
+    */
     moveArmsToIntake
      //gripper.openGripper()
      //gripper.closeGripper(

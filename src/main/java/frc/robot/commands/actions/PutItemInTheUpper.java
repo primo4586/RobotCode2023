@@ -4,6 +4,8 @@
 
 package frc.robot.commands.actions;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.BigArmConstants;
@@ -18,20 +20,25 @@ public class PutItemInTheUpper extends SequentialCommandGroup {
   public PutItemInTheUpper(BigArm bigArm, LilArm lilArm, Gripper gripper) {
     //cone and cube setPoints
     //MoveArmsToSetPointsLilFirst coneUpperSetPoint = new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.coneUpperSetPoint, lilArm, LilArmConstants.coneUpperSetPoint);
-    MoveArmsToSetPointsBigFirst cubeUpperFirstSetPoint = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.cubeUpperFirstSetPoint, lilArm, LilArmConstants.cubeUpperFirstSetPoint);
-    MoveArmsToSetPointsBigFirst cubeUpperSecondSetPoint = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.cubeUpperSecondSetPoint, lilArm, LilArmConstants.cubeUpperFirstSetPoint);
+    //MoveArmsToSetPointsBigFirst cubeUpperFirstSetPoint = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.cubeUpperFirstSetPoint, lilArm, LilArmConstants.cubeUpperFirstSetPoint);
+    //MoveArmsToSetPointsBigFirst cubeUpperSecondSetPoint = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.cubeUpperSecondSetPoint, lilArm, LilArmConstants.cubeUpperFirstSetPoint);
     MoveArmsToSetPointsLilFirst cubeUpperFinalSetPoint = new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.cubeUpperFinalSetPoint, lilArm, LilArmConstants.cubeUpperFinalSetPoint);
 
     
     MoveArmsToSetPointsLilFirst coneUpperFinalSetPoint = new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.coneUpperFinalSetPoint, lilArm, LilArmConstants.coneUpperFinalSetPoint);
+    Command coneUpper = lilArm.TurnLilArmToSetpointWithCustomPID(LilArmConstants.coneUpperFinalSetPoint, LilArmConstants.lilArmUpperConePID).andThen(bigArm.TurnBigArmToSetpoint(BigArmConstants.coneUpperFinalSetPoint)).andThen(lilArm.TurnLilArmToSetpoint(LilArmConstants.coneUpperFinalSetPoint));
     //check if we put cone or cube
-    ConditionalCommand finalSetPoint = new ConditionalCommand(coneUpperFinalSetPoint, cubeUpperFinalSetPoint, gripper::getShouldGripCone);
+    ConditionalCommand finalSetPoint = new ConditionalCommand(coneUpper, cubeUpperFinalSetPoint, gripper::getShouldGripCone);
 
+    // -54806 BIG
+    // -1742 LIL
+    ConditionalCommand middleCone = new ConditionalCommand(lilArm.TurnLilArmToSetpoint(LilArmConstants.coneMiddleSetPoint), Commands.none(), gripper::getShouldGripCone);
     addCommands(
       lilArm.closeLilArmSolenoid(),
       gripper.closeGripper(),
-      cubeUpperFirstSetPoint,
-      cubeUpperSecondSetPoint,
+      //cubeUpperFirstSetPoint,
+      //cubeUpperSecondSetPoint,
+      // middleCone,
       finalSetPoint,
       lilArm.openLilArmSolenoid()
     );

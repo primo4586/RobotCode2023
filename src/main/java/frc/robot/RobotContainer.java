@@ -18,10 +18,14 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.BigArmConstants;
+import frc.robot.Constants.LilArmConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.actions.GrabItemFromIntake;
 import frc.robot.commands.actions.GrabItemFromIntakeNoOpen;
+import frc.robot.commands.actions.MoveArmsToSetPointsLilFirst;
 import frc.robot.commands.actions.EmergencyStop;
+import frc.robot.commands.actions.GrabItemFromHighIntake;
 import frc.robot.commands.actions.MoveArmsToTheGround;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
@@ -60,7 +64,7 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings(gripper, lilArm, bigArm);
-    buildCameras();
+    // buildCameras();
   }
 
   /**
@@ -86,11 +90,15 @@ public class RobotContainer {
     operatorController.rightTrigger().onTrue(lilArm.openLilArmSolenoid());
 
     /* Operator Buttons */
-      operatorController.y().onTrue(new PutItemInTheUpper(bigArm, lilArm, gripper));
-      operatorController.a().onTrue(new PutItemInTheMiddle(lilArm, bigArm, gripper));
+       operatorController.y().onTrue(new PutItemInTheUpper(bigArm, lilArm, gripper));
+       operatorController.a().onTrue(new PutItemInTheMiddle(lilArm, bigArm, gripper));
       operatorController.leftBumper().onTrue(gripper.changeWhatWeGrip());
-      operatorController.x().onTrue(new MoveArmsToTheGround(gripper, lilArm, bigArm));
-      operatorController.b().onTrue(intake);
+      //operatorController.a().onTrue(lilArm.TurnLilArmToSetpoint(LilArmConstants.cubeMiddleSetPoint));
+      // operatorController.x().onTrue(bigArm.TurnBigArmToSetpoint(BigArmConstants.cubeMiddleSetPoint));
+      //operatorController.x().onTrue(new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.cubeMiddleSetPoint, lilArm, LilArmConstants.cubeMiddleSetPoint));
+      // operatorController.x().onTrue(new MoveArmsToTheGround(gripper, lilArm, bigArm));
+       operatorController.b().onTrue(intake);
+       operatorController.x().onTrue(new GrabItemFromHighIntake(bigArm, lilArm));
       operatorController.start().onTrue(new EmergencyStop(lilArm,bigArm));
       operatorController.back().onTrue(bigArm.Hone());
     }
