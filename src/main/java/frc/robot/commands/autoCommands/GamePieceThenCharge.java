@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.BigArmConstants;
 import frc.robot.Constants.LilArmConstants;
+import frc.robot.commands.ChargeAlignOtherSide;
 import frc.robot.commands.MoveArmsToSetPointsBigFirst;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
@@ -24,19 +25,13 @@ public class GamePieceThenCharge extends SequentialCommandGroup {
 
     ConditionalCommand puttingItemInPlace = new ConditionalCommand(putItemInTheUpper, putItemInTheMiddle,()-> shouldPutInUpper);
 
-    MoveArmsToSetPointsBigFirst moveArmsToMiddleOfBot = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.middleOfRobotSetPoint, lilArm, LilArmConstants.middleOfRobotSetPoint);
+    MoveArmsToSetPointsBigFirst moveArmsToMiddleOfBot = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint);
 
-    PathPlannerTrajectory trajectory;
     
-    if(gripper.getShouldGripCone())
-      trajectory = PathPlanner.loadPath("cone and charge", null);
-    else
-      trajectory = PathPlanner.loadPath("cube and charge", null);
     addCommands(
       puttingItemInPlace,
       moveArmsToMiddleOfBot,
-      swerve.followTrajectoryModifiedToAlliance(trajectory, true, false),
-      swerve.chargeStationAlign()
+      new ChargeAlignOtherSide(swerve)
     );
   }
 }

@@ -12,7 +12,7 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Swerve;
 import frc.robot.Constants.SwerveConstants;;
 
-public class ChargeAlign extends CommandBase {
+public class ChargeAlignOtherSide extends CommandBase {
   /** Creates a new chargeAlign. */
 
 
@@ -20,9 +20,10 @@ public class ChargeAlign extends CommandBase {
   private final Swerve swerve;
 
   private boolean startedClimbing;
+  private boolean otherSide;
   private double lastTimeNotOnTarget;
 
-  public ChargeAlign(Swerve swerve) {
+  public ChargeAlignOtherSide(Swerve swerve) {
     this.swerve = swerve;
     addRequirements(swerve);
   }
@@ -30,6 +31,7 @@ public class ChargeAlign extends CommandBase {
     @Override
     public void initialize() {
         startedClimbing = false;
+        otherSide = false;
         lastTimeNotOnTarget = Timer.getFPGATimestamp();
     }
 
@@ -45,8 +47,17 @@ public class ChargeAlign extends CommandBase {
             if (Math.abs(pitch) <= SwerveConstants.afterClimbTolerance) {
                 swerve.drive(new Translation2d(0, 0),0,true,false);
             } else {
+                if(pitch<=-3){
+                    otherSide = true;
+                }
+              if(otherSide){
+              swerve.drive(new Translation2d(-Math.signum(pitch) * SwerveConstants.afterAfterClimbSpeed, 0),0,true,false);
+              lastTimeNotOnTarget = Timer.getFPGATimestamp();
+              }
+              else{
               swerve.drive(new Translation2d(-Math.signum(pitch) * SwerveConstants.afterClimbSpeed, 0),0,true,false);
               lastTimeNotOnTarget = Timer.getFPGATimestamp();
+              }
             }
         }
     }

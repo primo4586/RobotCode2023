@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
        
-    lilArm.zeroEncoderForIntake();
+    lilArm.zeroEncoderForAuto();
     bigArm.zeroEncoderForIntake();
     m_autonomousCommand = autoContainer.getAutonomousCommand();//swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 3.6);
 

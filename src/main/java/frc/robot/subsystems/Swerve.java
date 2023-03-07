@@ -236,6 +236,7 @@ public class Swerve extends SubsystemBase {
 
         SmartDashboard.putNumber("Gyro", getYaw().getDegrees());
         SmartDashboard.putNumber("Roll", getRoll());
+        SmartDashboard.putNumber("Pitch", getPitch());
         SmartDashboard.putNumber("Teleop Gyro", getTeleopYaw().getDegrees());
 
         for (SwerveModule mod : mSwerveMods) {

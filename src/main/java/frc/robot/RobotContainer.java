@@ -11,6 +11,7 @@ import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -64,7 +65,7 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings(gripper, lilArm, bigArm);
-    // buildCameras();
+    buildCameras();
   }
 
   /**
@@ -83,9 +84,10 @@ public class RobotContainer {
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
     driverController.x().onTrue(gripper.toggleGripper());
-    driverController.start().onTrue(swerve.LockWheelsChargeStation());
+    driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilArmConstants.autoStartPoint));
     driverController.back().onTrue(lilArm.zeroLilArm());
-    // driverController.leftBumper().onTrue(new InstantCommand(() -> handler.switchCamera()));
+    driverController.leftBumper().onTrue(new InstantCommand(() -> handler.switchCamera()));
+
     operatorController.rightBumper().onTrue(lilArm.closeLilArmSolenoid());
     operatorController.rightTrigger().onTrue(lilArm.openLilArmSolenoid());
 
@@ -117,8 +119,7 @@ public class RobotContainer {
 
     public void buildCameras() {
       UsbCamera forward = CameraServer.startAutomaticCapture("Forward", 0);
-      UsbCamera backward = CameraServer.startAutomaticCapture("Backward", 1);
 
-      handler = new CameraHandler(forward, backward);
+      // handler = new CameraHandler(forward, backward);
     }
   }  

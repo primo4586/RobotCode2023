@@ -5,6 +5,7 @@ package frc.robot.commands.autoCommands;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.actions.GrabItemFromIntakeNoOpen;
 import frc.robot.commands.actions.PutItemInTheMiddle;
@@ -32,10 +33,9 @@ public class GamePieceThenDriveBack extends SequentialCommandGroup {
       }, gripper),
       puttingItemInPlace,
       gripper.openGripper(),
-      Commands.waitSeconds(0.5),
+      Commands.waitSeconds(0.2),
       lilArm.closeLilArmSolenoid(),
-      gripper.closeGripper(),
-      swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 2.5).alongWith(moveToIntakeNoOpen)
+      new ParallelCommandGroup(swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 2.5),moveToIntakeNoOpen)
     );
   }
 }

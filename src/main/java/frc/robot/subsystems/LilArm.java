@@ -49,6 +49,10 @@ public class LilArm extends SubsystemBase {
     this.lilArmEncoder.setSelectedSensorPosition(LilArmConstants.intakeSetPoint);
   }
 
+  public void zeroEncoderForAuto() {
+    this.lilArmEncoder.setSelectedSensorPosition(LilArmConstants.autoStartPoint);
+  }
+
   public Command setMotorSpeed(DoubleSupplier supplier) {
     return this.run(() -> {
 

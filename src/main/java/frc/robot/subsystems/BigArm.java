@@ -30,6 +30,7 @@ public class BigArm extends SubsystemBase {
     bigArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
 
     honeSwitch = new DigitalInput(BigArmConstants.honeSwitchID);
+    bigArmMotor.setInverted(true);
   }
 
   public void putBigArmInPlace(double setPoint){

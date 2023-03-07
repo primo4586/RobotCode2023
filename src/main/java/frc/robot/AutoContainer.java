@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.lib.util.PrimoShuffleboard;
 import frc.robot.autonomous.CommandSelector;
+import frc.robot.commands.ChargeAlign;
+import frc.robot.commands.ChargeAlignOtherSide;
+import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.commands.autoCommands.GamePieceThenDriveBack;
 import frc.robot.subsystems.BigArm;
@@ -30,26 +33,23 @@ public class AutoContainer {
 
 
         autoPaths.put("No Auto", new InstantCommand());
-        autoPaths.put("Cube Move Arm By Time", lilArm.speedByTime(0.3, 1.5));
+        // autoPaths.put("Cube Move Arm By Time", lilArm.speedByTime(0.3, 1.5));
         // autoPaths.put("Cube Timed", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, false, false));
-        autoPaths.put("Cone Timed", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, false, true));
+        autoPaths.put("Cone Upper FULL", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, false, true));
+        autoPaths.put("Cube Upper FULL", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, false, false));
         autoPaths.put("Drive By Time", swerve.driveForTimeAtSpeed(new Translation2d(1.25, 0), 2.5));
         autoPaths.put("Drive By Time AND CUBE", lilArm.speedByTime(0.6, 0.75).andThen(swerve.driveForTimeAtSpeed(new Translation2d(1.25, 0), 2.5)));
-
-        Command driveAndChargeOdometry = swerve.driveForwardUntilMeters(1, 2.5); 
-        autoPaths.put("Drive And Charge Odometry", driveAndChargeOdometry);
-
-        Command driveAndChargeTimed = swerve.driveForTimeAtSpeed(new Translation2d(
-            1.0, 0), 2.0).andThen(swerve.chargeStationAlign());
-
-        autoPaths.put("Drive And Charge Timed", driveAndChargeTimed);
+        autoPaths.put("super charge", new ChargeAlignOtherSide(swerve));
+        autoPaths.put("Charge Station", new ChargeAlign(swerve));
+        
 
         Command driveAndChargeAngle = swerve.driveForTimeAtSpeed(new Translation2d(-1.75, 0), 3);//.andThen(swerve.chargeStationAlign());
 
         autoPaths.put("Drive And Charge Angle", driveAndChargeAngle);
-        autoPaths.put("Cube Upper ", Commands.runOnce(() -> gripper.setShouldGripCone(false), gripper).andThen(new PutItemInTheUpper(bigArm, lilArm, gripper).andThen(gripper.openGripper())));
-        autoPaths.put("Cone Upper ", Commands.runOnce(() -> gripper.setShouldGripCone(true), gripper).andThen(new PutItemInTheUpper(bigArm, lilArm, gripper).andThen(gripper.openGripper())));
-        
+        autoPaths.put("Cube Upper Arm", Commands.runOnce(() -> gripper.setShouldGripCone(false), gripper).andThen(new PutItemInTheUpper(bigArm, lilArm, gripper).andThen(gripper.openGripper())));
+        autoPaths.put("Cube Lower Arm", Commands.runOnce(() -> gripper.setShouldGripCone(false), gripper).andThen(new PutItemInTheMiddle(lilArm, bigArm, gripper).andThen(gripper.openGripper())));
+        autoPaths.put("Cone Upper Arm", Commands.runOnce(() -> gripper.setShouldGripCone(true), gripper).andThen(new PutItemInTheUpper(bigArm, lilArm, gripper).andThen(gripper.openGripper())));
+        autoPaths.put("Cone Lower Arm", Commands.runOnce(() -> gripper.setShouldGripCone(true), gripper).andThen(new PutItemInTheMiddle(lilArm, bigArm, gripper)).andThen(gripper.openGripper()));
         this.autoSelector = new CommandSelector(autoPaths, PrimoShuffleboard.getInstance().getCompTabTitle());
     }
 

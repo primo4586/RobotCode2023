@@ -32,7 +32,7 @@ public final class Constants {
 
     public static final class BigArmConstants{
         //bigArm PID values
-        private static final double bigArmKP = 0.00175;
+        private static final double bigArmKP = 0.002;
         private static final double bigArmKI = 0.0;
         private static final double bigArmKD = 0.0;
         public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
@@ -51,7 +51,7 @@ public final class Constants {
         public static final String bigArmPreferencesKey = "bigArmEncoder" ;
 
         public static final double coneUpperFinalSetPoint = -54806;//-61857;
-        public static final double coneMiddleSetPoint = -31028;
+        public static final double coneMiddleSetPoint = -29016;
 
 
         public static final double cubeUpperFinalSetPoint = -47817;
@@ -194,10 +194,12 @@ public final class Constants {
 
         //new charge station align attempt
 
-        public static final Double preClimbSpeed = 0.6;
-        public static final Double afterClimbSpeed = 0.3;
-        public static final Double preClimbTolerance = 15.0;
-        public static final Double afterClimbTolerance = 3.0;
+
+        public static final Double preClimbSpeed = 1.8;
+        public static final Double afterClimbSpeed = 0.7;
+        public static final Double afterAfterClimbSpeed = 0.1;
+        public static final Double preClimbTolerance = 9.0;
+        public static final Double afterClimbTolerance = 3.5;
         public static final Double waitTime = 0.5;
 
         /* Charge Align Station Constants */
@@ -226,7 +228,7 @@ public final class Constants {
 
     public static final class LilArmConstants {
         /* LilArm PID Values */ 
-        private static final double lilArmMotorsKP = 0.09;
+        private static final double lilArmMotorsKP = 0.1;
         private static final double lilArmMotorsKI = 0.0;
         private static final double lilArmMotorsKD = 0.0;
         
@@ -253,11 +255,11 @@ public final class Constants {
 
         public static final double ticksTolerance = 5;
 
-        public static final double coneUpperFinalSetPoint = -1793;
-        public static final double coneMiddleSetPoint = -1245;
+        public static final double coneUpperFinalSetPoint = -1862;//-1793;
+        public static final double coneMiddleSetPoint = -1110;
 
 
-        public static final double  cubeUpperFinalSetPoint = -1290;
+        public static final double  cubeUpperFinalSetPoint = -1465;//-1290;
 
         public static final double cubeMiddleSetPoint = -839;
 
@@ -268,6 +270,8 @@ public final class Constants {
  
         public static final double middleOfRobotSetPoint = 0.0;
         public static final double groundSetPoint = 425;
+
+        public static final double autoStartPoint = -144;
 
         public static final double resetPoint = -30;
 
