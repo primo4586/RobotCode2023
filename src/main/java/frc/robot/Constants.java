@@ -192,6 +192,14 @@ public final class Constants {
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
         }
 
+        //new charge station align attempt
+
+        public static final Double preClimbSpeed = 0.6;
+        public static final Double afterClimbSpeed = 0.3;
+        public static final Double preClimbTolerance = 15.0;
+        public static final Double afterClimbTolerance = 3.0;
+        public static final Double waitTime = 0.5;
+
         /* Charge Align Station Constants */
         public static final double ALIGN_STATION_SPEED = .5;
         public static final double STATION_PITCH_ANGLE_TOLERANCE = 2.5;
