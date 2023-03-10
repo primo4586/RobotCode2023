@@ -34,7 +34,7 @@ public final class Constants {
         //bigArm PID values
         private static final double bigArmKP = 0.002;
         private static final double bigArmKI = 0.0;
-        private static final double bigArmKD = 0.0;
+        private static final double bigArmKD = 0.00;
         public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
 
         //bigArm feedforward values
