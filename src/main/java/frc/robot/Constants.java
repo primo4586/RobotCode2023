@@ -50,19 +50,19 @@ public final class Constants {
 
         public static final String bigArmPreferencesKey = "bigArmEncoder" ;
 
-        public static final double coneUpperFinalSetPoint = -54806;//-61857;
-        public static final double coneMiddleSetPoint = -29016;
+        public static final double coneUpperFinalSetPoint = -88152;
+        public static final double coneMiddleSetPoint = -47773;
 
 
-        public static final double cubeUpperFinalSetPoint = -47817;
+        public static final double cubeUpperFinalSetPoint = -72463;
 
-        public static final double cubeMiddleSetPoint = -39313;
+        public static final double cubeMiddleSetPoint = -56326;
 
-        public static final double intakeSetPoint = -6937;//-22270;
+        public static final double intakeSetPoint = 2838;//-1711;
         public static final double intakeReturnSetPoint = 37000;
         public static final double intakeReturnDeadZone = 48839;
 
-        public static final double highIntakeSetpoint = -19155;
+        public static final double highIntakeSetpoint = -28557;
 
         public static final double middleOfRobotSetPoint = 0.0;
         public static final double groundSetPoint = -15466;
@@ -255,23 +255,23 @@ public final class Constants {
 
         public static final double ticksTolerance = 5;
 
-        public static final double coneUpperFinalSetPoint = -1862;//-1793;
-        public static final double coneMiddleSetPoint = -1110;
+        public static final double coneUpperFinalSetPoint = -1801;//-1793;
+        public static final double coneMiddleSetPoint = -1189;
 
 
-        public static final double  cubeUpperFinalSetPoint = -1465;//-1290;
+        public static final double  cubeUpperFinalSetPoint = -1420;
 
-        public static final double cubeMiddleSetPoint = -839;
+        public static final double cubeMiddleSetPoint = -940;
 
-        public static final double intakeSetPoint = -298;//328;
+        public static final double intakeSetPoint = -184;//-230;
         public static final double intakeReturnDeadZone =2345;
 
-        public static final double highIntakeSetpoint = -1000;
+        public static final double highIntakeSetpoint = -976;
  
         public static final double middleOfRobotSetPoint = 0.0;
         public static final double groundSetPoint = 425;
 
-        public static final double autoStartPoint = -144;
+        public static final double autoStartPoint = -136;
 
         public static final double resetPoint = -30;
 

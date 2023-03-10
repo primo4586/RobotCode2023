@@ -3,6 +3,7 @@ package frc.robot.commands.autoCommands;
 
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -32,9 +33,11 @@ public class GamePieceThenDriveBack extends SequentialCommandGroup {
         gripper.turnOnLed();
       }, gripper),
       puttingItemInPlace,
+      Commands.waitSeconds(1),
       gripper.openGripper(),
-      Commands.waitSeconds(0.2),
+      Commands.waitSeconds(0.5),
       lilArm.closeLilArmSolenoid(),
+      gripper.closeGripper(),
       new ParallelCommandGroup(swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 2.5),moveToIntakeNoOpen)
     );
   }
