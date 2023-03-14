@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-       
+    swerve.zeroGyro();   
     lilArm.zeroEncoderForAuto();
     bigArm.zeroEncoderForIntake();
     m_autonomousCommand = autoContainer.getAutonomousCommand();//swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 3.6);

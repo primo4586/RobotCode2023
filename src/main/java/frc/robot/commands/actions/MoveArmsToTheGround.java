@@ -8,7 +8,7 @@ import frc.robot.subsystems.LilArm;
 public class MoveArmsToTheGround extends SequentialCommandGroup {
   public MoveArmsToTheGround(Gripper gripper, LilArm lilArm, BigArm bigArm) {
 
-    GrabItemFromIntake grabItemFromIntake = new GrabItemFromIntake(lilArm, bigArm, gripper);
+    IntakeSequential grabItemFromIntake = new IntakeSequential(lilArm, bigArm);
     MoveArmsToSetPointsLilFirst moveArmsToGround = new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.groundSetPoint, lilArm, LilArmConstants.groundSetPoint);
   
     addCommands(

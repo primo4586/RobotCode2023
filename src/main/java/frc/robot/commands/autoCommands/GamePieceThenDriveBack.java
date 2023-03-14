@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.actions.GrabItemFromIntakeNoOpen;
+import frc.robot.commands.actions.IntakeSequential;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.subsystems.BigArm;
@@ -24,8 +24,7 @@ public class GamePieceThenDriveBack extends SequentialCommandGroup {
 
     ConditionalCommand puttingItemInPlace = new ConditionalCommand(putItemInTheUpper, putItemInTheMiddle, () -> shouldPutInUpper);
 
-    GrabItemFromIntakeNoOpen moveToIntakeNoOpen = new GrabItemFromIntakeNoOpen(lilArm, bigArm, gripper);
-
+    IntakeSequential moveToIntakeNoOpen = new IntakeSequential(lilArm, bigArm);
 
     addCommands(
       Commands.runOnce(() -> {
@@ -37,8 +36,7 @@ public class GamePieceThenDriveBack extends SequentialCommandGroup {
       gripper.openGripper(),
       Commands.waitSeconds(0.5),
       lilArm.closeLilArmSolenoid(),
-      gripper.closeGripper(),
-      new ParallelCommandGroup(swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 2.5),moveToIntakeNoOpen)
+      new ParallelCommandGroup(swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 2.7),moveToIntakeNoOpen, Commands.waitSeconds(0.5).andThen(gripper.closeGripper()))
     );
   }
 }

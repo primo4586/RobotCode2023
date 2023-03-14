@@ -15,8 +15,8 @@ import frc.robot.subsystems.LilArm;
 public class PutItemInTheMiddle extends SequentialCommandGroup {
   public PutItemInTheMiddle(LilArm lilArm, BigArm bigArm, Gripper gripper) {
     //cone and cube setPoints
-    MoveArmsToSetPointsLilFirst coneMiddleSetPoint = new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.coneMiddleSetPoint, lilArm, LilArmConstants.coneMiddleSetPoint);
-    MoveArmsToSetPointsLilFirst cubeMiddleSetPoint = new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.cubeMiddleSetPoint, lilArm, LilArmConstants.cubeMiddleSetPoint);
+    MoveArmsParallel coneMiddleSetPoint = new MoveArmsParallel(bigArm, BigArmConstants.coneMiddleSetPoint, lilArm, LilArmConstants.coneMiddleSetPoint);
+    MoveArmsParallel cubeMiddleSetPoint = new MoveArmsParallel(bigArm, BigArmConstants.cubeMiddleSetPoint, lilArm, LilArmConstants.cubeMiddleSetPoint);
 
     //check if we put cone or cube
     ConditionalCommand putArmsInMiddleSetPoint = new ConditionalCommand(coneMiddleSetPoint, cubeMiddleSetPoint,gripper::getShouldGripCone);

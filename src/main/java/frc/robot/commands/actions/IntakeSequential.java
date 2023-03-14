@@ -12,8 +12,8 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 
-public class GrabItemFromIntake extends SequentialCommandGroup {
-  public GrabItemFromIntake(LilArm lilArm, BigArm bigArm, Gripper gripper) {
+public class IntakeSequential extends SequentialCommandGroup {
+  public IntakeSequential(LilArm lilArm, BigArm bigArm) {
    //closes the solenoid
    MoveArmsToSetPointsBigFirst moveArmsToIntake = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint);
    MoveArmsToSetPointsBigFirst moveArmsToIntake2 = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint);

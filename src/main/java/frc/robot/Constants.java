@@ -50,7 +50,7 @@ public final class Constants {
 
         public static final String bigArmPreferencesKey = "bigArmEncoder" ;
 
-        public static final double coneUpperFinalSetPoint = -88152;
+        public static final double coneUpperFinalSetPoint = -77931;//-88152;
         public static final double coneMiddleSetPoint = -47773;
 
 
@@ -196,7 +196,7 @@ public final class Constants {
 
 
         public static final Double preClimbSpeed = 1.8;
-        public static final Double afterClimbSpeed = 0.7;
+        public static final Double afterClimbSpeed = 0.55;
         public static final Double afterAfterClimbSpeed = 0.1;
         public static final Double preClimbTolerance = 9.0;
         public static final Double afterClimbTolerance = 3.5;
@@ -255,8 +255,8 @@ public final class Constants {
 
         public static final double ticksTolerance = 5;
 
-        public static final double coneUpperFinalSetPoint = -1801;//-1793;
-        public static final double coneMiddleSetPoint = -1189;
+        public static final double coneUpperFinalSetPoint = -1750;//-1696;//-1497;//-1801;//-1793;
+        public static final double coneMiddleSetPoint = -1253;//1189;
 
 
         public static final double  cubeUpperFinalSetPoint = -1420;
@@ -277,7 +277,7 @@ public final class Constants {
 
     }
 
-  
+   
     public static final class VisionConstants {
         // Camera's name in Photon's NetworkTable (Set in the PhotonVision UI)
         public static final String cameraName = "limelightCam";

@@ -15,21 +15,25 @@ import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.BigArmConstants;
 import frc.robot.Constants.LilArmConstants;
 import frc.robot.commands.*;
-import frc.robot.commands.actions.GrabItemFromIntake;
-import frc.robot.commands.actions.GrabItemFromIntakeNoOpen;
+import frc.robot.commands.actions.IntakeSequential;
+import frc.robot.commands.actions.IntakeParallel;
+import frc.robot.commands.actions.MoveArmsParallel;
 import frc.robot.commands.actions.MoveArmsToSetPointsLilFirst;
 import frc.robot.commands.actions.EmergencyStop;
 import frc.robot.commands.actions.GrabItemFromHighIntake;
 import frc.robot.commands.actions.MoveArmsToTheGround;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
+import frc.robot.commands.autoCommands.ChargeAlignOtherSide;
 import frc.robot.subsystems.*;
 
 /**
@@ -76,15 +80,17 @@ public class RobotContainer {
    */
   private void configureButtonBindings(Gripper gripper, LilArm lilArm, BigArm bigArm) {
   
-  GrabItemFromIntake grabItemFromIntake = new GrabItemFromIntake(lilArm, bigArm, gripper);
-  GrabItemFromIntakeNoOpen grabItemFromIntakeNoOpen = new GrabItemFromIntakeNoOpen(lilArm, bigArm, gripper);
-  ConditionalCommand intake = new ConditionalCommand(grabItemFromIntakeNoOpen, grabItemFromIntake,()-> gripper.getFakeIsGripperOpen());
-
+  IntakeSequential intake = new IntakeSequential(lilArm, bigArm);
+  // ConditionalCommand intake = new ConditionalCommand(grabItemFromIntakeNoOpen, grabItemFromIntake,()-> gripper.getFakeIsGripperOpen());
+    IntakeParallel intakeParallel = new IntakeParallel(lilArm, bigArm);
 
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
     driverController.x().onTrue(gripper.toggleGripper());
+
+
     driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilArmConstants.autoStartPoint));
+    // driverController.start().onTrue(testAuto);
     driverController.back().onTrue(lilArm.zeroLilArm());
     driverController.leftBumper().onTrue(new InstantCommand(() -> handler.switchCamera()));
 
@@ -93,13 +99,14 @@ public class RobotContainer {
 
     /* Operator Buttons */
        operatorController.y().onTrue(new PutItemInTheUpper(bigArm, lilArm, gripper));
+      // operatorController.y().onTrue(new MoveArmsParallel(bigArm, BigArmConstants.cubeUpperFinalSetPoint, lilArm, LilArmConstants.cubeUpperFinalSetPoint).andThen(lilArm.openLilArmSolenoid()));
        operatorController.a().onTrue(new PutItemInTheMiddle(lilArm, bigArm, gripper));
       operatorController.leftBumper().onTrue(gripper.changeWhatWeGrip());
       //operatorController.a().onTrue(lilArm.TurnLilArmToSetpoint(LilArmConstants.cubeMiddleSetPoint));
       // operatorController.x().onTrue(bigArm.TurnBigArmToSetpoint(BigArmConstants.cubeMiddleSetPoint));
       //operatorController.x().onTrue(new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.cubeMiddleSetPoint, lilArm, LilArmConstants.cubeMiddleSetPoint));
       // operatorController.x().onTrue(new MoveArmsToTheGround(gripper, lilArm, bigArm));
-       operatorController.b().onTrue(intake);
+       operatorController.b().onTrue(intakeParallel);
        operatorController.x().onTrue(new GrabItemFromHighIntake(bigArm, lilArm));
       operatorController.start().onTrue(new EmergencyStop(lilArm,bigArm));
       operatorController.back().onTrue(bigArm.Hone());

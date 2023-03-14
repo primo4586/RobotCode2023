@@ -403,6 +403,32 @@ public class Swerve extends SubsystemBase {
         });
     }
 
+    public Command driveUntilPitchAtSpeed(double speed, double targetPitch) {
+        double[] startingPitch = {0};
+        return runOnce(() -> {
+            startingPitch[0] = getRoll();
+        }).andThen(
+            run(() -> 
+                drive(new Translation2d(speed, 0), 0, true, false)
+            )
+        ).until(() -> {
+            return Math.abs(getRoll()) >= targetPitch;
+        });
+    }
+
+
+    public Command driveUntilPitchAtSpeedLower(double speed, double targetPitch) {
+        double[] startingPitch = {0};
+        return runOnce(() -> {
+            startingPitch[0] = getRoll();
+        }).andThen(
+            run(() -> 
+                drive(new Translation2d(speed, 0), 0, true, false)
+            )
+        ).until(() -> {
+            return Math.abs(getRoll()) <= targetPitch;
+        });
+    }
     public Command followTrajectoryWithReveresedInputs(PathPlannerTrajectory trajectory, boolean shouldResetOdometry) {
 
         PPSwerveControllerCommand followTrajecotryControllerCommand = new PPSwerveControllerCommand(
