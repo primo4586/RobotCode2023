@@ -194,7 +194,7 @@ public final class Constants {
 
         //new charge station align attempt
 
-
+        public static final double prepreClimbSpeed = 2.3;
         public static final Double preClimbSpeed = 1.8;
         public static final Double afterClimbSpeed = 0.55;
         public static final Double afterAfterClimbSpeed = 0.1;
