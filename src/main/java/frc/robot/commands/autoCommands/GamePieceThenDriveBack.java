@@ -8,9 +8,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.actions.GroundAuto;
+import frc.robot.commands.actions.GroundTele;
 import frc.robot.commands.actions.IntakeSequential;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
+import frc.robot.commands.actions.groundReturn;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -26,6 +29,8 @@ public class GamePieceThenDriveBack extends SequentialCommandGroup {
 
     IntakeSequential moveToIntakeNoOpen = new IntakeSequential(lilArm, bigArm);
 
+    GroundAuto groundAuto = new GroundAuto(gripper, lilArm, bigArm);
+
     addCommands(
       Commands.runOnce(() -> {
         gripper.setShouldGripCone(gripCone);
@@ -36,7 +41,15 @@ public class GamePieceThenDriveBack extends SequentialCommandGroup {
       gripper.openGripper(),
       Commands.waitSeconds(0.5),
       lilArm.closeLilArmSolenoid(),
-      new ParallelCommandGroup(swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 2.7),moveToIntakeNoOpen, Commands.waitSeconds(0.5).andThen(gripper.closeGripper()))
-    );
+      //swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 2.7),
+      new ParallelCommandGroup(swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 0.5),moveToIntakeNoOpen, Commands.waitSeconds(0.5).andThen(gripper.closeGripper())),
+      groundAuto
+      //gripper.closeGripper(),
+      //new groundReturn(lilArm, bigArm)
+      //new ParallelCommandGroup(swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 2.7),new GroundAuto(gripper, lilArm, bigArm))
+      //swerve.driveForTimeAtSpeed(new Translation2d(-1.25,0), 1.5)
+      //new ParallelCommandGroup(swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 2.7),new GroundTele(gripper, lilArm, bigArm), Commands.waitSeconds(0.5)),
+      //groundAuto
+      );
   }
 }

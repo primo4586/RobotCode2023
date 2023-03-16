@@ -65,7 +65,8 @@ public final class Constants {
         public static final double highIntakeSetpoint = -28557;
 
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = -15466;
+        public static final double groundSetPoint = -21767;
+        public static final double groundSetPoint2 = 10000;
 
         public static final double honeSpeed = 0.2;
         public static final double honeSetPoint = 0.0;
@@ -269,7 +270,7 @@ public final class Constants {
         public static final double highIntakeSetpoint = -976;
  
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = 425;
+        public static final double groundSetPoint = 701;
 
         public static final double autoStartPoint = -136;
 

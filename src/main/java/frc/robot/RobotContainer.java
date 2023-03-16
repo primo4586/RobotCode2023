@@ -30,9 +30,10 @@ import frc.robot.commands.actions.MoveArmsParallel;
 import frc.robot.commands.actions.MoveArmsToSetPointsLilFirst;
 import frc.robot.commands.actions.EmergencyStop;
 import frc.robot.commands.actions.GrabItemFromHighIntake;
-import frc.robot.commands.actions.MoveArmsToTheGround;
+import frc.robot.commands.actions.GroundTele;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
+import frc.robot.commands.actions.groundReturn;
 import frc.robot.commands.autoCommands.ChargeAlignOtherSide;
 import frc.robot.subsystems.*;
 
@@ -83,6 +84,8 @@ public class RobotContainer {
   IntakeSequential intake = new IntakeSequential(lilArm, bigArm);
   // ConditionalCommand intake = new ConditionalCommand(grabItemFromIntakeNoOpen, grabItemFromIntake,()-> gripper.getFakeIsGripperOpen());
     IntakeParallel intakeParallel = new IntakeParallel(lilArm, bigArm);
+    IntakeSequential intakeSequential = new IntakeSequential(lilArm, bigArm);
+    groundReturn groundReturn = new groundReturn(lilArm, bigArm);
 
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
@@ -106,10 +109,19 @@ public class RobotContainer {
       // operatorController.x().onTrue(bigArm.TurnBigArmToSetpoint(BigArmConstants.cubeMiddleSetPoint));
       //operatorController.x().onTrue(new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.cubeMiddleSetPoint, lilArm, LilArmConstants.cubeMiddleSetPoint));
       // operatorController.x().onTrue(new MoveArmsToTheGround(gripper, lilArm, bigArm));
-       operatorController.b().onTrue(intakeParallel);
+       operatorController.b().onTrue( new ConditionalCommand(groundReturn.beforeStarting(gripper.closeGripper()), intakeParallel, ()->lilArm.getCurrentArmPosition()>95));
        operatorController.x().onTrue(new GrabItemFromHighIntake(bigArm, lilArm));
       operatorController.start().onTrue(new EmergencyStop(lilArm,bigArm));
       operatorController.back().onTrue(bigArm.Hone());
+      operatorController.povCenter().onTrue(new GroundTele(gripper, lilArm, bigArm));
+      operatorController.povDown().onTrue(new GroundTele(gripper, lilArm, bigArm));
+      operatorController.povDownLeft().onTrue(new GroundTele(gripper, lilArm, bigArm));
+      operatorController.povDownRight().onTrue(new GroundTele(gripper, lilArm, bigArm));
+      operatorController.povLeft().onTrue(new GroundTele(gripper, lilArm, bigArm));
+      operatorController.povRight().onTrue(new GroundTele(gripper, lilArm, bigArm));
+      operatorController.povUp().onTrue(new GroundTele(gripper, lilArm, bigArm));
+      operatorController.povUpLeft().onTrue(new GroundTele(gripper, lilArm, bigArm));
+      operatorController.povUpRight().onTrue(new GroundTele(gripper, lilArm, bigArm));
     }
 
     /** 
