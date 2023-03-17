@@ -4,6 +4,8 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -19,7 +21,7 @@ import frc.robot.Constants.BigArmConstants;
 import frc.robot.Constants.LilArmConstants;
 
 public class LilArm extends SubsystemBase {
-  private WPI_TalonSRX lilArmMotor;
+  private CANSparkMax lilArmMotor;
   private WPI_TalonSRX lilArmEncoder;
 
   private Solenoid lilArmSolenoid;
@@ -32,15 +34,16 @@ public class LilArm extends SubsystemBase {
     lilArmPID = LilArmConstants.lilArmPID;
 
     lilArmEncoder = new WPI_TalonSRX(LilArmConstants.lilArmEncoderID);
-    lilArmMotor = new WPI_TalonSRX(LilArmConstants.lilArmMotorID);
+    // TODO: I assumed we're using the NEO 550s which are brushless, change motor type if not.
+    lilArmMotor = new CANSparkMax(LilArmConstants.lilArmMotorID, MotorType.kBrushless);
     lilArmSolenoid = new Solenoid(LilArmConstants.PCMID, PneumaticsModuleType.CTREPCM,
         LilArmConstants.lilArmSolenoidID);
 
-    lilArmMotor.setInverted(true);    
-    lilArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);    
-    lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+    lilArmMotor.setInverted(true); // TODO: Double-check inverts as necessary 
+    lilArmMotor.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT_LIMIT, Constants.ARM_FREE_CURRENT_LIMIT);
 
-    // lilArmEncoder.setSelectedSensorPosition(LilArmConstants.intakeSetPoint);
+    lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+    lilArmMotor.burnFlash();
   }
 
   public boolean isSolenoidOpen() {

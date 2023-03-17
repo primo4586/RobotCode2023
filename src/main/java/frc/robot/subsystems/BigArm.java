@@ -4,6 +4,8 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -15,7 +17,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.BigArmConstants;
 
 public class BigArm extends SubsystemBase {
-  private WPI_TalonSRX bigArmMotor;
+  private CANSparkMax bigArmMotor;
   private WPI_TalonSRX bigArmEncoder;
   private PIDController bigArmPID;
   private DigitalInput honeSwitch;
@@ -23,14 +25,16 @@ public class BigArm extends SubsystemBase {
   public BigArm() {
     bigArmPID = BigArmConstants.bigArmPID;
 
-    bigArmMotor = new WPI_TalonSRX(BigArmConstants.bigArmMotorPort);
+    // TODO: I assumed we're using the NEO 550s which are brushless, change motor type if not.
+    bigArmMotor = new CANSparkMax(BigArmConstants.bigArmMotorPort, MotorType.kBrushless); 
     bigArmEncoder = new WPI_TalonSRX(BigArmConstants.bigArmEncoderID);
     
     bigArmEncoder.setSelectedSensorPosition(BigArmConstants.intakeSetPoint);
-    bigArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
+    bigArmMotor.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT_LIMIT, Constants.ARM_FREE_CURRENT_LIMIT);
 
     honeSwitch = new DigitalInput(BigArmConstants.honeSwitchID);
-    bigArmMotor.setInverted(true);
+    bigArmMotor.setInverted(true); // TODO: Double-check inverts as necessary 
+    bigArmMotor.burnFlash();
   }
 
   public void putBigArmInPlace(double setPoint){
