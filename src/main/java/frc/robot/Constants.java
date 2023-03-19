@@ -38,7 +38,7 @@ public final class Constants {
         // TODO: Re-adjust these because we're using NEOs
         private static final double bigArmKP = 0.002;
         private static final double bigArmKI = 0.0;
-        private static final double bigArmKD = 0.00;
+        private static final double bigArmKD = Integer.MAX_VALUE;
         public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
 
         //bigArm feedforward values
@@ -47,7 +47,7 @@ public final class Constants {
 
         public static final double bigArmGearRatio = 3000 / 1;// (60 Gear to 50 gear = 60 * 50 = 3000 - god knows why) 
 
-        public static final int bigArmMotorPort = 17;
+        public static final int bigArmMotorID = 16;
         public static final int bigArmEncoderID = 5;
 
         public static final double ticksTolerance = 500;
@@ -69,12 +69,12 @@ public final class Constants {
         public static final double highIntakeSetpoint = -28557;
 
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = -21767;
+        public static final double groundSetPoint = -103589;
         public static final double groundSetPoint2 = 10000;
 
-        public static final double honeSpeed = 0.2;
+        public static final double honeSpeed = 0.1;
         public static final double honeSetPoint = 0.0;
-        public static final int honeSwitchID = 0;
+        public static final int honeSwitchID = 1;
     }
 
     public static final class SwerveConstants {
@@ -123,20 +123,20 @@ public final class Constants {
         public static final double angleKF = 0.0;
 
         /* Drive Motor PID Values (Changes Per Robot) */
-        public static final double driveKP = 0.175;
+        public static final double driveKP = 0.3;
         public static final double driveKI = 0.0;
         public static final double driveKD = 0.0;
         public static final double driveKF = 0.0;
 
         /* Drive Motor Characterization Values (Changes Per Robot) */
-        public static final double driveKS = (0.22857/ 12); // divided by 12 to convert from volts to percent output for CTRE
-        public static final double driveKV = (2.6676 / 12);
-        public static final double driveKA = (0.2864 / 12);
+        public static final double driveKS = (0.22754/ 12); // divided by 12 to convert from volts to percent output for CTRE
+        public static final double driveKV = (2.6777 / 12);
+        public static final double driveKA = (0.45944 / 12);
 
 
         /* Swerve Profiling Values (Changes Per Robot) - usually set by preference */
         /** meters / second */
-        public static final double maxSpeed = 3;
+        public static final double maxSpeed = 5;
         /** Percent output to motors. */
         public static final double maxPercentVelocity = 0.85; 
         /** radians / second */
@@ -144,7 +144,7 @@ public final class Constants {
 
         /* Swerve Slow Mode Reduce Values */
         public static final double slowModeSpeed = maxSpeed / 4;
-        public static final double slowModeAngularVelocity = maxAngularVelocity / 2;
+        public static final double slowModeAngularVelocity = maxAngularVelocity / 4;
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -275,7 +275,7 @@ public final class Constants {
         public static final double highIntakeSetpoint = -976;
  
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = 701;
+        public static final double groundSetPoint = -456;
 
         public static final double autoStartPoint = -136;
 

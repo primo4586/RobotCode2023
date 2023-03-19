@@ -20,8 +20,8 @@ public class GrabItemFromHighIntake extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
-    MoveArmsToSetPointsBigFirst moveArmsToHighIntake = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.highIntakeSetpoint, lilArm, LilArmConstants.highIntakeSetpoint);
-
+    //MoveArmsToSetPointsBigFirst moveArmsToHighIntake = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.highIntakeSetpoint, lilArm, LilArmConstants.highIntakeSetpoint);
+    MoveArmsParallel moveArmsToHighIntake = new MoveArmsParallel(bigArm, BigArmConstants.highIntakeSetpoint, lilArm, LilArmConstants.highIntakeSetpoint);
 
     addCommands(moveArmsToHighIntake);
   }

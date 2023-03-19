@@ -57,6 +57,7 @@ public class SwerveModule {
 
     public void setDesiredStateReveresed(SwerveModuleState desiredState) {
         setDesiredState(new SwerveModuleState(-desiredState.speedMetersPerSecond, desiredState.angle), true);
+        SmartDashboard.putNumber("desierd velocity", desiredState.speedMetersPerSecond);
     }
 
     /**

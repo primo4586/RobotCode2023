@@ -7,7 +7,12 @@ package frc.robot;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -15,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.lib.util.PrimoShuffleboard;
 import frc.robot.autonomous.CommandSelector;
+import frc.robot.commands.actions.GroundAuto;
 import frc.robot.commands.actions.IntakeSequential;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
@@ -34,8 +40,7 @@ public class AutoContainer {
     private Map<String, Command> autoPaths;
 
     public AutoContainer(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm){
-        this.autoPaths = new HashMap<String, Command>();
-
+        this.autoPaths = new HashMap<String, Command>(); 
 
         //TwoPieces twoPieces = new TwoPieces(swerve, gripper, bigArm, lilArm, true, true, false);
         Command cubeUpper = Commands.runOnce(() -> gripper.setShouldGripCone(false), gripper).andThen(new PutItemInTheUpper(bigArm, lilArm, gripper)).andThen(Commands.waitSeconds(0.3)).andThen(gripper.openGripper());
@@ -52,7 +57,9 @@ public class AutoContainer {
         autoPaths.put("Drive By Time", swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 2.5));
         autoPaths.put("Drive By Time AND CUBE", lilArm.speedByTime(0.6, 0.75).andThen(swerve.driveForTimeAtSpeed(new Translation2d(1.25, 0), 2.5)));
         autoPaths.put("super charge", new ChargeAlignOtherSide(swerve));
-        //autoPaths.put("test test", testTwoPieces);
+        autoPaths.put("one meter", new SequentialCommandGroup(swerve.followTrajectory(PathPlanner.loadPath("upperCube2", Constants.AutoConstants.pathConstraints, false), true),Commands.waitSeconds(1).andThen( swerve.followTrajectory(PathPlanner.loadPath("upperCubeReturn", Constants.AutoConstants.pathConstraints, false), true))));
+                //autoPaths.put("test test", testTwoPieces);p
+
         //autoPaths.put("2 pieces", new TwoPieces(swerve, gripper, bigArm, lilArm, true, true, false));
         
         //autoPaths.put("Cube Charge", cubeUpper.andThen(Commands.waitSeconds(0.5)).andThen(new ParallelCommandGroup(new IntakeSequential(lilArm, bigArm),Commands.waitSeconds(0.7).andThen(new ChargeAlignOtherSide(swerve)))));

@@ -9,6 +9,7 @@ import frc.robot.Constants.BigArmConstants;
 import frc.robot.Constants.LilArmConstants;
 import frc.robot.commands.MoveArmsToSetPointsBigFirst;
 import frc.robot.subsystems.BigArm;
+import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -16,7 +17,7 @@ import frc.robot.subsystems.LilArm;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class groundReturn extends SequentialCommandGroup {
   /** Creates a new groundReturn. */
-  public groundReturn(LilArm lilArm, BigArm bigArm) {
+  public groundReturn(LilArm lilArm, BigArm bigArm,Gripper gripper) {
     
   MoveArmsToSetPointsBigFirst moveArmsToIntake = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint);
 
@@ -24,9 +25,9 @@ public class groundReturn extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      
+    
     lilArm.closeLilArmSolenoid(),
-    returnPoint,
+    //returnPoint,
     moveArmsToIntake
     );
   }

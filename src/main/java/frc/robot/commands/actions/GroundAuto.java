@@ -11,9 +11,10 @@ import frc.robot.subsystems.LilArm;
 public class GroundAuto extends SequentialCommandGroup {
   public GroundAuto(Gripper gripper, LilArm lilArm, BigArm bigArm) {
     IntakeParallel grabItemFromIntake = new IntakeParallel(lilArm, bigArm);
+    MoveArmsParallel moveArmsTGround = new MoveArmsParallel(bigArm, BigArmConstants.groundSetPoint, lilArm, LilArmConstants.groundSetPoint);
     MoveArmsToSetPointsBigFirst moveArmsToGround = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.groundSetPoint, lilArm, LilArmConstants.groundSetPoint);
-    MoveArmsToSetPointsLilFirst moveArmsToGround2  =new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.groundSetPoint2, lilArm, LilArmConstants.groundSetPoint);
-    MoveArmsToSetPointsLilFirst moveArmsToGround3  =new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.groundSetPoint2, lilArm, LilArmConstants.groundSetPoint);
+    //MoveArmsToSetPointsLilFirst moveArmsToGround2  =new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.groundSetPoint2, lilArm, LilArmConstants.groundSetPoint);
+    //MoveArmsToSetPointsLilFirst moveArmsToGround3  =new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.groundSetPoint2, lilArm, LilArmConstants.groundSetPoint);
 
     addCommands(
       lilArm.closeLilArmSolenoid(),
@@ -21,7 +22,7 @@ public class GroundAuto extends SequentialCommandGroup {
       //grabItemFromIntake,
       moveArmsToGround,
       gripper.openGripper(),
-      moveArmsToGround2,
+      //moveArmsToGround2,
       lilArm.openLilArmSolenoid()
     );
   }

@@ -63,8 +63,8 @@ public class RobotContainer {
     boolean fieldRelative = true;
     boolean openLoop = true;
 
-    bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRightY()));
-    lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> operatorController.getLeftY()));
+    bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRightY()*0.7));
+    lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> operatorController.getLeftY()*0.5));
 
     swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
 
@@ -85,7 +85,7 @@ public class RobotContainer {
   // ConditionalCommand intake = new ConditionalCommand(grabItemFromIntakeNoOpen, grabItemFromIntake,()-> gripper.getFakeIsGripperOpen());
     IntakeParallel intakeParallel = new IntakeParallel(lilArm, bigArm);
     IntakeSequential intakeSequential = new IntakeSequential(lilArm, bigArm);
-    groundReturn groundReturn = new groundReturn(lilArm, bigArm);
+   // groundReturn groundReturn = new groundReturn(lilArm, bigArm);
 
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
@@ -109,7 +109,7 @@ public class RobotContainer {
       // operatorController.x().onTrue(bigArm.TurnBigArmToSetpoint(BigArmConstants.cubeMiddleSetPoint));
       //operatorController.x().onTrue(new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.cubeMiddleSetPoint, lilArm, LilArmConstants.cubeMiddleSetPoint));
       // operatorController.x().onTrue(new MoveArmsToTheGround(gripper, lilArm, bigArm));
-       operatorController.b().onTrue( new ConditionalCommand(groundReturn.beforeStarting(gripper.closeGripper()), intakeParallel, ()->lilArm.getCurrentArmPosition()>95));
+       operatorController.b().onTrue(intakeParallel);//new ConditionalCommand(groundReturn.beforeStarting(gripper.closeGripper()), intakeParallel, ()->lilArm.getCurrentArmPosition()>95));
        operatorController.x().onTrue(new GrabItemFromHighIntake(bigArm, lilArm));
       operatorController.start().onTrue(new EmergencyStop(lilArm,bigArm));
       operatorController.back().onTrue(bigArm.Hone());
