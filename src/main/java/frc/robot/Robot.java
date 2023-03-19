@@ -119,6 +119,7 @@ public class Robot extends TimedRobot {
     }
     gripper.turnOnLed();
     
+    swerve.zeroGyroForAutoEnd();
   }
 
   /** This function is called periodically during operator control. */

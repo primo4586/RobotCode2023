@@ -84,6 +84,14 @@ public class LilArm extends SubsystemBase {
     .until(() -> (Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance));
   }
 
+  public Command TurnLilArmToSetpointOnlyForAuto(double setpoint) {
+    SmartDashboard.putNumber("LilArm Setpoint", setpoint);
+    return run(() -> {
+        putArmInPlace(setpoint);
+    })
+    .until(() -> (Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance));
+  }
+
   public Command TurnLilArmToSetpointWithCustomPID(double setpoint, PIDController pid) {
     SmartDashboard.putNumber("LilArm Setpoint", setpoint);
     return run(() -> {

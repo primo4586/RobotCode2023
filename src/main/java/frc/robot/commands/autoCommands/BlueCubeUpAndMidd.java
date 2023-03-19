@@ -23,8 +23,8 @@ import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
 
-public class CubeUpAndMidd extends SequentialCommandGroup {
-  public CubeUpAndMidd(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm, Boolean shouldPutInUpper, boolean areWeCloseToLoadingStation, boolean gripCone) {
+public class BlueCubeUpAndMidd extends SequentialCommandGroup {
+  public BlueCubeUpAndMidd(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm, Boolean shouldPutInUpper, boolean areWeCloseToLoadingStation, boolean gripCone) {
     
     PutItemInTheMiddle putItemInTheMiddle = new PutItemInTheMiddle(lilArm, bigArm, gripper);
     PutItemInTheUpper putItemInTheUpper = new PutItemInTheUpper(bigArm, lilArm, gripper);
@@ -44,12 +44,15 @@ public class CubeUpAndMidd extends SequentialCommandGroup {
       lilArm.closeLilArmSolenoid(),
       driveBackAndGround,
       gripper.closeGripper(),
-      swerve.followTrajectory(PathPlanner.loadPath("upperCubeReturn", AutoConstants.pathConstraints), false)
-      .alongWith(new IntakeParallel(lilArm, bigArm))
-      .alongWith(Commands.waitSeconds(1).andThen(new PutItemInTheMiddle(lilArm, bigArm, gripper))),
-      gripper.openGripper(),
       Commands.waitSeconds(0.2),
-      new IntakeSequential(lilArm, bigArm)
+      swerve.followTrajectory(PathPlanner.loadPath("upperCubeReturn", AutoConstants.pathConstraints), false)
+      .alongWith(new IntakeParallel(lilArm, bigArm)),
+      new PutItemInTheMiddle(lilArm, bigArm, gripper),
+      lilArm.openLilArmSolenoid(),
+      Commands.waitSeconds(0.4),
+      gripper.openGripper(),
+      Commands.waitSeconds(0.4),
+      new IntakeSequential(lilArm, bigArm).alongWith(Commands.waitSeconds(0.2).andThen(gripper.closeGripper()))
     );
   }
 }
