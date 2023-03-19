@@ -20,14 +20,13 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
-public class DriveBackAndGround extends ParallelCommandGroup {
-  public DriveBackAndGround(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm) {
-
+public class RedDriveBackAndGround extends ParallelCommandGroup {
+    public RedDriveBackAndGround(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm) {
     MoveArmsToSetPointsBigFirst firstMove = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.groundSetPoint);
 
     addCommands(
       firstMove.andThen(new GroundAuto(gripper, lilArm, bigArm)),
-      swerve.followTrajectory(PathPlanner.loadPath("upperCube2", Constants.AutoConstants.pathConstraints, false), true)
+      swerve.followTrajectoryModifiedToRedAlliance(PathPlanner.loadPath("upperCube2", Constants.AutoConstants.pathConstraints, false), true)
     );
   }
 }
