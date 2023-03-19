@@ -27,6 +27,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -347,7 +348,7 @@ public class Swerve extends SubsystemBase {
      * you're on the red side. This follow trajectory
      * command accounts for that.
      * 
-     * @param trajectory          Trajectory to follow
+     * @param blueTrajectory       Trajectory to follow, built on the blue side of the field
      * @param shouldResetOdometry Should odometry be reset before following the
      *                            trajectory or not
      * 
@@ -355,17 +356,11 @@ public class Swerve extends SubsystemBase {
      *         the start auto, we would have the Driver Station data to know
      *         what alliance we are, and flip the trajectory if necessary.
      */
-    public Command followTrajectoryModifiedToAlliance(PathPlannerTrajectory trajectory, boolean shouldResetOdometry, boolean reverseInputs) {
+    public Command followTrajectoryModifiedToRedAlliance(PathPlannerTrajectory blueTrajectory, boolean shouldResetOdometry) {
 
-        Supplier<Command> followCommandSupplier = () -> {
-            // Modifies trajectory in case we need to because of our alliance
-            PathPlannerTrajectory modifiedTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory,
-                    DriverStation.getAlliance());
+        PathPlannerTrajectory newTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(blueTrajectory, Alliance.Red);
 
-            return reverseInputs ? followTrajectoryWithReveresedInputs(modifiedTrajectory, shouldResetOdometry) : followTrajectory(modifiedTrajectory, shouldResetOdometry);
-        };
-
-        return new ProxyCommand(followCommandSupplier);
+        return followTrajectory(newTrajectory, shouldResetOdometry);
     }
 
     public Command driveForTimeAtSpeed(Translation2d speed, double timeSeconds) {
