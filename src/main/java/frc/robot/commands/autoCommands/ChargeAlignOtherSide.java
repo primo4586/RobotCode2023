@@ -40,7 +40,7 @@ public class ChargeAlignOtherSide extends CommandBase {
         double pitch = swerve.getRoll();
         SmartDashboard.putBoolean("Started climbing?", startedClimbing);
         if (!startedClimbing) {
-            swerve.drive(new Translation2d(-SwerveConstants.preClimbSpeed, 0),0,true,false);
+            swerve.drive(new Translation2d(SwerveConstants.preClimbSpeed, 0),0,true,false);
             startedClimbing = Math.abs(pitch) >SwerveConstants.preClimbTolerance;
             lastTimeNotOnTarget = Timer.getFPGATimestamp();
         } else {
