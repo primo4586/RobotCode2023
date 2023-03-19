@@ -1,7 +1,4 @@
 package frc.robot.commands.autoCommands;
-
-
-
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -22,16 +19,18 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
+public class reloadCharge extends SequentialCommandGroup {
+  public reloadCharge(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm, Boolean shouldPutInUpper, boolean areWeCloseToLoadingStation, boolean gripCone) {
 
-public class CubeUpAndMidd extends SequentialCommandGroup {
-  public CubeUpAndMidd(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm, Boolean shouldPutInUpper, boolean areWeCloseToLoadingStation, boolean gripCone) {
-    
     PutItemInTheMiddle putItemInTheMiddle = new PutItemInTheMiddle(lilArm, bigArm, gripper);
     PutItemInTheUpper putItemInTheUpper = new PutItemInTheUpper(bigArm, lilArm, gripper);
 
     ConditionalCommand puttingItemInPlace = new ConditionalCommand(putItemInTheUpper, putItemInTheMiddle, () -> shouldPutInUpper);
     
     DriveBackAndGround driveBackAndGround = new DriveBackAndGround(swerve, gripper, bigArm, lilArm);
+
+    ChargeAlignOtherSide chargeAlignOtherSide = new ChargeAlignOtherSide(swerve);
+
     addCommands(
       Commands.runOnce(() -> {
         gripper.setShouldGripCone(false);
@@ -45,11 +44,9 @@ public class CubeUpAndMidd extends SequentialCommandGroup {
       driveBackAndGround,
       gripper.closeGripper(),
       swerve.followTrajectory(PathPlanner.loadPath("upperCubeReturn", AutoConstants.pathConstraints), false)
-      .alongWith(new IntakeParallel(lilArm, bigArm))
-      .alongWith(Commands.waitSeconds(1).andThen(new PutItemInTheMiddle(lilArm, bigArm, gripper))),
-      gripper.openGripper(),
-      Commands.waitSeconds(0.2),
-      new IntakeSequential(lilArm, bigArm)
+      .alongWith(new IntakeParallel(lilArm, bigArm)),
+      chargeAlignOtherSide
+
     );
   }
 }

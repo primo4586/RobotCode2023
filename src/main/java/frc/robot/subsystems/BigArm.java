@@ -25,7 +25,8 @@ public class BigArm extends SubsystemBase {
   public BigArm() {
     bigArmPID = BigArmConstants.bigArmPID;
 
-    // TODO: I assumed we're using the NEO 550s which are brushless, change motor type if not.
+    // TODO: I assumed we're using the NEO 550s which are brushless, change motor type if not. 
+    // TODO: were using neo v1.1 not 550 nut it doesn't matter
     bigArmMotor = new CANSparkMax(BigArmConstants.bigArmMotorID, MotorType.kBrushless); 
     bigArmEncoder = new WPI_TalonSRX(BigArmConstants.bigArmEncoderID);
     

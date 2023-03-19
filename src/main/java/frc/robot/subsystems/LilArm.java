@@ -35,6 +35,7 @@ public class LilArm extends SubsystemBase {
 
     lilArmEncoder = new WPI_TalonSRX(LilArmConstants.lilArmEncoderID);
     // TODO: I assumed we're using the NEO 550s which are brushless, change motor type if not.
+    // TODO: were using neo v1.1 not 550 nut it doesn't matter
     lilArmMotor = new CANSparkMax(LilArmConstants.lilArmMotorID, MotorType.kBrushless);
     lilArmSolenoid = new Solenoid(LilArmConstants.PCMID, PneumaticsModuleType.CTREPCM,
         LilArmConstants.lilArmSolenoidID);
