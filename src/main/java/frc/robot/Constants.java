@@ -201,6 +201,7 @@ public final class Constants {
 
 
         public static final Double preClimbSpeed = 1.8;
+        public static final Double prePreClimbSpeed = 2.0;
         public static final Double afterClimbSpeed = 0.55;
         public static final Double afterAfterClimbSpeed = 0.1;
         public static final Double preClimbTolerance = 9.0;
