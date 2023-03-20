@@ -27,6 +27,7 @@ import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.commands.actions.groundReturn;
 import frc.robot.commands.autoCommands.ChargeAlign;
 import frc.robot.commands.autoCommands.ChargeAlignOtherSide;
+import frc.robot.commands.autoCommands.BlueConeUpAndCubeUp;
 import frc.robot.commands.autoCommands.BlueCubeUpAndMidd;
 import frc.robot.commands.autoCommands.GamePieceThenDriveBack;
 import frc.robot.commands.autoCommands.RedCubeUpAndMidd;
@@ -52,6 +53,7 @@ public class AutoContainer {
         autoPaths.put("blue two cubes", new BlueCubeUpAndMidd(swerve, gripper, bigArm, lilArm, true, false, false));
         autoPaths.put("red two cubes", new RedCubeUpAndMidd(swerve, gripper, bigArm, lilArm, true, false, false));
         autoPaths.put("reload charge", new reloadCharge(swerve, gripper, bigArm, lilArm, true, false, false));
+        autoPaths.put("blue cone and cube", new BlueConeUpAndCubeUp(bigArm, lilArm, gripper, swerve));
         // autoPaths.put("Cube Move Arm By Time", lilArm.speedByTime(0.3, 1.5));
         // autoPaths.put("Cube Timed", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, false, false));
         autoPaths.put("Charge 2", swerve.driveUntilPitchAtSpeed(-2, 9).andThen(swerve.driveUntilPitchAtSpeedLower(-0.7, 3.5)));
