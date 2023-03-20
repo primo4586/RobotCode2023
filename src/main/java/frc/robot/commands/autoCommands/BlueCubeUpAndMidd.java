@@ -31,7 +31,7 @@ public class BlueCubeUpAndMidd extends SequentialCommandGroup {
 
     ConditionalCommand puttingItemInPlace = new ConditionalCommand(putItemInTheUpper, putItemInTheMiddle, () -> shouldPutInUpper);
     
-    DriveBackAndGround driveBackAndGround = new DriveBackAndGround(swerve, gripper, bigArm, lilArm);
+    BlueDriveBackAndGround driveBackAndGround = new BlueDriveBackAndGround(swerve, gripper, bigArm, lilArm);
     addCommands(
       Commands.runOnce(() -> {
         gripper.setShouldGripCone(false);
@@ -45,7 +45,7 @@ public class BlueCubeUpAndMidd extends SequentialCommandGroup {
       driveBackAndGround,
       gripper.closeGripper(),
       Commands.waitSeconds(0.2),
-      swerve.followTrajectory(PathPlanner.loadPath("upperCubeReturn", AutoConstants.pathConstraints), false)
+      swerve.followTrajectory(PathPlanner.loadPath("blueUpperCubeReturn", AutoConstants.pathConstraints), false)
       .alongWith(new IntakeParallel(lilArm, bigArm)),
       new PutItemInTheMiddle(lilArm, bigArm, gripper),
       lilArm.openLilArmSolenoid(),

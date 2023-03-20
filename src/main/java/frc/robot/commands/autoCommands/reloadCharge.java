@@ -27,7 +27,7 @@ public class reloadCharge extends SequentialCommandGroup {
 
     ConditionalCommand puttingItemInPlace = new ConditionalCommand(putItemInTheUpper, putItemInTheMiddle, () -> shouldPutInUpper);
     
-    DriveBackAndGround driveBackAndGround = new DriveBackAndGround(swerve, gripper, bigArm, lilArm);
+    BlueDriveBackAndGround driveBackAndGround = new BlueDriveBackAndGround(swerve, gripper, bigArm, lilArm);
 
     ChargeAlignOtherSide chargeAlignOtherSide = new ChargeAlignOtherSide(swerve);
 
@@ -43,7 +43,7 @@ public class reloadCharge extends SequentialCommandGroup {
       lilArm.closeLilArmSolenoid(),
       driveBackAndGround,
       gripper.closeGripper(),
-      swerve.followTrajectory(PathPlanner.loadPath("upperCubeReturn", AutoConstants.pathConstraints), false)
+      swerve.followTrajectory(PathPlanner.loadPath("cubeCharge", AutoConstants.pathConstraints), false)
       .alongWith(new IntakeParallel(lilArm, bigArm)),
       chargeAlignOtherSide
 

@@ -26,7 +26,7 @@ public class RedDriveBackAndGround extends ParallelCommandGroup {
 
     addCommands(
       firstMove.andThen(new GroundAuto(gripper, lilArm, bigArm)),
-      swerve.followTrajectoryModifiedToRedAlliance(PathPlanner.loadPath("upperCube2", Constants.AutoConstants.pathConstraints, false), true)
+      swerve.followTrajectory(PathPlanner.loadPath("redUpperCube2", Constants.AutoConstants.pathConstraints, false), true)
     );
   }
 }

@@ -29,7 +29,7 @@ public class RedCubeUpAndMidd extends SequentialCommandGroup {
 
     ConditionalCommand puttingItemInPlace = new ConditionalCommand(putItemInTheUpper, putItemInTheMiddle, () -> shouldPutInUpper);
     
-    DriveBackAndGround driveBackAndGround = new DriveBackAndGround(swerve, gripper, bigArm, lilArm);
+    RedDriveBackAndGround driveBackAndGround = new RedDriveBackAndGround(swerve, gripper, bigArm, lilArm);
     addCommands(
       Commands.runOnce(() -> {
         gripper.setShouldGripCone(false);
@@ -43,7 +43,7 @@ public class RedCubeUpAndMidd extends SequentialCommandGroup {
       driveBackAndGround,
       gripper.closeGripper(),
       Commands.waitSeconds(0.2),
-      swerve.followTrajectoryModifiedToRedAlliance(PathPlanner.loadPath("upperCubeReturn", AutoConstants.pathConstraints), false)
+      swerve.followTrajectory(PathPlanner.loadPath("redUpperCubeReturn", AutoConstants.pathConstraints), false)
       .alongWith(new IntakeParallel(lilArm, bigArm)),
       new PutItemInTheMiddle(lilArm, bigArm, gripper),
       lilArm.openLilArmSolenoid(),
