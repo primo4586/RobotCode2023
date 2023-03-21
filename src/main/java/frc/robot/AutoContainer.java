@@ -30,7 +30,6 @@ import frc.robot.commands.autoCommands.ChargeAlignOtherSide;
 import frc.robot.commands.autoCommands.BlueCubeUpAndMidd;
 import frc.robot.commands.autoCommands.GamePieceThenDriveBack;
 import frc.robot.commands.autoCommands.RedCubeUpAndMidd;
-import frc.robot.commands.autoCommands.reloadCharge;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
