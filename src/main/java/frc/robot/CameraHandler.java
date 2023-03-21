@@ -39,7 +39,7 @@ public class CameraHandler {
     public int getIndex() {
         return index;
     }
-
+    
     public VideoSource getActiveSource() {
         return sink.getSource();
     }

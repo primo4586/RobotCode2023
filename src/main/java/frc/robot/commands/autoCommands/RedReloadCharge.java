@@ -27,7 +27,7 @@ public class RedReloadCharge extends SequentialCommandGroup {
 
     ConditionalCommand puttingItemInPlace = new ConditionalCommand(putItemInTheUpper, putItemInTheMiddle, () -> shouldPutInUpper);
     
-    RedDriveBackAndGround driveBackAndGround = new RedDriveBackAndGround(swerve, gripper, bigArm, lilArm);
+    RedDriveBackAndGround driveBackAndGround = new RedDriveBackAndGround(swerve, gripper, bigArm, lilArm, true);
 
     ChargeAlignOtherSide chargeAlignOtherSide = new ChargeAlignOtherSide(swerve);
 
