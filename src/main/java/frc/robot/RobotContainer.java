@@ -95,12 +95,13 @@ public class RobotContainer {
     driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilArmConstants.autoStartPoint));
     // driverController.start().onTrue(testAuto);
     driverController.back().onTrue(lilArm.zeroLilArm());
-    driverController.leftBumper().onTrue(new InstantCommand(() -> handler.switchCamera()));
+    //driverController.leftBumper().onTrue(new InstantCommand(() -> handler.switchCamera()));
 
-    operatorController.rightBumper().onTrue(lilArm.closeLilArmSolenoid());
-    operatorController.rightTrigger().onTrue(lilArm.openLilArmSolenoid());
 
     /* Operator Buttons */
+    
+    operatorController.rightBumper().onTrue(lilArm.closeLilArmSolenoid());
+    operatorController.rightTrigger().onTrue(lilArm.openLilArmSolenoid());
        operatorController.y().onTrue(new PutItemInTheUpper(bigArm, lilArm, gripper));
       // operatorController.y().onTrue(new MoveArmsParallel(bigArm, BigArmConstants.cubeUpperFinalSetPoint, lilArm, LilArmConstants.cubeUpperFinalSetPoint).andThen(lilArm.openLilArmSolenoid()));
        operatorController.a().onTrue(new PutItemInTheMiddle(lilArm, bigArm, gripper));

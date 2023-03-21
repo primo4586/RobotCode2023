@@ -66,7 +66,7 @@ public class AutoContainer {
         autoPaths.put("Cube Upper FULL", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, false, false));
         autoPaths.put("Cube MIDDLE FULL", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, false, false, false));
         autoPaths.put("CONE MIDDLE FULL", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, false, false, true));
-        autoPaths.put("Drive By Time", swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 1.0));
+        autoPaths.put("Drive By Time", swerve.driveForTimeAtSpeed(new Translation2d(-2, 0), 3));
         autoPaths.put("Cube Upper Arm", cubeUpper2);
         autoPaths.put("Cone Upper Arm", Commands.runOnce(() -> gripper.setShouldGripCone(true), gripper).andThen(new PutItemInTheUpper(bigArm, lilArm, gripper)).andThen(Commands.waitSeconds(0.3)).andThen(gripper.openGripper()));
         autoPaths.put("Cone middle Arm", Commands.runOnce(() -> gripper.setShouldGripCone(true), gripper).andThen(new PutItemInTheMiddle(lilArm, bigArm, gripper)).andThen(Commands.waitSeconds(0.3)).andThen(gripper.openGripper()));
