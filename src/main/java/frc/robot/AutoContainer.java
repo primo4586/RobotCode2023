@@ -32,7 +32,6 @@ import frc.robot.commands.autoCommands.BlueCubeUpAndMidd;
 import frc.robot.commands.autoCommands.GamePieceThenDriveBack;
 import frc.robot.commands.autoCommands.RedConeUpAndCubeUp;
 import frc.robot.commands.autoCommands.RedCubeUpAndMidd;
-import frc.robot.commands.autoCommands.reloadCharge;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -56,7 +55,7 @@ public class AutoContainer {
         autoPaths.put("blue cone and cube", new BlueConeUpAndCubeUp(bigArm, lilArm, gripper, swerve));
         autoPaths.put("red cone and cube", new RedConeUpAndCubeUp(bigArm, lilArm, gripper, swerve));
         //TODO: ללכת למגרש אימונים ולבדוק 
-        //test charge station befor reload charge
+        //test charge station before reload charge
         //autoPaths.put("reload charge", new reloadCharge(swerve, gripper, bigArm, lilArm, true, false, false));
         //autoPaths.put("Charge Station", new ChargeAlign(swerve));
 

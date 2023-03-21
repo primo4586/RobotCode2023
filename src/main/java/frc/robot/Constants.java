@@ -206,7 +206,7 @@ public final class Constants {
         public static final Double afterAfterClimbSpeed = 0.1;
         public static final Double preClimbTolerance = 9.0;
         public static final Double afterClimbTolerance = 3.5;
-        public static final Double waitTime = 0.5;
+        public static final Double maybeAfterClimbSpeed = 0.55;
 
         /* Charge Align Station Constants */
         public static final double ALIGN_STATION_SPEED = .5;
