@@ -54,7 +54,7 @@ public final class Constants {
 
         public static final String bigArmPreferencesKey = "bigArmEncoder" ;
 
-        public static final double coneUpperFinalSetPoint = -77931;//-88152;
+        public static final double coneUpperFinalSetPoint = -78853;//-88152;
         public static final double coneMiddleSetPoint = -47773;
 
 
@@ -138,13 +138,13 @@ public final class Constants {
         /** meters / second */
         public static final double maxSpeed = 5;
         /** Percent output to motors. */
-        public static final double maxPercentVelocity = 0.85; 
+        public static final double maxPercentVelocity = 1; 
         /** radians / second */
         public static final double maxAngularVelocity = 5; 
 
         /* Swerve Slow Mode Reduce Values */
         public static final double slowModeSpeed = maxSpeed / 4;
-        public static final double slowModeAngularVelocity = maxAngularVelocity / 4;
+        public static final double slowModeAngularVelocity = 2;
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -201,7 +201,7 @@ public final class Constants {
 
 
         public static final Double preClimbSpeed = 1.8;
-        public static final double prePreClimbSpeed = 2.3;
+        public static final Double prePreClimbSpeed = 2.3;
         public static final Double afterClimbSpeed = 0.55;
         public static final Double afterAfterClimbSpeed = 0.1;
         public static final Double preClimbTolerance = 9.0;
@@ -262,8 +262,8 @@ public final class Constants {
 
         public static final double ticksTolerance = 5;
 
-        public static final double coneUpperFinalSetPoint = -1750;//-1696;//-1497;//-1801;//-1793;
-        public static final double coneMiddleSetPoint = -1253;//1189;
+        public static final double coneUpperFinalSetPoint = -1738;//-1696;//-1497;//-1801;//-1793;
+        public static final double coneMiddleSetPoint = -1187;//1189;
 
 
         public static final double  cubeUpperFinalSetPoint = -1420;
@@ -273,7 +273,7 @@ public final class Constants {
         public static final double intakeSetPoint = -184;//-230;
         public static final double intakeReturnDeadZone =2345;
 
-        public static final double highIntakeSetpoint = -976;
+        public static final double highIntakeSetpoint = -1010;
  
         public static final double middleOfRobotSetPoint = 0.0;
         public static final double groundSetPoint = -291;

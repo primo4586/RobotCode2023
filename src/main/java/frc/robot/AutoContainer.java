@@ -27,8 +27,10 @@ import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.commands.actions.groundReturn;
 import frc.robot.commands.autoCommands.ChargeAlign;
 import frc.robot.commands.autoCommands.ChargeAlignOtherSide;
+import frc.robot.commands.autoCommands.BlueConeUpAndCubeUp;
 import frc.robot.commands.autoCommands.BlueCubeUpAndMidd;
 import frc.robot.commands.autoCommands.GamePieceThenDriveBack;
+import frc.robot.commands.autoCommands.RedConeUpAndCubeUp;
 import frc.robot.commands.autoCommands.RedCubeUpAndMidd;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
@@ -50,21 +52,24 @@ public class AutoContainer {
         autoPaths.put("No Auto", new InstantCommand());
         autoPaths.put("blue two cubes", new BlueCubeUpAndMidd(swerve, gripper, bigArm, lilArm, true, false, false));
         autoPaths.put("red two cubes", new RedCubeUpAndMidd(swerve, gripper, bigArm, lilArm, true, false, false));
-        autoPaths.put("Cube Charge", cubeUpper.andThen(Commands.waitSeconds(0.5)).andThen(new ParallelCommandGroup(new IntakeSequential(lilArm, bigArm),Commands.waitSeconds(0.2).andThen(new ChargeAlignOtherSide(swerve)))));
+        autoPaths.put("blue cone and cube", new BlueConeUpAndCubeUp(bigArm, lilArm, gripper, swerve));
+        autoPaths.put("red cone and cube", new RedConeUpAndCubeUp(bigArm, lilArm, gripper, swerve));
+        //TODO: ללכת למגרש אימונים ולבדוק 
+        //test charge station before reload charge
+        //autoPaths.put("reload charge", new reloadCharge(swerve, gripper, bigArm, lilArm, true, false, false));
+        //autoPaths.put("Charge Station", new ChargeAlign(swerve));
+
+        autoPaths.put("Cube Charge", cubeUpper.andThen(Commands.waitSeconds(0.5)).andThen(new ParallelCommandGroup(new IntakeSequential(lilArm, bigArm),Commands.waitSeconds(0.7).andThen(new ChargeAlignOtherSide(swerve)))));
+        autoPaths.put("super charge", new ChargeAlignOtherSide(swerve));
         autoPaths.put("Cone Upper FULL", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, false, true));
         autoPaths.put("Cube Upper FULL", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, true, false, false));
         autoPaths.put("Cube MIDDLE FULL", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, false, false, false));
-        autoPaths.put("Drive By Time", swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 2.5));
-        autoPaths.put("super charge", new ChargeAlignOtherSide(swerve));
-        autoPaths.put("Charge Station", new ChargeAlign(swerve));
-        
-        Command driveAndChargeAngle = swerve.driveForTimeAtSpeed(new Translation2d(-1.75, 0), 3);//.andThen(swerve.chargeStationAlign());
-
-        autoPaths.put("Drive And Charge Angle", driveAndChargeAngle);
+        autoPaths.put("CONE MIDDLE FULL", new GamePieceThenDriveBack(swerve, gripper, bigArm, lilArm, false, false, true));
+        autoPaths.put("Drive By Time", swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 1.0));
         autoPaths.put("Cube Upper Arm", cubeUpper2);
-        autoPaths.put("Cube Lower Arm", Commands.runOnce(() -> gripper.setShouldGripCone(false), gripper).andThen(new PutItemInTheMiddle(lilArm, bigArm, gripper)).andThen(Commands.waitSeconds(0.3)).andThen(gripper.openGripper()));
         autoPaths.put("Cone Upper Arm", Commands.runOnce(() -> gripper.setShouldGripCone(true), gripper).andThen(new PutItemInTheUpper(bigArm, lilArm, gripper)).andThen(Commands.waitSeconds(0.3)).andThen(gripper.openGripper()));
-        autoPaths.put("Cone Lower Arm", Commands.runOnce(() -> gripper.setShouldGripCone(true), gripper).andThen(new PutItemInTheMiddle(lilArm, bigArm, gripper)).andThen(Commands.waitSeconds(0.3)).andThen(gripper.openGripper()));
+        autoPaths.put("Cone middle Arm", Commands.runOnce(() -> gripper.setShouldGripCone(true), gripper).andThen(new PutItemInTheMiddle(lilArm, bigArm, gripper)).andThen(Commands.waitSeconds(0.3)).andThen(gripper.openGripper()));
+        autoPaths.put("Cube middle Arm", Commands.runOnce(() -> gripper.setShouldGripCone(false), gripper).andThen(new PutItemInTheMiddle(lilArm, bigArm, gripper)).andThen(Commands.waitSeconds(0.3)).andThen(gripper.openGripper()));
         this.autoSelector = new CommandSelector(autoPaths, PrimoShuffleboard.getInstance().getCompTabTitle());
     }
 

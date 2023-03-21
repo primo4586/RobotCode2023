@@ -18,7 +18,7 @@ public class Gripper extends SubsystemBase {
   private DigitalInput isGripperOpen;
   
   private AddressableLED m_led = new AddressableLED(0);
-  private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(55);
+  private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(20);
   private boolean fakeIsGripperOpen;
 
   /** Creates a new Gripper. */
@@ -98,17 +98,15 @@ public class Gripper extends SubsystemBase {
         for (var i = 0; i < m_ledBuffer.getLength(); i++)
           m_ledBuffer.setRGB(i,180,31,235);
         }
-      
      
       m_led.setData(m_ledBuffer);
       m_led.start();
     });
   }
-
 public void turnOffLed() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++)
       m_ledBuffer.setRGB(i,0,0,0);
-    
+
     m_led.setData(m_ledBuffer);
     m_led.start();
 }
@@ -122,7 +120,6 @@ public void turnOnLed() {
       for (var i = 0; i < m_ledBuffer.getLength(); i++)
         m_ledBuffer.setRGB(i,180,31,235);
       }
-    
    
     m_led.setData(m_ledBuffer);
     m_led.start();

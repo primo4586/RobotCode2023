@@ -191,6 +191,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyroForAutoEnd() {
+        
         gyro.setYaw(180);
     }
 
@@ -368,6 +369,7 @@ public class Swerve extends SubsystemBase {
         return run(() -> {
             drive(speed, 0, true, true);
         })
+        .andThen(run(()->drive(new Translation2d(0.0,0.0), 0, true, true)))
         .beforeStarting(() -> timer.start())
         .until(() -> timer.hasElapsed(timeSeconds));
     }

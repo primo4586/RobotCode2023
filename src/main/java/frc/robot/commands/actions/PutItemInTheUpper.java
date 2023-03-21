@@ -27,7 +27,9 @@ public class PutItemInTheUpper extends SequentialCommandGroup {
 
     
     MoveArmsParallel coneUpperFinalSetPoint = new MoveArmsParallel(bigArm, BigArmConstants.coneUpperFinalSetPoint, lilArm, LilArmConstants.coneUpperFinalSetPoint);
-    Command coneUpper = new ParallelCommandGroup(lilArm.TurnLilArmToSetpointWithCustomPID(LilArmConstants.coneUpperFinalSetPoint, LilArmConstants.lilArmUpperConePID),bigArm.TurnBigArmToSetpoint(BigArmConstants.coneUpperFinalSetPoint));
+    //Command coneUpper = new ParallelCommandGroup(lilArm.TurnLilArmToSetpointWithCustomPID(LilArmConstants.coneUpperFinalSetPoint, LilArmConstants.lilArmUpperConePID),bigArm.TurnBigArmToSetpoint(BigArmConstants.coneUpperFinalSetPoint));
+    Command coneUpper = new ParallelCommandGroup(lilArm.TurnLilArmToSetpoint(LilArmConstants.coneUpperFinalSetPoint),bigArm.TurnBigArmToSetpoint(BigArmConstants.coneUpperFinalSetPoint));
+
     //check if we put cone or cube
     ConditionalCommand finalSetPoint = new ConditionalCommand(coneUpper, cubeUpperFinalSetPoint, gripper::getShouldGripCone);
 
