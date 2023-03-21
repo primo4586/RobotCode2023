@@ -35,11 +35,12 @@ public class BlueConeUpAndCubeUp extends SequentialCommandGroup {
         gripper.turnOnLed();
       }, gripper),
       putItemInTheUpper,
-      Commands.waitSeconds(0.3),
+      Commands.waitSeconds(0.4),
       gripper.openGripper(),
       Commands.waitSeconds(0.3),
       lilArm.closeLilArmSolenoid(),
       driveBackAndGround,
+      Commands.waitSeconds(0.2),
       gripper.closeGripper(),
       Commands.waitSeconds(0.2),
       swerve.followTrajectory(PathPlanner.loadPath("blueUpperCubeReturn", AutoConstants.pathConstraints), false)
