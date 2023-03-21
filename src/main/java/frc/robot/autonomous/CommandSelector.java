@@ -37,7 +37,7 @@ public class CommandSelector {
         for(int i = 1; i < commandList.size();i++){
             chooser.addOption(commandList.get(i).getKey(), commandList.get(i).getValue());
         }
-        tab.add(chooser); // sending the chooser data to Shuffleboard
+        tab.add(chooser).withPosition(0, 1).withSize(2, 1); // sending the chooser data to Shuffleboard
     }
 
     // starts the selected command

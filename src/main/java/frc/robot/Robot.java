@@ -76,7 +76,6 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    PrimoShuffleboard.getInstance().updateCompetition(swerve, lilArm, bigArm, gripper);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -110,6 +109,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

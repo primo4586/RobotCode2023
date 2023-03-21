@@ -3,6 +3,7 @@ package frc.lib.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.subsystems.BigArm;
@@ -46,15 +47,15 @@ public class PrimoShuffleboard {
         return PrimoShuffleboard.getInstance().getPrimoTab("Competition Dashboard");
     }
 
-    public void updateCompetition(Swerve swerve, LilArm lilArm, BigArm bigArm, Gripper gripper) {
-
+    public void initDashboard(Swerve swerve, LilArm lilArm, BigArm bigArm, Gripper gripper, VideoSource camera) {
         PrimoTab tab = getCompetitonBoard();
-        tab.addEntry("Gripper Mode").setDefaultBoolean(false);
-        tab.addEntry("Gripper State").setDefaultBoolean(false);
 
-        tab.addEntry("Time left").setDouble(Timer.getMatchTime(), 0);
-        tab.addEntry("Gripper State").setBoolean(gripper.getFakeIsGripperOpen(),0);
-        tab.addEntry("Gripper Mode").setBoolean(gripper.getShouldGripCone(),0);
+        try {
+            tab.getTab().add("POV: You are Itzik", camera).withPosition(2, 0).withSize(7, 4);
+            tab.getTab().addBoolean("Cone?", () -> gripper.getShouldGripCone()).withPosition(9, 0).withSize(1, 4);
+            tab.getTab().addDouble("Time left", () -> Timer.getMatchTime()).withPosition(0, 0).withSize(2, 1);
+
+        } catch (IllegalArgumentException alreadyExists) {} // We ignore.
     }
 
     public String getCompTabTitle() {

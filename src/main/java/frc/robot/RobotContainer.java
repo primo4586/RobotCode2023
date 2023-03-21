@@ -53,6 +53,8 @@ public class RobotContainer {
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
+  private UsbCamera driverCamera;
+
   /* Subsystems */
   private Swerve swerve;
   private CameraHandler handler;
@@ -138,8 +140,11 @@ public class RobotContainer {
 
 
     public void buildCameras() {
-      UsbCamera forward = CameraServer.startAutomaticCapture("Forward", 0);
+      driverCamera = CameraServer.startAutomaticCapture("Forward", 0);
 
-      // handler = new CameraHandler(forward, backward);
+    }
+
+    public UsbCamera getDriverCamera() {
+        return driverCamera;
     }
   }  
