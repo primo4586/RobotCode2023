@@ -24,7 +24,6 @@ public class ChargeAlignOtherSide extends CommandBase {
   private boolean chargeOtherSide;
   private boolean startedGoingOtherSide;
   private boolean firstCharge;
-  private double lastTimeNotOnTarget;
   private Timer timer;
 
   public ChargeAlignOtherSide(Swerve swerve) {
@@ -70,7 +69,6 @@ public class ChargeAlignOtherSide extends CommandBase {
             if (!startedClimbing) {
                 swerve.drive(new Translation2d(-SwerveConstants.preClimbSpeed, 0),0,true,false);
                 startedClimbing = Math.abs(pitch) >SwerveConstants.preClimbTolerance;
-                lastTimeNotOnTarget = Timer.getFPGATimestamp();
             } else {
                 if (Math.abs(pitch) <= SwerveConstants.afterClimbTolerance) {
                     swerve.drive(new Translation2d(0, 0),0,true,false);
@@ -80,11 +78,9 @@ public class ChargeAlignOtherSide extends CommandBase {
                     }
                 if(chargeOtherSide){
                 swerve.drive(new Translation2d(-Math.signum(pitch) * SwerveConstants.afterAfterClimbSpeed, 0),0,true,false);
-                lastTimeNotOnTarget = Timer.getFPGATimestamp();
                 }
                 else{
                 swerve.drive(new Translation2d(-Math.signum(pitch) * SwerveConstants.afterClimbSpeed, 0),0,true,false);
-                lastTimeNotOnTarget = Timer.getFPGATimestamp();
                 }
                 }
             }
