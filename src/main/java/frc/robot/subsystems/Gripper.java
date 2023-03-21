@@ -18,7 +18,7 @@ public class Gripper extends SubsystemBase {
   private DigitalInput isGripperOpen;
   
   private AddressableLED m_led = new AddressableLED(0);
-  private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(20);
+  private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(39);
   private boolean fakeIsGripperOpen;
 
   /** Creates a new Gripper. */
