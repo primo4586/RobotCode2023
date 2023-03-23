@@ -38,7 +38,7 @@ public final class Constants {
         // TODO: Re-adjust these because we're using NEOs
         private static final double bigArmKP = 0.002;
         private static final double bigArmKI = 0.0;
-        private static final double bigArmKD = Integer.MAX_VALUE;
+        private static final double bigArmKD = 300;
         public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
 
         //bigArm feedforward values
@@ -69,7 +69,7 @@ public final class Constants {
         public static final double highIntakeSetpoint = -28557;
 
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = -84986;
+        public static final double groundSetPoint = 18087;
         public static final double groundSetPoint2 = 10000;
 
         public static final double honeSpeed = 0.1;
@@ -87,7 +87,9 @@ public final class Constants {
         /* Drivetrain Constants (Changes Per Robot) */
         public static final double trackWidth = 0.61;
         public static final double wheelBase = 0.61;
+    
 
+                                                                                  
         /* Wheel Constants (Changes Per Robot's Wheels) */ 
         public static final double wheelDiameter = Units.inchesToMeters(4);
         public static final double wheelCircumference = wheelDiameter * Math.PI;
@@ -112,12 +114,12 @@ public final class Constants {
         public static final boolean angleEnableCurrentLimit = true;
 
         public static final int driveContinuousCurrentLimit = 35;
-        public static final int drivePeakCurrentLimit = 60;
+        public static final int drivePeakCurrentLimit = 50;
         public static final double drivePeakCurrentDuration = 0.1;
         public static final boolean driveEnableCurrentLimit = true;
 
         /* Angle Motor PID Values (Changes Per Module) */
-        public static final double angleKP = 0.3;
+        public static final double angleKP = 0.1;
         public static final double angleKI = 0.0;
         public static final double angleKD = 0.0;
         public static final double angleKF = 0.0;
@@ -200,13 +202,14 @@ public final class Constants {
         //new charge station align attempt
 
 
-        public static final Double preClimbSpeed = 1.8;
-        public static final Double prePreClimbSpeed = 2.3;
-        public static final Double afterClimbSpeed = 0.55;
-        public static final Double afterAfterClimbSpeed = 0.1;
-        public static final Double preClimbTolerance = 9.0;
-        public static final Double afterClimbTolerance = 3.5;
-        public static final Double maybeAfterClimbSpeed = 0.55;
+        public static final double preClimbSpeed = 1.8;
+        public static final double reversePreClimbSpeed = 1;
+        public static final double prePreClimbSpeed = 2.3;
+        public static final double afterClimbSpeed = 0.55;
+        public static final double afterAfterClimbSpeed = 0.1;
+        public static final double preClimbTolerance = 9.0;
+        public static final double afterClimbTolerance = 3.5;
+        public static final double maybeAfterClimbSpeed = 0.55;
 
         /* Charge Align Station Constants */
         public static final double ALIGN_STATION_SPEED = .5;
@@ -236,7 +239,7 @@ public final class Constants {
         /* LilArm PID Values */ // TODO: Re-adjust these because now we're using NEO
         private static final double lilArmMotorsKP = 0.1;
         private static final double lilArmMotorsKI = 0.0;
-        private static final double lilArmMotorsKD = 0.0;
+        private static final double lilArmMotorsKD = 5;
         
         public static final PIDController lilArmPID = new PIDController(lilArmMotorsKP, lilArmMotorsKI, lilArmMotorsKD);
 
@@ -260,7 +263,7 @@ public final class Constants {
         public static final int PCMID = 44;
         public static final int lilArmSolenoidID = 4;
 
-        public static final double ticksTolerance = 5;
+        public static final double ticksTolerance = 20;
 
         public static final double coneUpperFinalSetPoint = -1738;//-1696;//-1497;//-1801;//-1793;
         public static final double coneMiddleSetPoint = -1187;//1189;
@@ -276,7 +279,7 @@ public final class Constants {
         public static final double highIntakeSetpoint = -1010;
  
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = -291;
+        public static final double groundSetPoint = -3192;
 
         public static final double autoStartPoint = -136;
 

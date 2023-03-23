@@ -35,8 +35,8 @@ public class BigArm extends SubsystemBase {
 
     honeSwitch = new DigitalInput(BigArmConstants.honeSwitchID);
     bigArmMotor.setInverted(true); // TODO: Double-check inverts as necessary 
-    bigArmMotor.burnFlash();
-    bigArmMotor.setInverted(true);
+    var errorCode = bigArmMotor.burnFlash();
+    System.out.println("BigArm Error Code:" + errorCode);
   }
 
   public void putBigArmInPlace(double setPoint){
@@ -66,6 +66,8 @@ public class BigArm extends SubsystemBase {
       bigArmMotor.set(supplier.getAsDouble());
     });
   }
+
+
 
   public void setPreference(){
     Preferences.setDouble(BigArmConstants.bigArmPreferencesKey, getCurrentArmPosition());

@@ -5,6 +5,8 @@
 package frc.robot;
 
 
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -33,7 +35,7 @@ public class Robot extends TimedRobot {
   private LilArm lilArm;
 
   private BigArm bigArm;
-
+  private boolean hasReset = false;
   private Gripper gripper;
   private Swerve swerve;
   private PneumaticsControlModule pcm;
@@ -57,7 +59,8 @@ public class Robot extends TimedRobot {
 
     m_robotContainer = new RobotContainer(swerve, gripper ,lilArm, bigArm);
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm);
-
+    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
+    PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
   }
 
   /**
@@ -119,7 +122,11 @@ public class Robot extends TimedRobot {
     }
     gripper.turnOnLed();
     
-    swerve.zeroGyroForAutoEnd();
+    if(!hasReset)  {
+      swerve.zeroGyroForAutoEnd();
+      hasReset = true;
+    }
+
   }
 
   /** This function is called periodically during operator control. */

@@ -12,17 +12,17 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Swerve;
 import frc.robot.Constants.SwerveConstants;;
 
-public class ChargeAlignOtherSide extends CommandBase {
+public class ReverseChargeAlign extends CommandBase {
   /** Creates a new chargeAlign. */
 
-  
+
   private final Swerve swerve;
 
   private boolean startedClimbing;
   private boolean otherSide;
   private double lastTimeNotOnTarget;
 
-  public ChargeAlignOtherSide(Swerve swerve) {
+  public ReverseChargeAlign(Swerve swerve) {
     this.swerve = swerve;
     addRequirements(swerve);
   }
@@ -39,22 +39,22 @@ public class ChargeAlignOtherSide extends CommandBase {
         double pitch = swerve.getRoll();
         SmartDashboard.putBoolean("Started climbing?", startedClimbing);
         if (!startedClimbing) {
-            swerve.drive(new Translation2d(-SwerveConstants.preClimbSpeed, 0),0,true,false);
+            swerve.drive(new Translation2d(SwerveConstants.reversePreClimbSpeed, 0),0,true,false);
             startedClimbing = Math.abs(pitch) >SwerveConstants.preClimbTolerance;
             lastTimeNotOnTarget = Timer.getFPGATimestamp();
         } else {
             if (Math.abs(pitch) <= SwerveConstants.afterClimbTolerance) {
                 swerve.drive(new Translation2d(0, 0),0,true,false);
             } else {
-                if(pitch<=-3){
+                if(pitch>=3){
                     otherSide = true;
                 }
               if(otherSide){
-              swerve.drive(new Translation2d(-Math.signum(pitch) * SwerveConstants.afterAfterClimbSpeed, 0),0,true,false);
+              swerve.drive(new Translation2d(Math.signum(pitch) * SwerveConstants.afterAfterClimbSpeed, 0),0,true,false);
               lastTimeNotOnTarget = Timer.getFPGATimestamp();
               }
               else{
-              swerve.drive(new Translation2d(-Math.signum(pitch) * SwerveConstants.afterClimbSpeed, 0),0,true,false);
+              swerve.drive(new Translation2d(Math.signum(pitch) * SwerveConstants.afterClimbSpeed, 0),0,true,false);
               lastTimeNotOnTarget = Timer.getFPGATimestamp();
               }
             }
