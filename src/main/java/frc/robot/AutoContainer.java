@@ -54,7 +54,8 @@ public class AutoContainer {
         autoPaths.put("No Auto", new InstantCommand());
         autoPaths.put("blue two cubes", new BlueCubeUpAndMidd(swerve, gripper, bigArm, lilArm, true, false, false));
         autoPaths.put("red two cubes", new RedCubeUpAndMidd(swerve, gripper, bigArm, lilArm, true, false, false));
-        autoPaths.put("blue cone and cube", new BlueConeUpAndCubeUp(bigArm, lilArm, gripper, swerve));
+        autoPaths.put("blue cone and cube", new BlueConeUpAndCubeUp(
+            bigArm, lilArm, gripper, swerve));
         autoPaths.put("red cone and cube", new RedConeUpAndCubeUp(bigArm, lilArm, gripper, swerve));
         //test charge station before reload charge
         //autoPaths.put("reload charge", new reloadCharge(swerve, gripper, bigArm, lilArm, true, false, false));

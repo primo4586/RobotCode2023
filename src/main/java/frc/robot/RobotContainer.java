@@ -12,6 +12,7 @@ import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode;
+import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -141,6 +142,7 @@ public class RobotContainer {
 
     public void buildCameras() {
       driverCamera = CameraServer.startAutomaticCapture("Forward", 0);
+      driverCamera.setVideoMode(PixelFormat.kYUYV, 320, 240, 10);
 
     }
 

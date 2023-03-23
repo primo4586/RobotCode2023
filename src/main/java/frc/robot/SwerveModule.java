@@ -57,7 +57,7 @@ public class SwerveModule {
 
     public void setDesiredStateReveresed(SwerveModuleState desiredState) {
         setDesiredState(new SwerveModuleState(-desiredState.speedMetersPerSecond, desiredState.angle), true);
-        SmartDashboard.putNumber("desierd velocity", desiredState.speedMetersPerSecond);
+        // SmartDashboard.putNumber("desierd velocity", desiredState.speedMetersPerSecond);
     }
 
     /**
@@ -87,7 +87,7 @@ public class SwerveModule {
                     feedforward.calculate(desiredState.speedMetersPerSecond));
 
         }
-        SmartDashboard.putNumber("Mod " + moduleNumber + " Desired Velocity", desiredState.speedMetersPerSecond);
+        // SmartDashboard.putNumber("Mod " + moduleNumber + " Desired Velocity", desiredState.speedMetersPerSecond);
 
         double angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.SwerveConstants.maxSpeed * 0.01))
                 ? lastAngle
@@ -96,8 +96,8 @@ public class SwerveModule {
         mAngleMotor.set(ControlMode.Position,
                 Conversions.degreesToFalcon(angle, Constants.SwerveConstants.angleGearRatio));
         if (isOpenLoop) {
-            SmartDashboard.putNumber("Mod " + moduleNumber + " Current Velocity", getState().speedMetersPerSecond);
-            SmartDashboard.putNumber("Mod " + moduleNumber + " Desired Angle ", desiredState.angle.getDegrees());
+            // SmartDashboard.putNumber("Mod " + moduleNumber + " Current Velocity", getState().speedMetersPerSecond);
+            // SmartDashboard.putNumber("Mod " + moduleNumber + " Desired Angle ", desiredState.angle.getDegrees());
         }
         lastAngle = angle;
     }
@@ -110,16 +110,16 @@ public class SwerveModule {
 
     private void configAngleEncoder() {
         ErrorCode code;
-        code = angleEncoder.configFactoryDefault();
-        System.out.println("Module " + moduleNumber + " CANCoder Factory Default: " + code);
+        // code = angleEncoder.configFactoryDefault();
+        // System.out.println("Module " + moduleNumber + " CANCoder Factory Default: " + code);
         code = angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
         System.out.println("Module " + moduleNumber + " CANCoder Settings: " + code);
     }
 
     private void configAngleMotor() {
         ErrorCode code;
-        code = mAngleMotor.configFactoryDefault();
-        System.out.println("Module " + moduleNumber + " Angle Factory Default: " + code);
+        // code = mAngleMotor.configFactoryDefault();
+        // System.out.println("Module " + moduleNumber + " Angle Factory Default: " + code);
         code = mAngleMotor.configAllSettings(Robot.ctreConfigs.swerveAngleFXConfig);
         System.out.println("Module " + moduleNumber + " Angle Settings: " + code);
         mAngleMotor.setInverted(Constants.SwerveConstants.angleMotorInvert);
@@ -129,8 +129,8 @@ public class SwerveModule {
 
     private void configDriveMotor() {
         ErrorCode code;
-        code = mDriveMotor.configFactoryDefault();
-        System.out.println("Module " + moduleNumber + " Drive Factory Default: " + code);
+        // code = mDriveMotor.configFactoryDefault();
+        // System.out.println("Module " + moduleNumber + " Drive Factory Default: " + code);
         code = mDriveMotor.configAllSettings(Robot.ctreConfigs.swerveDriveFXConfig);
         System.out.println("Module " + moduleNumber + " Angle Settings: " + code);
         mDriveMotor.setInverted(constants.driveInvert);

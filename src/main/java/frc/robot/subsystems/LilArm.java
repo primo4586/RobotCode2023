@@ -44,7 +44,8 @@ public class LilArm extends SubsystemBase {
     lilArmMotor.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT_LIMIT, Constants.ARM_FREE_CURRENT_LIMIT);
 
     lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-    lilArmMotor.burnFlash();
+    var errorCode = lilArmMotor.burnFlash();
+    System.out.println("LilArm Error Code: " + errorCode);
   }
 
   public boolean isSolenoidOpen() {
@@ -72,7 +73,7 @@ public class LilArm extends SubsystemBase {
   }
 
   public void putArmInPlaceWithCustomPID(double setpoint, PIDController pid) {
-    SmartDashboard.putNumber("LilArm PID Output", pid.calculate(getCurrentArmPosition(), setpoint));
+    // SmartDashboard.putNumber("LilArm PID Output", pid.calculate(getCurrentArmPosition(), setpoint));
     lilArmMotor.setVoltage(pid.calculate(getCurrentArmPosition(), setpoint));
   }
 
@@ -85,7 +86,7 @@ public class LilArm extends SubsystemBase {
   }
 
   public Command TurnLilArmToSetpointOnlyForAuto(double setpoint) {
-    SmartDashboard.putNumber("LilArm Setpoint", setpoint);
+    // SmartDashboard.putNumber("LilArm Setpoint", setpoint);
     return run(() -> {
         putArmInPlace(setpoint);
     })
@@ -93,7 +94,7 @@ public class LilArm extends SubsystemBase {
   }
 
   public Command TurnLilArmToSetpointWithCustomPID(double setpoint, PIDController pid) {
-    SmartDashboard.putNumber("LilArm Setpoint", setpoint);
+    // SmartDashboard.putNumber("LilArm Setpoint", setpoint);
     return run(() -> {
         putArmInPlaceWithCustomPID(setpoint, pid);
     })

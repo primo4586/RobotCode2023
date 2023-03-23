@@ -47,7 +47,7 @@ public class Swerve extends SubsystemBase {
     private double teleopRotationOffset = 0;
 
     // Field visualizer for debug purposes
-    private Field2d field2d = new Field2d();
+    // private Field2d field2d = new Field2d();
 
     // Uses vision data to estimate the robot's position on the field.
     private VisionPoseEstimator visionPoseEstimator;
@@ -67,7 +67,7 @@ public class Swerve extends SubsystemBase {
         gyro.configFactoryDefault();
         zeroGyro();
 
-        SmartDashboard.putData(field2d);
+        // SmartDashboard.putData(field2d);
         mSwerveMods = new SwerveModule[] {
                 new SwerveModule(0, SwerveConstants.FrontLeftModule.constants),
                 new SwerveModule(1, SwerveConstants.FrontRightModule.constants),
@@ -241,22 +241,22 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         updateOdometry();
 
-        SmartDashboard.putNumber("Gyro", getYaw().getDegrees());
-        SmartDashboard.putNumber("Roll", getRoll());
-        SmartDashboard.putNumber("Pitch", getPitch());
-        SmartDashboard.putNumber("Teleop Gyro", getTeleopYaw().getDegrees());
+        // SmartDashboard.putNumber("Gyro", getYaw().getDegrees());
+        // SmartDashboard.putNumber("Roll", getRoll());
+        // SmartDashboard.putNumber("Pitch", getPitch());
+        // SmartDashboard.putNumber("Teleop Gyro", getTeleopYaw().getDegrees());
 
-        for (SwerveModule mod : mSwerveMods) {
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getState().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-        }
+        // for (SwerveModule mod : mSwerveMods) {
+        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
+        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getState().angle.getDegrees());
+        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+        // }
     }
 
     public void updateOdometry() {
         poseEstimation.update(getYaw(), getPositions());
         swerveOdometry.update(getYaw(), getPositions());
-        field2d.getObject("Odometry").setPose(swerveOdometry.getPoseMeters());
+        // field2d.getObject("Odometry").setPose(swerveOdometry.getPoseMeters());
 
         if (visionPoseEstimator != null) {
             var result = visionPoseEstimator
@@ -264,11 +264,11 @@ public class Swerve extends SubsystemBase {
 
             if (result != null) {
                 poseEstimation.addVisionMeasurement(result.estimatedPose.toPose2d(), result.timestampSeconds);
-                field2d.getObject("Vision Position").setPose(result.estimatedPose.toPose2d());
+                // field2d.getObject("Vision Position").setPose(result.estimatedPose.toPose2d());
             }
         }
 
-        field2d.setRobotPose(getPose());
+        // field2d.setRobotPose(getPose());
     }
 
     public Command driveForwardUntilMeters(double driveSpeed, double metersSetpoint) {

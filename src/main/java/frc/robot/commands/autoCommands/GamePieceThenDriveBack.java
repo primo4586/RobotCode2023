@@ -42,7 +42,7 @@ public class GamePieceThenDriveBack extends SequentialCommandGroup {
       Commands.waitSeconds(0.5),
       lilArm.closeLilArmSolenoid(),
       //swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 2.7),
-      new ParallelCommandGroup(swerve.driveForTimeAtSpeed(new Translation2d(-2.0, 0), 3.0),moveToIntakeNoOpen, Commands.waitSeconds(0.5).andThen(gripper.closeGripper())),
+      new ParallelCommandGroup(swerve.driveForTimeAtSpeed(new Translation2d(-2.0, 0), 2.5),moveToIntakeNoOpen, Commands.waitSeconds(0.5).andThen(gripper.closeGripper())),
       groundAuto
       //gripper.closeGripper(),
       //new groundReturn(lilArm, bigArm)

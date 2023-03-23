@@ -87,7 +87,9 @@ public final class Constants {
         /* Drivetrain Constants (Changes Per Robot) */
         public static final double trackWidth = 0.61;
         public static final double wheelBase = 0.61;
+    
 
+                                                                                  
         /* Wheel Constants (Changes Per Robot's Wheels) */ 
         public static final double wheelDiameter = Units.inchesToMeters(4);
         public static final double wheelCircumference = wheelDiameter * Math.PI;
@@ -112,12 +114,12 @@ public final class Constants {
         public static final boolean angleEnableCurrentLimit = true;
 
         public static final int driveContinuousCurrentLimit = 35;
-        public static final int drivePeakCurrentLimit = 60;
+        public static final int drivePeakCurrentLimit = 50;
         public static final double drivePeakCurrentDuration = 0.1;
         public static final boolean driveEnableCurrentLimit = true;
 
         /* Angle Motor PID Values (Changes Per Module) */
-        public static final double angleKP = 0.3;
+        public static final double angleKP = 0.1;
         public static final double angleKI = 0.0;
         public static final double angleKD = 0.0;
         public static final double angleKF = 0.0;
@@ -200,13 +202,14 @@ public final class Constants {
         //new charge station align attempt
 
 
-        public static final Double preClimbSpeed = 1.8;
-        public static final Double prePreClimbSpeed = 2.3;
-        public static final Double afterClimbSpeed = 0.55;
-        public static final Double afterAfterClimbSpeed = 0.1;
-        public static final Double preClimbTolerance = 9.0;
-        public static final Double afterClimbTolerance = 3.5;
-        public static final Double maybeAfterClimbSpeed = 0.55;
+        public static final double preClimbSpeed = 1.8;
+        public static final double reversePreClimbSpeed = 1;
+        public static final double prePreClimbSpeed = 2.3;
+        public static final double afterClimbSpeed = 0.55;
+        public static final double afterAfterClimbSpeed = 0.1;
+        public static final double preClimbTolerance = 9.0;
+        public static final double afterClimbTolerance = 3.5;
+        public static final double maybeAfterClimbSpeed = 0.55;
 
         /* Charge Align Station Constants */
         public static final double ALIGN_STATION_SPEED = .5;
