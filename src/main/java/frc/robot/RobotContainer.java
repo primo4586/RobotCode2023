@@ -6,6 +6,9 @@
 package frc.robot;
 
 
+import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIOServer;
+import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
@@ -15,6 +18,8 @@ import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -45,6 +50,9 @@ import frc.robot.subsystems.*;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  
+  private ObjectiveTracker objectiveTracker;
+
   /* Controllers */
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
@@ -62,6 +70,10 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm) {
+    
+    objectiveTracker = new ObjectiveTracker(new NodeSelectorIOServer());
+    if(objectiveTracker == null )
+      SmartDashboard.putBoolean("fucckckk", true);
     this.swerve = swerve;
     boolean fieldRelative = true;
     boolean openLoop = true;
