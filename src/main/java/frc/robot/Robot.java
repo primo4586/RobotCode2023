@@ -5,13 +5,20 @@
 package frc.robot;
 
 
+import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIOServer;
+import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker;
+import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
+import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import org.littletonrobotics.junction.LoggedRobot;
 
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.util.PrimoShuffleboard;
@@ -19,6 +26,7 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.VirtualSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -41,6 +49,8 @@ public class Robot extends LoggedRobot {
   private Gripper gripper;
   private Swerve swerve;
   private PneumaticsControlModule pcm;
+  private ObjectiveTracker objectiveTracker;
+  public final Objective objective = new Objective();
 
   // private DigitalInput input = new DigitalInput(3);
 
@@ -63,6 +73,8 @@ public class Robot extends LoggedRobot {
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm);
     PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
     PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
+  
+  objectiveTracker = new ObjectiveTracker(new NodeSelectorIOServer());
   }
 
   /**
@@ -80,7 +92,38 @@ public class Robot extends LoggedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    VirtualSubsystem.periodicAll();
     CommandScheduler.getInstance().run();
+
+
+    {
+      String text = "";
+      switch (objective.nodeLevel) {
+        case HYBRID -> text += "HYBRID";
+        case MID -> text += "MID";
+        case HIGH -> text += "HIGH";
+      }
+      text += ", ";
+      if (objective.nodeRow < 3) {
+        text += DriverStation.getAlliance() == Alliance.Red ? "LEFT" : "RIGHT";
+      } else if (objective.nodeRow < 6) {
+        text += "CO-OP";
+      } else {
+        text += DriverStation.getAlliance() == Alliance.Red ? "RIGHT" : "LEFT";
+      }
+      text += " grid, ";
+      if (objective.nodeRow == 1 || objective.nodeRow == 4 || objective.nodeRow == 7) {
+        text += objective.nodeLevel == NodeLevel.HYBRID ? "CENTER" : "CUBE";
+      } else if (objective.nodeRow == 0 || objective.nodeRow == 3 || objective.nodeRow == 6) {
+        text += DriverStation.getAlliance() == Alliance.Red ? "LEFT" : "RIGHT";
+        text += objective.nodeLevel == NodeLevel.HYBRID ? "" : " CONE";
+      } else {
+        text += DriverStation.getAlliance() == Alliance.Red ? "RIGHT" : "LEFT";
+        text += objective.nodeLevel == NodeLevel.HYBRID ? "" : " CONE";
+      }
+      text += " node";
+      SmartDashboard.putString("Selected Node", text);
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

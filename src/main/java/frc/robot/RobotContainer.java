@@ -51,7 +51,6 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
   
-  private ObjectiveTracker objectiveTracker;
 
   /* Controllers */
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -71,9 +70,6 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm) {
     
-    objectiveTracker = new ObjectiveTracker(new NodeSelectorIOServer());
-    if(objectiveTracker == null )
-      SmartDashboard.putBoolean("fucckckk", true);
     this.swerve = swerve;
     boolean fieldRelative = true;
     boolean openLoop = true;
