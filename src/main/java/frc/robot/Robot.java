@@ -26,7 +26,6 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.VirtualSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -92,38 +91,10 @@ public class Robot extends LoggedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
-    VirtualSubsystem.periodicAll();
     CommandScheduler.getInstance().run();
 
 
-    {
-      String text = "";
-      switch (objective.nodeLevel) {
-        case HYBRID -> text += "HYBRID";
-        case MID -> text += "MID";
-        case HIGH -> text += "HIGH";
-      }
-      text += ", ";
-      if (objective.nodeRow < 3) {
-        text += DriverStation.getAlliance() == Alliance.Red ? "LEFT" : "RIGHT";
-      } else if (objective.nodeRow < 6) {
-        text += "CO-OP";
-      } else {
-        text += DriverStation.getAlliance() == Alliance.Red ? "RIGHT" : "LEFT";
-      }
-      text += " grid, ";
-      if (objective.nodeRow == 1 || objective.nodeRow == 4 || objective.nodeRow == 7) {
-        text += objective.nodeLevel == NodeLevel.HYBRID ? "CENTER" : "CUBE";
-      } else if (objective.nodeRow == 0 || objective.nodeRow == 3 || objective.nodeRow == 6) {
-        text += DriverStation.getAlliance() == Alliance.Red ? "LEFT" : "RIGHT";
-        text += objective.nodeLevel == NodeLevel.HYBRID ? "" : " CONE";
-      } else {
-        text += DriverStation.getAlliance() == Alliance.Red ? "RIGHT" : "LEFT";
-        text += objective.nodeLevel == NodeLevel.HYBRID ? "" : " CONE";
-      }
-      text += " node";
-      SmartDashboard.putString("Selected Node", text);
-    }
+    
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
