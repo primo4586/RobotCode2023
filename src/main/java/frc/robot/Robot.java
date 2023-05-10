@@ -5,11 +5,20 @@
 package frc.robot;
 
 
+import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIOServer;
+import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker;
+import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
+import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
+import org.littletonrobotics.junction.LoggedRobot;
+
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.util.PrimoShuffleboard;
@@ -24,7 +33,7 @@ import frc.robot.subsystems.Swerve;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   public static CTREConfigs ctreConfigs;
 
   private Command m_autonomousCommand;
@@ -39,6 +48,8 @@ public class Robot extends TimedRobot {
   private Gripper gripper;
   private Swerve swerve;
   private PneumaticsControlModule pcm;
+  private ObjectiveTracker objectiveTracker;
+  public final Objective objective = new Objective();
 
   // private DigitalInput input = new DigitalInput(3);
 
@@ -61,6 +72,8 @@ public class Robot extends TimedRobot {
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm);
     PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
     PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
+  
+  objectiveTracker = new ObjectiveTracker(new NodeSelectorIOServer());
   }
 
   /**
@@ -79,6 +92,9 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+
+    
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
