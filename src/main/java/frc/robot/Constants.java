@@ -217,6 +217,11 @@ public final class Constants {
 
         /* where to align Constants */
 
+        public static final double[] aligningYAxis = {};
+
+        public static final double blueAligningX = 0;
+        public static final double redAligningX = 0;
+
         // 3 scoring locations on each side. (Unused)
         public static final List<Translation2d> cubeScoringLocations = List.of();
 

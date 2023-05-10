@@ -1,10 +1,14 @@
 package frc.robot.subsystems;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import frc.robot.SwerveModule;
@@ -340,6 +344,19 @@ public class Swerve extends SubsystemBase {
         }, this);
         return resetOdometryBeforePath.andThen(followTrajecotryControllerCommand);
 
+    }
+
+    public PathPlannerTrajectory generateTrajectoryToAligmentPose(Translation2d targetPose) {
+        if (targetPose == null)
+            return new PathPlannerTrajectory(); // Empty trajectory - 0 seconds duration.
+
+        PathPoint robotPose = new PathPoint(getPose().getTranslation(), getYaw());
+        PathPoint endPoint = new PathPoint(targetPose, Rotation2d.fromDegrees(0));
+
+        return PathPlanner.generatePath(
+                new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+                        AutoConstants.kMaxAccelerationMetersPerSecondSquared),
+                List.of(robotPose, endPoint));
     }
 
     /**

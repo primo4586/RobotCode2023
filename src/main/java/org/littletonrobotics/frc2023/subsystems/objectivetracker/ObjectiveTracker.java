@@ -65,7 +65,17 @@ public class ObjectiveTracker extends SubsystemBase {
             : ScoringSide.BACK;
       }
     }
+
+    public int getNodeRow(){
+      return(this.nodeRow);
+    }
+
+    public NodeLevel getNodeLevel(){
+      return(this.nodeLevel);
+    }
   }
+
+
 
   public ObjectiveTracker(NodeSelectorIO selectorIO) {
     System.out.println("[Init] Creating ObjectiveTracker");
