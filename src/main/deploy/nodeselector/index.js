@@ -67,6 +67,14 @@ function displayTime(time, isAuto) {
 
 function toggleTipped() {
   client.addSample(coneTippedDashboardToRobotTopic, !tipped);
+  const coneOrientation = document.querySelector('.cone-orientation');
+const svgElement = document.getElementById('svgElement');
+
+if (coneOrientation.classList.contains('tipped')) {
+  svgElement.innerHTML = '<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>';
+} else {
+  svgElement.innerHTML = '<path d="M8.5 1.866a1 1 0 1 0-1 0V3h-2A4.5 4.5 0 0 0 1 7.5V8a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1v1a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1v-.5A4.5 4.5 0 0 0 10.5 3h-2V1.866ZM14 7.5V13a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.5A3.5 3.5 0 0 1 5.5 4h5A3.5 3.5 0 0 1 14 7.5Z"/>';
+}
 }
 
 let client = new NT4_Client(
