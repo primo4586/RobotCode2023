@@ -217,10 +217,13 @@ public final class Constants {
 
         /* where to align Constants */
 
-        public static final double[] aligningYAxis = {};
+        public static final double[] blueAligningYAxis = {20, 42.19, 64, 86, 108.19, 130, 152, 174.19, 196};
+        public static final double[] redAligningYAxis = {196, 174.19, 152, 130, 108.19, 86, 64, 42.19, 20};
 
         public static final double blueAligningX = 0;
         public static final double redAligningX = 0;
+
+        public static final double howCloseWeNeedToBe = 1.541526;
 
         // 3 scoring locations on each side. (Unused)
         public static final List<Translation2d> cubeScoringLocations = List.of();

@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -25,8 +24,8 @@ public class BigArm extends SubsystemBase {
   public BigArm() {
     bigArmPID = BigArmConstants.bigArmPID;
 
-    // TODO: I assumed we're using the NEO 550s which are brushless, change motor type if not. 
-    // TODO: were using neo v1.1 not 550 nut it doesn't matter
+    // I assumed we're using the NEO 550s which are brushless, change motor type if not. 
+    // were using neo v1.1 not 550 nut it doesn't matter
     bigArmMotor = new CANSparkMax(BigArmConstants.bigArmMotorID, MotorType.kBrushless); 
     bigArmEncoder = new WPI_TalonSRX(BigArmConstants.bigArmEncoderID);
     
@@ -34,7 +33,7 @@ public class BigArm extends SubsystemBase {
     bigArmMotor.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT_LIMIT, Constants.ARM_FREE_CURRENT_LIMIT);
 
     honeSwitch = new DigitalInput(BigArmConstants.honeSwitchID);
-    bigArmMotor.setInverted(true); // TODO: Double-check inverts as necessary 
+    bigArmMotor.setInverted(true);
     var errorCode = bigArmMotor.burnFlash();
     System.out.println("BigArm Error Code:" + errorCode);
   }
