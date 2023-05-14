@@ -4,11 +4,8 @@
 package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.BigArmConstants;
-import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Swerve;
 import frc.robot.Constants.SwerveConstants;;
 
@@ -20,7 +17,6 @@ public class ChargeAlignOtherSide extends CommandBase {
 
   private boolean startedClimbing;
   private boolean otherSide;
-  private double lastTimeNotOnTarget;
 
   public ChargeAlignOtherSide(Swerve swerve) {
     this.swerve = swerve;
@@ -31,7 +27,6 @@ public class ChargeAlignOtherSide extends CommandBase {
     public void initialize() {
         startedClimbing = false;
         otherSide = false;
-        lastTimeNotOnTarget = Timer.getFPGATimestamp();
     }
 
     @Override
@@ -41,7 +36,6 @@ public class ChargeAlignOtherSide extends CommandBase {
         if (!startedClimbing) {
             swerve.drive(new Translation2d(-SwerveConstants.preClimbSpeed, 0),0,true,false);
             startedClimbing = Math.abs(pitch) >SwerveConstants.preClimbTolerance;
-            lastTimeNotOnTarget = Timer.getFPGATimestamp();
         } else {
             if (Math.abs(pitch) <= SwerveConstants.afterClimbTolerance) {
                 swerve.drive(new Translation2d(0, 0),0,true,false);
@@ -51,11 +45,9 @@ public class ChargeAlignOtherSide extends CommandBase {
                 }
               if(otherSide){
               swerve.drive(new Translation2d(-Math.signum(pitch) * SwerveConstants.afterAfterClimbSpeed, 0),0,true,false);
-              lastTimeNotOnTarget = Timer.getFPGATimestamp();
               }
               else{
               swerve.drive(new Translation2d(-Math.signum(pitch) * SwerveConstants.afterClimbSpeed, 0),0,true,false);
-              lastTimeNotOnTarget = Timer.getFPGATimestamp();
               }
             }
         }

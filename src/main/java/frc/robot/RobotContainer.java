@@ -6,41 +6,31 @@
 package frc.robot;
 
 
-import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIOServer;
-import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker;
+import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.BigArmConstants;
 import frc.robot.Constants.LilArmConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.actions.IntakeSequential;
 import frc.robot.commands.actions.IntakeParallel;
-import frc.robot.commands.actions.MoveArmsParallel;
-import frc.robot.commands.actions.MoveArmsToSetPointsLilFirst;
 import frc.robot.commands.actions.EmergencyStop;
 import frc.robot.commands.actions.GrabItemFromHighIntake;
 import frc.robot.commands.actions.GroundTele;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
-import frc.robot.commands.actions.groundReturn;
-import frc.robot.commands.autoCommands.ChargeAlignOtherSide;
 import frc.robot.subsystems.*;
 
 /**
@@ -68,7 +58,7 @@ public class RobotContainer {
   private CameraHandler handler;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm) {
+  public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm, Objective objective) {
     
     this.swerve = swerve;
     boolean fieldRelative = true;
@@ -80,7 +70,7 @@ public class RobotContainer {
     swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
 
     // Configure the button bindings
-    configureButtonBindings(gripper, lilArm, bigArm);
+    configureButtonBindings(swerve, gripper, lilArm, bigArm, objective);
     buildCameras();
   }
 
@@ -90,8 +80,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings(Gripper gripper, LilArm lilArm, BigArm bigArm) {
+  private void configureButtonBindings(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm, Objective objective) {
   
+  CoolScore coolScore = new CoolScore(swerve, bigArm,  lilArm,  gripper ,  objective);
   IntakeSequential intake = new IntakeSequential(lilArm, bigArm);
   // ConditionalCommand intake = new ConditionalCommand(grabItemFromIntakeNoOpen, grabItemFromIntake,()-> gripper.getFakeIsGripperOpen());
     IntakeParallel intakeParallel = new IntakeParallel(lilArm, bigArm);
@@ -108,6 +99,9 @@ public class RobotContainer {
     driverController.back().onTrue(lilArm.zeroLilArm());
     //driverController.leftBumper().onTrue(new InstantCommand(() -> handler.switchCamera()));
 
+    driverController.b().onTrue(new ConditionalCommand(coolScore, Commands.none(),()-> swerve.areWeCloseEnough()));
+
+    
 
     /* Operator Buttons */
     
