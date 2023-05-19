@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -62,14 +63,29 @@ public class LilArm extends SubsystemBase {
 
   public Command setMotorSpeed(DoubleSupplier supplier) {
     return this.run(() -> {
-
-      lilArmMotor.set(supplier.getAsDouble());
+      if (getCurrentArmPosition() >= LilArmConstants.maxLimit){
+        if (supplier.getAsDouble() > 0){
+          lilArmMotor.set(0);
+        }
+        else
+          lilArmMotor.set(supplier.getAsDouble());
+      }
+      else if (getCurrentArmPosition() <= LilArmConstants.minLimit){
+        if (supplier.getAsDouble() < 0){
+          lilArmMotor.set(0);
+        }
+        else
+          lilArmMotor.set(supplier.getAsDouble());
+      }
+      else
+        lilArmMotor.set(supplier.getAsDouble());
     });
   }
 
   public void putArmInPlace(double setpoint) {
     SmartDashboard.putNumber("LilArm PID Output", lilArmPID.calculate(getCurrentArmPosition(), setpoint));
-    lilArmMotor.setVoltage(lilArmPID.calculate(getCurrentArmPosition(), setpoint));
+
+    lilArmMotor.setVoltage(MathUtil.clamp(lilArmPID.calculate(getCurrentArmPosition(), setpoint), -7 , 7));
   }
 
   public void putArmInPlaceWithCustomPID(double setpoint, PIDController pid) {

@@ -75,6 +75,10 @@ public final class Constants {
         public static final double honeSpeed = 0.1;
         public static final double honeSetPoint = 0.0;
         public static final int honeSwitchID = 1;
+
+        //limits kenes mishpahot
+        public static final double maxLimit = 500;
+        public static final double minLimit = -80000;
     }
 
     public static final class SwerveConstants {
@@ -284,6 +288,10 @@ public final class Constants {
         public static final double autoStartPoint = -136;
 
         public static final double resetPoint = -30;
+
+        /* limits kenes mishpahot */
+        public static final double maxLimit = 0;
+        public static final double minLimit = -1800;
 
     }
 

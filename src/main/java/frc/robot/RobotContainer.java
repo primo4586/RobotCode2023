@@ -48,6 +48,7 @@ public class RobotContainer {
   /* Controllers */
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
+  private final CommandXboxController combinedController = new CommandXboxController(2);
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -66,10 +67,12 @@ public class RobotContainer {
     boolean fieldRelative = true;
     boolean openLoop = true;
 
+    
     bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRightY()*0.7));
     lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> operatorController.getLeftY()*0.5));
 
-    swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
+    //swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
+    swerve.setDefaultCommand(new TeleopSwerve(swerve, combinedController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->combinedController.getRightTriggerAxis() > 0.5));
 
     // Configure the button bindings
     configureButtonBindings(gripper, lilArm, bigArm);
@@ -126,6 +129,17 @@ public class RobotContainer {
       operatorController.povUp().onTrue(new GroundTele(gripper, lilArm, bigArm));
       operatorController.povUpLeft().onTrue(new GroundTele(gripper, lilArm, bigArm));
       operatorController.povUpRight().onTrue(new GroundTele(gripper, lilArm, bigArm));
+
+      /* Combined Buttons */
+      combinedController.y().onTrue(new PutItemInTheUpper(bigArm, lilArm, gripper));
+      combinedController.a().onTrue(new PutItemInTheMiddle(lilArm, bigArm, gripper));
+      combinedController.b().onTrue(intakeParallel);
+      combinedController.x().onTrue(new GrabItemFromHighIntake(bigArm, lilArm));
+
+      combinedController.start().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
+      combinedController.rightBumper().onTrue(gripper.toggleGripper());
+
+      combinedController.leftBumper().onTrue(gripper.changeWhatWeGrip());
     }
 
     /** 

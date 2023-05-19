@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
@@ -41,7 +42,8 @@ public class BigArm extends SubsystemBase {
 
   public void putBigArmInPlace(double setPoint){
     SmartDashboard.putNumber("Big Arm PID Output",bigArmPID.calculate(getCurrentArmPosition(), setPoint));
-    bigArmMotor.setVoltage(bigArmPID.calculate(getCurrentArmPosition(), setPoint));
+  
+    bigArmMotor.setVoltage(MathUtil.clamp(bigArmPID.calculate(getCurrentArmPosition(), setPoint), -7 , 7));
   }
 
   public void zeroEncoderForIntake(){
@@ -51,7 +53,7 @@ public class BigArm extends SubsystemBase {
   public Command TurnBigArmToSetpoint(double setPoint){
     SmartDashboard.putNumber("Big Arm Setpoint", setPoint);
     return run(()->{
-      putBigArmInPlace(setPoint);
+    putBigArmInPlace(setPoint);
     })
     .until(() -> Math.abs(this.getCurrentArmPosition() - setPoint) <= BigArmConstants.ticksTolerance);
   }
@@ -62,8 +64,22 @@ public class BigArm extends SubsystemBase {
 
   public Command setMotorSpeed(DoubleSupplier supplier) {
     return this.run(() -> {
-
-      bigArmMotor.set(supplier.getAsDouble());
+      if (getCurrentArmPosition() >= BigArmConstants.maxLimit){
+        if (supplier.getAsDouble() > 0){
+          bigArmMotor.set(0);
+        }
+        else
+          bigArmMotor.set(supplier.getAsDouble());
+      }
+      else if (getCurrentArmPosition() <= BigArmConstants.minLimit){
+        if (supplier.getAsDouble() < 0){
+          bigArmMotor.set(0);
+        }
+        else
+          bigArmMotor.set(supplier.getAsDouble());
+      }
+      else
+        bigArmMotor.set(supplier.getAsDouble());
     });
   }
 
