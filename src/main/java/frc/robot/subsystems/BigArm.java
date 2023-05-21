@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -19,11 +18,16 @@ import frc.robot.Constants.BigArmConstants;
 public class BigArm extends SubsystemBase {
   private CANSparkMax bigArmMotor;
   private WPI_TalonSRX bigArmEncoder;
-  private PIDController bigArmPID;
+  //private PIDController bigArmPID;
   private DigitalInput honeSwitch;
+  private static final double bigArmKP = 0.00002;
+  private static final double bigArmKI = 0.0;
+  private static final double bigArmKD = Integer.MAX_VALUE;
+  public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
 
   public BigArm() {
-    bigArmPID = BigArmConstants.bigArmPID;
+
+  //bigArmPID = BigArmConstants.bigArmPID;
 
     // TODO: I assumed we're using the NEO 550s which are brushless, change motor type if not. 
     // TODO: were using neo v1.1 not 550 nut it doesn't matter
@@ -37,11 +41,23 @@ public class BigArm extends SubsystemBase {
     bigArmMotor.setInverted(true); // TODO: Double-check inverts as necessary 
     var errorCode = bigArmMotor.burnFlash();
     System.out.println("BigArm Error Code:" + errorCode);
+  
   }
 
-  public void putBigArmInPlace(double setPoint){
-    SmartDashboard.putNumber("Big Arm PID Output",bigArmPID.calculate(getCurrentArmPosition(), setPoint));
-    bigArmMotor.setVoltage(bigArmPID.calculate(getCurrentArmPosition(), setPoint));
+  public void putBigArmInPlace(double setpoint){
+    SmartDashboard.putNumber("bigArmSetPoint", setpoint);
+    if(bigArmPID.calculate(getCurrentArmPosition(),setpoint)>12){
+      bigArmMotor.set(1);
+    SmartDashboard.putNumber("Big Arm PID Output",1);
+    }
+    else if(bigArmPID.calculate(getCurrentArmPosition(),setpoint)<-12){
+      bigArmMotor.set(-1);
+    SmartDashboard.putNumber("Big Arm PID Output",-1);
+    }
+    else{
+    bigArmMotor.set(bigArmPID.calculate(getCurrentArmPosition(),setpoint)/12);
+    SmartDashboard.putNumber("Big Arm PID Output",bigArmPID.calculate(getCurrentArmPosition(), setpoint)/12);
+    }
   }
 
   public void zeroEncoderForIntake(){
@@ -87,6 +103,18 @@ public class BigArm extends SubsystemBase {
     });
   }
 
+  public double getSpeed(){
+    return bigArmMotor.get();
+  }
+
+  public void setEncoder(int encoderSpot){
+    bigArmEncoder.setSelectedSensorPosition(encoderSpot);
+  }
+
+  public int getEncoder(){
+    return bigArmEncoder.getSensorCollection().getQuadraturePosition();
+  }
+
   @Override
   public void periodic() {
       SmartDashboard.putNumber("Big Arm Position", bigArmEncoder.getSelectedSensorPosition());
@@ -98,4 +126,6 @@ public class BigArm extends SubsystemBase {
       bigArmEncoder.setSelectedSensorPosition(0)
     );
   }
+
+
 }

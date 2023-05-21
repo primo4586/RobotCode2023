@@ -61,15 +61,15 @@ public class RobotContainer {
   private CameraHandler handler;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm) {
+  public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm, DaulArmSim daulArmSim) {
     this.swerve = swerve;
-    boolean fieldRelative = true;
+    boolean fieldRelative = false;
     boolean openLoop = true;
 
-    bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRightY()*0.7));
-    lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> operatorController.getLeftY()*0.5));
+    bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRawAxis(0)*0.7));
+    lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> operatorController.getRawAxis(1)*0.5));
 
-    swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
+    swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRawAxis(1) > 0.5));
 
     // Configure the button bindings
     configureButtonBindings(gripper, lilArm, bigArm);
@@ -115,7 +115,8 @@ public class RobotContainer {
       // operatorController.x().onTrue(new MoveArmsToTheGround(gripper, lilArm, bigArm));
        operatorController.b().onTrue(intakeParallel);//new ConditionalCommand(groundReturn.beforeStarting(gripper.closeGripper()), intakeParallel, ()->lilArm.getCurrentArmPosition()>95));
        operatorController.x().onTrue(new GrabItemFromHighIntake(bigArm, lilArm));
-      operatorController.start().onTrue(new EmergencyStop(lilArm,bigArm));
+       operatorController.povDown().onTrue(lilArm.TurnLilArmToSetpoint(1000));
+      /*operatorController.start().onTrue(new EmergencyStop(lilArm,bigArm));
       operatorController.back().onTrue(bigArm.Hone());
       operatorController.povCenter().onTrue(new GroundTele(gripper, lilArm, bigArm));
       operatorController.povDown().onTrue(new GroundTele(gripper, lilArm, bigArm));
@@ -125,7 +126,7 @@ public class RobotContainer {
       operatorController.povRight().onTrue(new GroundTele(gripper, lilArm, bigArm));
       operatorController.povUp().onTrue(new GroundTele(gripper, lilArm, bigArm));
       operatorController.povUpLeft().onTrue(new GroundTele(gripper, lilArm, bigArm));
-      operatorController.povUpRight().onTrue(new GroundTele(gripper, lilArm, bigArm));
+      operatorController.povUpRight().onTrue(new GroundTele(gripper, lilArm, bigArm));*/
     }
 
     /** 
@@ -142,7 +143,7 @@ public class RobotContainer {
 
     public void buildCameras() {
       driverCamera = CameraServer.startAutomaticCapture("Forward", 0);
-      driverCamera.setVideoMode(PixelFormat.kYUYV, 320, 240, 10);
+      //driverCamera.setVideoMode(PixelFormat.kYUYV, 320, 240, 10);
 
     }
 

@@ -2,8 +2,10 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.unmanaged.Unmanaged;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
@@ -25,6 +27,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -36,10 +40,11 @@ import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
-
+    private Field2d field = new Field2d();
     // Swerve Basic Components
     private SwerveModule[] mSwerveMods; // Order for modules is always FL, FR, BL, BR
     private PigeonIMU gyro;
+    private double simYaw;
 
     // To avoid gyro resetting messing with odometry data, during teleop the driver
     // resets the offset to the current gyro angle, rather then resetting the gyro
@@ -47,7 +52,8 @@ public class Swerve extends SubsystemBase {
     private double teleopRotationOffset = 0;
 
     // Field visualizer for debug purposes
-    // private Field2d field2d = new Field2d();
+     private Field2d field2d = new Field2d();
+     private double[] swerveState = new double[8];
 
     // Uses vision data to estimate the robot's position on the field.
     private VisionPoseEstimator visionPoseEstimator;
@@ -67,7 +73,7 @@ public class Swerve extends SubsystemBase {
         gyro.configFactoryDefault();
         zeroGyro();
 
-        // SmartDashboard.putData(field2d);
+         SmartDashboard.putData(field2d);
         mSwerveMods = new SwerveModule[] {
                 new SwerveModule(0, SwerveConstants.FrontLeftModule.constants),
                 new SwerveModule(1, SwerveConstants.FrontRightModule.constants),
@@ -240,6 +246,13 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         updateOdometry();
+        field.setRobotPose(swerveOdometry.getPoseMeters());
+        SmartDashboard.putData("Field", field);
+
+        for (SwerveModule mod : mSwerveMods) {
+            mod.simulationPeriodic();
+        }
+
 
         // SmartDashboard.putNumber("Gyro", getYaw().getDegrees());
         // SmartDashboard.putNumber("Roll", getRoll());
@@ -248,7 +261,7 @@ public class Swerve extends SubsystemBase {
 
         // for (SwerveModule mod : mSwerveMods) {
         //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getState().angle.getDegrees());
+             SmartDashboard.putNumber("Mod " + mSwerveMods[0].moduleNumber + " Integrated", mSwerveMods[0].getState().angle.getDegrees());
         //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
         // }
     }
@@ -256,7 +269,7 @@ public class Swerve extends SubsystemBase {
     public void updateOdometry() {
         poseEstimation.update(getYaw(), getPositions());
         swerveOdometry.update(getYaw(), getPositions());
-        // field2d.getObject("Odometry").setPose(swerveOdometry.getPoseMeters());
+         field2d.getObject("Odometry").setPose(swerveOdometry.getPoseMeters());
 
         if (visionPoseEstimator != null) {
             var result = visionPoseEstimator
@@ -268,7 +281,7 @@ public class Swerve extends SubsystemBase {
             }
         }
 
-        // field2d.setRobotPose(getPose());
+        field2d.setRobotPose(getPose());
     }
 
     public Command driveForwardUntilMeters(double driveSpeed, double metersSetpoint) {
@@ -504,5 +517,28 @@ public class Swerve extends SubsystemBase {
         return runOnce(()->{
             lockWheelsChargeStation();
         });
-    }        
+    }      
+    
+    public void putStates(){
+        int i = 0;
+        for (SwerveModule module : mSwerveMods) {
+            swerveState[i] = module.getAngle().getDegrees();
+            swerveState[i+1] = module.getVelocity();
+            i+=2;
+        }
+        SmartDashboard.putNumberArray("swerveState", swerveState);
+    }
+
+    @Override
+    public void simulationPeriodic() {
+      ChassisSpeeds chassisSpeed =
+        SwerveConstants.swerveKinematics.toChassisSpeeds(getStates());
+  
+      simYaw += chassisSpeed.omegaRadiansPerSecond * 0.02;
+  
+      Unmanaged.feedEnable(20);
+      gyro.getSimCollection().setRawHeading(-Units.radiansToDegrees(simYaw));
+
+      putStates();
+    }
 }
