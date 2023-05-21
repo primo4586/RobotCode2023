@@ -33,11 +33,11 @@ public class SwerveModule {
 
     private final FlywheelSim m_turnMotorSim = new FlywheelSim(
             // Sim Values
-            LinearSystemId.identifyVelocitySystem(1, 0.0008), DCMotor.getFalcon500(1), 8.14);
+            LinearSystemId.identifyVelocitySystem(1, 0.0008), DCMotor.getFalcon500(1), 150/7);
 
     private final FlywheelSim m_driveMotorSim = new FlywheelSim(
             // Sim Values
-            LinearSystemId.identifyVelocitySystem(2.6777,0.45944 ), DCMotor.getFalcon500(1), 150/7);
+            LinearSystemId.identifyVelocitySystem(2.6777,0.45944 ), DCMotor.getFalcon500(1), 8.14);
 
     private double m_drivePercentOutput;
     private double m_turnPercentOutput;
@@ -58,7 +58,7 @@ public class SwerveModule {
         configAngleEncoder();
         configAngleEncoder();
         configAngleEncoder();
-
+    angleEncoder.getSimCollection().setRawPosition(0);
         /* Angle Motor Config */
         mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
         configAngleMotor();
@@ -70,8 +70,6 @@ public class SwerveModule {
         configDriveMotor();
         configDriveMotor();
         configDriveMotor();
-
-        lastAngle = getState().angle.getDegrees();
 
         simulationPeriodic();
     }
@@ -245,6 +243,8 @@ public class SwerveModule {
                 .setIntegratedSensorVelocity(
                         (int) (m_driveMotorSim.getAngularVelocityRadPerSec()
                                 / (((Units.inchesToMeters(4) * Math.PI) / (2048 * 8.14))*10 )));
+
+        
 
     }
 }

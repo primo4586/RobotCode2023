@@ -63,13 +63,13 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm, DaulArmSim daulArmSim) {
     this.swerve = swerve;
-    boolean fieldRelative = false;
+    boolean fieldRelative = true;
     boolean openLoop = true;
 
     bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRawAxis(0)*0.7));
     lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> operatorController.getRawAxis(1)*0.5));
 
-    swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRawAxis(1) > 0.5));
+    swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis, fieldRelative, openLoop, () ->driverController.getRightTriggerAxis() > 0.5));
 
     // Configure the button bindings
     configureButtonBindings(gripper, lilArm, bigArm);
