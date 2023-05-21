@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -36,7 +37,7 @@ import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
-
+    private Field2d field = new Field2d();
     // Swerve Basic Components
     private SwerveModule[] mSwerveMods; // Order for modules is always FL, FR, BL, BR
     private PigeonIMU gyro;
@@ -240,6 +241,8 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         updateOdometry();
+        field.setRobotPose(swerveOdometry.getPoseMeters());
+        SmartDashboard.putData("Field", field);
 
         // SmartDashboard.putNumber("Gyro", getYaw().getDegrees());
         // SmartDashboard.putNumber("Roll", getRoll());

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.util.PrimoShuffleboard;
 import frc.robot.subsystems.BigArm;
+import frc.robot.subsystems.DaulArmSim;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
@@ -39,6 +40,7 @@ public class Robot extends TimedRobot {
   private Gripper gripper;
   private Swerve swerve;
   private PneumaticsControlModule pcm;
+  private DaulArmSim daulArmSim;
 
   // private DigitalInput input = new DigitalInput(3);
 
@@ -56,8 +58,9 @@ public class Robot extends TimedRobot {
     gripper.turnOnLed();
     lilArm = new LilArm();
     swerve = new Swerve();
+    daulArmSim = new DaulArmSim(bigArm,lilArm);
 
-    m_robotContainer = new RobotContainer(swerve, gripper ,lilArm, bigArm);
+    m_robotContainer = new RobotContainer(swerve, gripper ,lilArm, bigArm, daulArmSim);
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm);
     PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
     PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
