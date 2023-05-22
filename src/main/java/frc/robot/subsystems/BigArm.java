@@ -64,6 +64,7 @@ public class BigArm extends SubsystemBase {
 
   public Command setMotorSpeed(DoubleSupplier supplier) {
     return this.run(() -> {
+      /* 
       if (getCurrentArmPosition() >= BigArmConstants.maxLimit){
         if (supplier.getAsDouble() > 0){
           bigArmMotor.set(0);
@@ -78,8 +79,8 @@ public class BigArm extends SubsystemBase {
         else
           bigArmMotor.set(supplier.getAsDouble());
       }
-      else
-        bigArmMotor.set(supplier.getAsDouble());
+      */
+      bigArmMotor.set(supplier.getAsDouble());
     });
   }
 

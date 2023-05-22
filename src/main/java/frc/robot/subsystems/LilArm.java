@@ -63,6 +63,7 @@ public class LilArm extends SubsystemBase {
 
   public Command setMotorSpeed(DoubleSupplier supplier) {
     return this.run(() -> {
+      /* 
       if (getCurrentArmPosition() >= LilArmConstants.maxLimit){
         if (supplier.getAsDouble() > 0){
           lilArmMotor.set(0);
@@ -77,8 +78,8 @@ public class LilArm extends SubsystemBase {
         else
           lilArmMotor.set(supplier.getAsDouble());
       }
-      else
-        lilArmMotor.set(supplier.getAsDouble());
+      */
+      lilArmMotor.set(supplier.getAsDouble());
     });
   }
 
