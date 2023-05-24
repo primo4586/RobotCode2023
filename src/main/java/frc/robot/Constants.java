@@ -149,7 +149,7 @@ public final class Constants {
         public static final double slowModeAngularVelocity = 2;
 
         /* Neutral Modes */
-        public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
+        public static final NeutralMode angleNeutralMode = NeutralMode.Brake;
         public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
 
         /* Motor Inverts - Ensure that motors are CCW+!!! (Changes Per Module)*/

@@ -52,8 +52,8 @@ public class Swerve extends SubsystemBase {
     private double teleopRotationOffset = 0;
 
     // Field visualizer for debug purposes
-     private Field2d field2d = new Field2d();
-     private double[] swerveState = new double[8];
+    private Field2d field2d = new Field2d();
+    private double[] swerveState = new double[8];
 
     // Uses vision data to estimate the robot's position on the field.
     private VisionPoseEstimator visionPoseEstimator;
@@ -73,7 +73,7 @@ public class Swerve extends SubsystemBase {
         gyro.configFactoryDefault();
         zeroGyro();
 
-         SmartDashboard.putData(field2d);
+        SmartDashboard.putData(field2d);
         mSwerveMods = new SwerveModule[] {
                 new SwerveModule(0, SwerveConstants.FrontLeftModule.constants),
                 new SwerveModule(1, SwerveConstants.FrontRightModule.constants),
@@ -154,7 +154,6 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-
     public void setModulesStatesClosedLoopReveresed(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.maxSpeed);
 
@@ -197,8 +196,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyroForAutoEnd() {
-        
-        gyro.setYaw(gyro.getYaw()+ 180);
+
+        gyro.setYaw(gyro.getYaw() + 180);
     }
 
     /**
@@ -249,27 +248,25 @@ public class Swerve extends SubsystemBase {
         field.setRobotPose(swerveOdometry.getPoseMeters());
         SmartDashboard.putData("Field", field);
 
-        for (SwerveModule mod : mSwerveMods) {
-            mod.simulationPeriodic();
-        }
-
-
         // SmartDashboard.putNumber("Gyro", getYaw().getDegrees());
         // SmartDashboard.putNumber("Roll", getRoll());
         // SmartDashboard.putNumber("Pitch", getPitch());
         // SmartDashboard.putNumber("Teleop Gyro", getTeleopYaw().getDegrees());
 
         // for (SwerveModule mod : mSwerveMods) {
-        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-             SmartDashboard.putNumber("Mod " + mSwerveMods[0].moduleNumber + " Integrated", mSwerveMods[0].getState().angle.getDegrees());
-        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+        // SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder",
+        // mod.getCanCoder().getDegrees());
+        SmartDashboard.putNumber("Mod " + mSwerveMods[0].moduleNumber + " Integrated",
+                mSwerveMods[0].getState().angle.getDegrees());
+        // SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity",
+        // mod.getState().speedMetersPerSecond);
         // }
     }
 
     public void updateOdometry() {
         poseEstimation.update(getYaw(), getPositions());
         swerveOdometry.update(getYaw(), getPositions());
-         field2d.getObject("Odometry").setPose(swerveOdometry.getPoseMeters());
+        field2d.getObject("Odometry").setPose(swerveOdometry.getPoseMeters());
 
         if (visionPoseEstimator != null) {
             var result = visionPoseEstimator
@@ -277,7 +274,8 @@ public class Swerve extends SubsystemBase {
 
             if (result != null) {
                 poseEstimation.addVisionMeasurement(result.estimatedPose.toPose2d(), result.timestampSeconds);
-                // field2d.getObject("Vision Position").setPose(result.estimatedPose.toPose2d());
+                // field2d.getObject("Vision
+                // Position").setPose(result.estimatedPose.toPose2d());
             }
         }
 
@@ -317,7 +315,6 @@ public class Swerve extends SubsystemBase {
         };
     }
 
-    
     /**
      * Follows a given trajectory from PathPlanner
      * 
@@ -362,7 +359,8 @@ public class Swerve extends SubsystemBase {
      * you're on the red side. This follow trajectory
      * command accounts for that.
      * 
-     * @param blueTrajectory       Trajectory to follow, built on the blue side of the field
+     * @param blueTrajectory      Trajectory to follow, built on the blue side of
+     *                            the field
      * @param shouldResetOdometry Should odometry be reset before following the
      *                            trajectory or not
      * 
@@ -370,9 +368,11 @@ public class Swerve extends SubsystemBase {
      *         the start auto, we would have the Driver Station data to know
      *         what alliance we are, and flip the trajectory if necessary.
      */
-    public Command followTrajectoryModifiedToRedAlliance(PathPlannerTrajectory blueTrajectory, boolean shouldResetOdometry) {
+    public Command followTrajectoryModifiedToRedAlliance(PathPlannerTrajectory blueTrajectory,
+            boolean shouldResetOdometry) {
 
-        PathPlannerTrajectory newTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(blueTrajectory, Alliance.Red);
+        PathPlannerTrajectory newTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(blueTrajectory,
+                Alliance.Red);
 
         return followTrajectory(newTrajectory, shouldResetOdometry);
     }
@@ -382,68 +382,55 @@ public class Swerve extends SubsystemBase {
         return run(() -> {
             drive(speed, 0, true, true);
         })
-        .andThen(run(()->drive(new Translation2d(0.0,0.0), 0, true, true)))
-        .beforeStarting(() -> timer.start())
-        .until(() -> timer.hasElapsed(timeSeconds));
+                .andThen(run(() -> drive(new Translation2d(0.0, 0.0), 0, true, true)))
+                .beforeStarting(() -> timer.start())
+                .until(() -> timer.hasElapsed(timeSeconds));
     }
 
     public Command driveUntilPitchChangeAtSpeed(double speed, double angleDeltaTolerance, double delay) {
-        double[] startingPitch = {0};
+        double[] startingPitch = { 0 };
         Timer timer = new Timer();
         return runOnce(() -> {
             startingPitch[0] = getRoll();
             timer.start();
         }).andThen(
-            run(() -> 
-                drive(new Translation2d(speed, 0), 0, true, true)
-            )
-        ).until(() -> {
-            double deltaAngle = startingPitch[0] - getRoll();
-            return timer.hasElapsed(delay) && deltaAngle >= angleDeltaTolerance;
-        });
+                run(() -> drive(new Translation2d(speed, 0), 0, true, true))).until(() -> {
+                    double deltaAngle = startingPitch[0] - getRoll();
+                    return timer.hasElapsed(delay) && deltaAngle >= angleDeltaTolerance;
+                });
     }
 
-
     public Command driveUntilPitchChangeAtSpeed(double speed, double angleDeltaTolerance) {
-        double[] startingPitch = {0};
+        double[] startingPitch = { 0 };
         return runOnce(() -> {
             startingPitch[0] = getRoll();
         }).andThen(
-            run(() -> 
-                drive(new Translation2d(speed, 0), 0, true, false)
-            )
-        ).until(() -> {
-            double deltaAngle = startingPitch[0] - getRoll();
-            return Math.abs(deltaAngle) >= angleDeltaTolerance;
-        });
+                run(() -> drive(new Translation2d(speed, 0), 0, true, false))).until(() -> {
+                    double deltaAngle = startingPitch[0] - getRoll();
+                    return Math.abs(deltaAngle) >= angleDeltaTolerance;
+                });
     }
 
     public Command driveUntilPitchAtSpeed(double speed, double targetPitch) {
-        double[] startingPitch = {0};
+        double[] startingPitch = { 0 };
         return runOnce(() -> {
             startingPitch[0] = getRoll();
         }).andThen(
-            run(() -> 
-                drive(new Translation2d(speed, 0), 0, true, false)
-            )
-        ).until(() -> {
-            return Math.abs(getRoll()) >= targetPitch;
-        });
+                run(() -> drive(new Translation2d(speed, 0), 0, true, false))).until(() -> {
+                    return Math.abs(getRoll()) >= targetPitch;
+                });
     }
-
 
     public Command driveUntilPitchAtSpeedLower(double speed, double targetPitch) {
-        double[] startingPitch = {0};
+        double[] startingPitch = { 0 };
         return runOnce(() -> {
             startingPitch[0] = getRoll();
         }).andThen(
-            run(() -> 
-                drive(new Translation2d(speed, 0), 0, true, false)
-            )
-        ).until(() -> {
-            return Math.abs(getRoll()) <= targetPitch;
-        });
+                run(() -> drive(new Translation2d(speed, 0), 0, true, false))).until(() -> {
+                    return Math.abs(getRoll()) <= targetPitch;
+                });
     }
+
     public Command followTrajectoryWithReveresedInputs(PathPlannerTrajectory trajectory, boolean shouldResetOdometry) {
 
         PPSwerveControllerCommand followTrajecotryControllerCommand = new PPSwerveControllerCommand(
@@ -464,7 +451,6 @@ public class Swerve extends SubsystemBase {
         return resetOdometryBeforePath.andThen(followTrajecotryControllerCommand);
 
     }
-
 
     /**
      * Auto-aligns the robot to a given setpoint degree
@@ -506,39 +492,41 @@ public class Swerve extends SubsystemBase {
         })
                 .until(() -> Math.abs(getPitch()) < SwerveConstants.STATION_PITCH_ANGLE_TOLERANCE);
     }
-    
+
     public void lockWheelsChargeStation() {
         for (SwerveModule module : mSwerveMods) {
             module.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), true);
         }
     }
 
-    public Command LockWheelsChargeStation(){
-        return runOnce(()->{
+    public Command LockWheelsChargeStation() {
+        return runOnce(() -> {
             lockWheelsChargeStation();
         });
-    }      
-    
-    public void putStates(){
+    }
+
+    public void putStates() {
         int i = 0;
         for (SwerveModule module : mSwerveMods) {
             swerveState[i] = module.getAngle().getDegrees();
-            swerveState[i+1] = module.getVelocity();
-            i+=2;
+            swerveState[i + 1] = module.getVelocity();
+            i += 2;
         }
         SmartDashboard.putNumberArray("swerveState", swerveState);
     }
 
     @Override
     public void simulationPeriodic() {
-      ChassisSpeeds chassisSpeed =
-        SwerveConstants.swerveKinematics.toChassisSpeeds(getStates());
-  
-      simYaw += chassisSpeed.omegaRadiansPerSecond * 0.02;
-  
-      Unmanaged.feedEnable(20);
-      gyro.getSimCollection().setRawHeading(-Units.radiansToDegrees(simYaw));
+        for (SwerveModule mod : mSwerveMods) {
+            mod.simulationPeriodic();
+        }
+        ChassisSpeeds chassisSpeed = SwerveConstants.swerveKinematics.toChassisSpeeds(getStates());
 
-      putStates();
+        simYaw += chassisSpeed.omegaRadiansPerSecond * 0.02;
+
+        Unmanaged.feedEnable(20);
+        gyro.getSimCollection().setRawHeading(-Units.radiansToDegrees(simYaw));
+
+        putStates();
     }
 }

@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,11 +34,11 @@ public class SwerveModule {
 
     private final FlywheelSim m_turnMotorSim = new FlywheelSim(
             // Sim Values
-            LinearSystemId.identifyVelocitySystem(1, 0.0008), DCMotor.getFalcon500(1), 150/7);
+            LinearSystemId.identifyVelocitySystem(0.1, 0.0008), DCMotor.getFalcon500(1), 150 / 7);
 
     private final FlywheelSim m_driveMotorSim = new FlywheelSim(
             // Sim Values
-            LinearSystemId.identifyVelocitySystem(2.6777,0.45944 ), DCMotor.getFalcon500(1), 8.14);
+            LinearSystemId.identifyVelocitySystem(4, 1.24), DCMotor.getFalcon500(1), 8.14);
 
     private double m_drivePercentOutput;
     private double m_turnPercentOutput;
@@ -58,7 +59,9 @@ public class SwerveModule {
         configAngleEncoder();
         configAngleEncoder();
         configAngleEncoder();
-    angleEncoder.getSimCollection().setRawPosition(0);
+        if (RobotBase.isSimulation()) {
+            angleEncoder.getSimCollection().setRawPosition(0);
+        }
         /* Angle Motor Config */
         mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
         configAngleMotor();
@@ -70,13 +73,11 @@ public class SwerveModule {
         configDriveMotor();
         configDriveMotor();
         configDriveMotor();
-
-        simulationPeriodic();
     }
 
     public void setDesiredStateReveresed(SwerveModuleState desiredState) {
         setDesiredState(new SwerveModuleState(-desiredState.speedMetersPerSecond, desiredState.angle), true);
-        
+
         // SmartDashboard.putNumber("desierd velocity",
         // desiredState.speedMetersPerSecond);
     }
@@ -135,6 +136,10 @@ public class SwerveModule {
         double absolutePosition = Conversions.degreesToFalcon(getCanCoder().getDegrees() - angleOffset,
                 Constants.SwerveConstants.angleGearRatio);
         mAngleMotor.setSelectedSensorPosition(absolutePosition);
+
+        if (RobotBase.isSimulation()) {
+            mAngleMotor.getSimCollection().setIntegratedSensorRawPosition(0);
+        }
     }
 
     private void configAngleEncoder() {
@@ -154,6 +159,9 @@ public class SwerveModule {
         code = mAngleMotor.configAllSettings(Robot.ctreConfigs.swerveAngleFXConfig);
         System.out.println("Module " + moduleNumber + " Angle Settings: " + code);
         mAngleMotor.setInverted(Constants.SwerveConstants.angleMotorInvert);
+        if (RobotBase.isSimulation()) {
+            mAngleMotor.setInverted(false);
+        }
         mAngleMotor.setNeutralMode(Constants.SwerveConstants.angleNeutralMode);
         resetToAbsolute();
     }
@@ -189,14 +197,14 @@ public class SwerveModule {
         return new SwerveModuleState(velocity, angle);
     }
 
-    public Rotation2d getAngle(){
-         return Rotation2d.fromDegrees(Conversions.falconToDegrees(mAngleMotor.getSelectedSensorPosition(),
+    public Rotation2d getAngle() {
+        return Rotation2d.fromDegrees(Conversions.falconToDegrees(mAngleMotor.getSelectedSensorPosition(),
                 Constants.SwerveConstants.angleGearRatio));
     }
 
-    public double getVelocity(){
+    public double getVelocity() {
         return Conversions.falconToMPS(mDriveMotor.getSelectedSensorVelocity(),
-        Constants.SwerveConstants.wheelCircumference, Constants.SwerveConstants.driveGearRatio);
+                Constants.SwerveConstants.wheelCircumference, Constants.SwerveConstants.driveGearRatio);
     }
 
     public double getOffset() {
@@ -223,28 +231,33 @@ public class SwerveModule {
         Unmanaged.feedEnable(20);
 
         m_turnMotorSimDistance += m_turnMotorSim.getAngularVelocityRadPerSec() * 0.02;
-        SmartDashboard.putNumber("m_turnMotorSimDistance", m_turnMotorSimDistance);
+        SmartDashboard.putNumber("m_turnMotorSimDistance", m_turnMotorSim.getAngularVelocityRadPerSec());
         m_driveMotorSimDistance += m_driveMotorSim.getAngularVelocityRadPerSec() * 0.02;
         mAngleMotor
-                 .getSimCollection()
-                 .setIntegratedSensorRawPosition(
-                         (int) (m_turnMotorSimDistance / (360.0 / (2048 * (150 / 7)))));
-        mAngleMotor
                 .getSimCollection()
-                .setIntegratedSensorVelocity(
-                        (int) (m_turnMotorSim.getAngularVelocityRadPerSec()
-                                / ((360.0 / (2048 * (150 / 7)))*10 )));
+                .setIntegratedSensorRawPosition(
+                        (int) (m_turnMotorSimDistance / (360.0 / (2048 * (150 / 7)))));
+
+        if (mAngleMotor.getMotorOutputVoltage() == 0) {
+            mAngleMotor
+                    .getSimCollection()
+                    .setIntegratedSensorVelocity(0);
+        } else {
+            mAngleMotor
+                    .getSimCollection()
+                    .setIntegratedSensorVelocity(
+                            (int) (m_turnMotorSim.getAngularVelocityRadPerSec()
+                                    / ((360.0 / (2048 * (150 / 7))) * 10)));
+        }
         mDriveMotor
-                  .getSimCollection()
-                  .setIntegratedSensorRawPosition(
-                          (int) (m_driveMotorSimDistance / ((Units.inchesToMeters(4) * Math.PI) / (2048 * 8.14))));
+                .getSimCollection()
+                .setIntegratedSensorRawPosition(
+                        (int) (m_driveMotorSimDistance / ((Units.inchesToMeters(4) * Math.PI) / (2048 * 8.14))));
         mDriveMotor
                 .getSimCollection()
                 .setIntegratedSensorVelocity(
                         (int) (m_driveMotorSim.getAngularVelocityRadPerSec()
-                                / (((Units.inchesToMeters(4) * Math.PI) / (2048 * 8.14))*10 )));
-
-        
+                                / (((Units.inchesToMeters(4) * Math.PI) / (2048 * 8.14)) * 10)));
 
     }
 }

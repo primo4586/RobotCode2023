@@ -55,11 +55,6 @@
       "/SmartDashboard/Lil Arm Sim": "Mechanism2d"
     },
     "windows": {
-      "/SmartDashboard/Big Arm Sim": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Field": {
         "window": {
           "visible": true
