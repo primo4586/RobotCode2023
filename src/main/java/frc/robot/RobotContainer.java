@@ -115,7 +115,11 @@ public class RobotContainer {
       // operatorController.x().onTrue(new MoveArmsToTheGround(gripper, lilArm, bigArm));
        operatorController.b().onTrue(intakeParallel);//new ConditionalCommand(groundReturn.beforeStarting(gripper.closeGripper()), intakeParallel, ()->lilArm.getCurrentArmPosition()>95));
        operatorController.x().onTrue(new GrabItemFromHighIntake(bigArm, lilArm));
-       operatorController.povDown().onTrue(lilArm.TurnLilArmToSetpoint(1000));
+       //operatorController.povDown().onTrue(lilArm.TurnLilArmToSetpoint(1000));
+       operatorController.back().onTrue(bigArm.Hone());
+      operatorController.povCenter().onTrue(intakeParallel);
+      operatorController.povLeft().onTrue(new PutItemInTheMiddle(lilArm, bigArm, gripper));
+      operatorController.povRight().onTrue(new PutItemInTheUpper(bigArm, lilArm, gripper));
       /*operatorController.start().onTrue(new EmergencyStop(lilArm,bigArm));
       operatorController.back().onTrue(bigArm.Hone());
       operatorController.povCenter().onTrue(new GroundTele(gripper, lilArm, bigArm));

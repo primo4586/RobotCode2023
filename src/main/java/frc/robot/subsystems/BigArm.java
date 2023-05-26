@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,16 +19,12 @@ import frc.robot.Constants.BigArmConstants;
 public class BigArm extends SubsystemBase {
   private CANSparkMax bigArmMotor;
   private WPI_TalonSRX bigArmEncoder;
-  //private PIDController bigArmPID;
+  private PIDController bigArmPID;
   private DigitalInput honeSwitch;
-  private static final double bigArmKP = 0.00002;
-  private static final double bigArmKI = 0.0;
-  private static final double bigArmKD = Integer.MAX_VALUE;
-  public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
 
   public BigArm() {
 
-  //bigArmPID = BigArmConstants.bigArmPID;
+  bigArmPID = BigArmConstants.bigArmPID;
 
     // TODO: I assumed we're using the NEO 550s which are brushless, change motor type if not. 
     // TODO: were using neo v1.1 not 550 nut it doesn't matter
@@ -41,7 +38,6 @@ public class BigArm extends SubsystemBase {
     bigArmMotor.setInverted(true); // TODO: Double-check inverts as necessary 
     var errorCode = bigArmMotor.burnFlash();
     System.out.println("BigArm Error Code:" + errorCode);
-  
   }
 
   public void putBigArmInPlace(double setpoint){

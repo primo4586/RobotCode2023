@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,18 +24,12 @@ public class LilArm extends SubsystemBase {
   private WPI_TalonSRX lilArmEncoder;
 
   private Solenoid lilArmSolenoid;
-
-  private static final double lilArmMotorsKP = 0.02;
-  private static final double lilArmMotorsKI = 0.0;
-  private static final double lilArmMotorsKD = 0.0;
-  
-  public static final PIDController lilArmPID = new PIDController(lilArmMotorsKP, lilArmMotorsKI, lilArmMotorsKD);
-  //private PIDController lilArmPID;
+  private PIDController lilArmPID;
 
 
   /** Creates a new LilArm. */
   public LilArm() {
-    //lilArmPID = LilArmConstants.lilArmPID;
+    lilArmPID = LilArmConstants.lilArmPID;
 
     lilArmEncoder = new WPI_TalonSRX(LilArmConstants.lilArmEncoderID);
     // TODO: I assumed we're using the NEO 550s which are brushless, change motor
