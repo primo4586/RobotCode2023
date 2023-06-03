@@ -39,7 +39,6 @@ public class Robot extends TimedRobot {
   private Gripper gripper;
   private Swerve swerve;
   private PneumaticsControlModule pcm;
-
   // private DigitalInput input = new DigitalInput(3);
 
   /**

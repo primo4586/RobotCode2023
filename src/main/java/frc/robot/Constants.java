@@ -243,12 +243,6 @@ public final class Constants {
         
         public static final PIDController lilArmPID = new PIDController(lilArmMotorsKP, lilArmMotorsKI, lilArmMotorsKD);
 
-        // TODO: These can probably be removed? Adjust or remove as needed
-        public static final double lilArmUpperConeKP = 0.14;
-        public static final double lilArmUpperConeKI = 0.0;
-        public static final double lilArmUpperConeKD = 0.0;
-        public static final PIDController lilArmUpperConePID = new PIDController(lilArmUpperConeKP, lilArmUpperConeKI, lilArmUpperConeKD);
-
         public static final String lilArmPreferencesKey = "lilArmEncoder";
 
         /* LilArm Motors ID */ 
@@ -326,4 +320,5 @@ public final class Constants {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
 
+    public static final boolean tuningMode = true;
 }

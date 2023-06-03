@@ -9,7 +9,6 @@ import frc.robot.Constants.BigArmConstants;
 import frc.robot.Constants.LilArmConstants;
 import frc.robot.commands.MoveArmsToSetPointsBigFirst;
 import frc.robot.subsystems.BigArm;
-import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 
 public class IntakeSequential extends SequentialCommandGroup {

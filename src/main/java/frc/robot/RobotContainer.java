@@ -11,31 +11,22 @@ import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.BigArmConstants;
 import frc.robot.Constants.LilArmConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.actions.IntakeSequential;
 import frc.robot.commands.actions.IntakeParallel;
-import frc.robot.commands.actions.MoveArmsParallel;
-import frc.robot.commands.actions.MoveArmsToSetPointsLilFirst;
 import frc.robot.commands.actions.EmergencyStop;
 import frc.robot.commands.actions.GrabItemFromHighIntake;
 import frc.robot.commands.actions.GroundTele;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
-import frc.robot.commands.actions.groundReturn;
-import frc.robot.commands.autoCommands.ChargeAlignOtherSide;
 import frc.robot.subsystems.*;
 
 /**

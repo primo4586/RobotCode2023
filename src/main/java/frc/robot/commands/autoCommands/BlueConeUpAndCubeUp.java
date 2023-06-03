@@ -8,12 +8,10 @@ package frc.robot.commands.autoCommands;
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.actions.IntakeParallel;
 import frc.robot.commands.actions.IntakeSequential;
-import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
