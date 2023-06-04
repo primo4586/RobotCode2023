@@ -25,6 +25,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -487,15 +488,12 @@ public class Swerve extends SubsystemBase {
                 .until(() -> Math.abs(getPitch()) < SwerveConstants.STATION_PITCH_ANGLE_TOLERANCE);
     }
     
-    public void lockWheelsChargeStation() {
-        for (SwerveModule module : mSwerveMods) {
+    public Command lockWheelsChargeStation() {
+        return runOnce(()->{
+            for (SwerveModule module : mSwerveMods) {
             module.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), true);
         }
-    }
-
-    public Command LockWheelsChargeStation(){
-        return runOnce(()->{
-            lockWheelsChargeStation();
         });
-    }        
+
+    }       
 }
