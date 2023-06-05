@@ -40,6 +40,7 @@ public class PIDBalance extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+    swerve.drive(new Translation2d(0,0), 45, true, false);
   }
 
   @Override

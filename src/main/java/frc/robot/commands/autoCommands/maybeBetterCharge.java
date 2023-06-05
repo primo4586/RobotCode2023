@@ -4,6 +4,7 @@
 
 package frc.robot.commands.autoCommands;
 
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -16,7 +17,7 @@ public class maybeBetterCharge extends CommandBase {
   private double lastRobotAngle;
   private final Swerve swerve;
   private final int direction;
-  private MovingAverage rollVelocityAverage = new MovingAverage(30);
+  private MovingAverage rollVelocityAverage = new MovingAverage(10);
 
   public maybeBetterCharge(boolean shouldDriveBack, Swerve swerve) {
     this.swerve = swerve;
@@ -43,11 +44,9 @@ public class maybeBetterCharge extends CommandBase {
 
     lastRobotAngle = swerve.getRoll();
   }
-
-  // Called once the command ends or is interrupted.
+  
   @Override
   public void end(boolean interrupted) {
-    new PIDBalance(swerve);
   }
 
   // Returns true when the command should end.
