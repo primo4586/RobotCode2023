@@ -10,14 +10,14 @@ import frc.robot.commands.actions.IntakeParallel;
 import frc.robot.commands.actions.IntakeSequential;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
+import frc.robot.commands.usefulAutos.utils.BlueUpperDriveBackAndGround;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
 
 public class BlueCubeUpAndMidd extends SequentialCommandGroup {
-  public BlueCubeUpAndMidd(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm,
-      boolean areWeCloseToLoadingStation, boolean gripCone) {
+  public BlueCubeUpAndMidd(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm) {
 
     PutItemInTheMiddle putItemInTheMiddle = new PutItemInTheMiddle(lilArm, bigArm, gripper);
     PutItemInTheUpper putItemInTheUpper = new PutItemInTheUpper(bigArm, lilArm, gripper);

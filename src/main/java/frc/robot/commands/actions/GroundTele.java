@@ -6,6 +6,9 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 public class GroundTele extends SequentialCommandGroup {
+
+  
+
   public GroundTele(Gripper gripper, LilArm lilArm, BigArm bigArm) {
 
     IntakeParallel grabItemFromIntake = new IntakeParallel(lilArm, bigArm);

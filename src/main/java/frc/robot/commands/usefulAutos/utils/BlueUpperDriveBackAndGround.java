@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.autoCommands;
+package frc.robot.commands.usefulAutos.utils;
 
 import com.pathplanner.lib.PathPlanner;
 
@@ -16,14 +16,12 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
-public class BlueDriveBackAndGround extends ParallelCommandGroup {
-  public BlueDriveBackAndGround(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm, boolean drivingFromCube) {
-
-    MoveArmsToSetPointsBigFirst firstMove = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.groundSetPoint);
+public class BlueUpperDriveBackAndGround extends ParallelCommandGroup {
+  public BlueUpperDriveBackAndGround(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm, boolean drivingFromCube) {
 
     addCommands(
-      firstMove.andThen(new GroundAuto(gripper, lilArm, bigArm)),
-      swerve.followTrajectory(PathPlanner.loadPath(drivingFromCube ? "blueUpperCube2" : "blueUpperCone2", Constants.AutoConstants.pathConstraints, false), true)
+      new GroundAuto(gripper, lilArm, bigArm, true),
+      swerve.followTrajectory(PathPlanner.loadPath(drivingFromCube ? "blueUpperCube" : "blueUpperCone", Constants.AutoConstants.pathConstraints, false), true)
     );
   }
 }

@@ -26,7 +26,7 @@ public class GamePieceThenDriveBack extends SequentialCommandGroup {
 
     IntakeSequential moveToIntakeNoOpen = new IntakeSequential(lilArm, bigArm);
 
-    GroundAuto groundAuto = new GroundAuto(gripper, lilArm, bigArm);
+    GroundAuto groundAuto = new GroundAuto(gripper, lilArm, bigArm, true);
 
     addCommands(
       Commands.runOnce(() -> {

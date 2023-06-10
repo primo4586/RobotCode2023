@@ -21,7 +21,7 @@ public class RedDriveBackAndGround extends ParallelCommandGroup {
     MoveArmsToSetPointsBigFirst firstMove = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.groundSetPoint);
 
     addCommands(
-      firstMove.andThen(new GroundAuto(gripper, lilArm, bigArm)),
+      firstMove.andThen(new GroundAuto(gripper, lilArm, bigArm, true)),
       swerve.followTrajectory(PathPlanner.loadPath(drivingFromCube ? "redUpperCube2" : "redUpperCone2", Constants.AutoConstants.pathConstraints, false), true)
     );
   }

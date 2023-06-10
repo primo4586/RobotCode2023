@@ -2,12 +2,10 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.autoCommands;
+package frc.robot.commands.usefulAutos.utils;
 
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.MovingAverage;
 
@@ -19,12 +17,12 @@ public class maybeBetterCharge extends CommandBase {
   private final int direction;
   private MovingAverage rollVelocityAverage = new MovingAverage(10);
 
-  public maybeBetterCharge(boolean shouldDriveBack, Swerve swerve) {
+  public maybeBetterCharge(boolean shouldDriveAwayFromDriver, Swerve swerve) {
     this.swerve = swerve;
-    this.shouldDriveBack = shouldDriveBack;
+    this.shouldDriveBack = shouldDriveAwayFromDriver;
     lastRobotAngle = swerve.getRoll();
 
-    if(shouldDriveBack)
+    if(shouldDriveAwayFromDriver)
     direction = -1;
     else
     direction = 1;

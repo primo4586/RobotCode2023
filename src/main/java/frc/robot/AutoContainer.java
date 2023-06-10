@@ -18,11 +18,11 @@ import frc.robot.commands.actions.IntakeSequential;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.commands.autoCommands.ChargeAlignOtherSide;
-import frc.robot.commands.autoCommands.BlueConeUpAndCubeUp;
-import frc.robot.commands.autoCommands.BlueCubeUpAndMidd;
 import frc.robot.commands.autoCommands.GamePieceThenDriveBack;
 import frc.robot.commands.autoCommands.RedConeUpAndCubeUp;
 import frc.robot.commands.autoCommands.RedCubeUpAndMidd;
+import frc.robot.commands.usefulAutos.BlueConeUpAndCubeUp;
+import frc.robot.commands.usefulAutos.BlueCubeUpAndMidd;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -41,7 +41,7 @@ public class AutoContainer {
         Command cubeUpper2 = Commands.runOnce(() -> gripper.setShouldGripCone(false), gripper).andThen(new PutItemInTheUpper(bigArm, lilArm, gripper)).andThen(Commands.waitSeconds(0.3)).andThen(gripper.openGripper());
 
         autoPaths.put("No Auto", new InstantCommand());
-        autoPaths.put("blue two cubes", new BlueCubeUpAndMidd(swerve, gripper, bigArm, lilArm, true, false, false));
+        autoPaths.put("blue two cubes", new BlueCubeUpAndMidd(swerve, gripper, bigArm, lilArm));
         autoPaths.put("red two cubes", new RedCubeUpAndMidd(swerve, gripper, bigArm, lilArm, true, false, false));
         autoPaths.put("blue cone and cube", new BlueConeUpAndCubeUp(
             bigArm, lilArm, gripper, swerve));

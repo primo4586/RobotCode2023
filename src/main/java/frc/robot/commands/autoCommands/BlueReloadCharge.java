@@ -8,6 +8,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.actions.IntakeParallel;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
+import frc.robot.commands.usefulAutos.utils.BlueUpperDriveBackAndGround;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -20,7 +21,7 @@ public class BlueReloadCharge extends SequentialCommandGroup {
 
     ConditionalCommand puttingItemInPlace = new ConditionalCommand(putItemInTheUpper, putItemInTheMiddle, () -> shouldPutInUpper);
     
-    BlueDriveBackAndGround driveBackAndGround = new BlueDriveBackAndGround(swerve, gripper, bigArm, lilArm, true);
+    BlueUpperDriveBackAndGround driveBackAndGround = new BlueUpperDriveBackAndGround(swerve, gripper, bigArm, lilArm, true);
 
     ChargeAlignOtherSide chargeAlignOtherSide = new ChargeAlignOtherSide(swerve);
 
