@@ -10,20 +10,13 @@ public class GroundTele extends SequentialCommandGroup {
   
 
   public GroundTele(Gripper gripper, LilArm lilArm, BigArm bigArm) {
-
-    IntakeParallel grabItemFromIntake = new IntakeParallel(lilArm, bigArm);
     MoveArmsParallel moveArmsToGround = new MoveArmsParallel(bigArm, BigArmConstants.groundSetPoint, lilArm, LilArmConstants.groundSetPoint);
-    //MoveArmsToSetPointsBigFirst moveArmsToGround = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.groundSetPoint, lilArm, LilArmConstants.groundSetPoint);
-    //MoveArmsToSetPointsLilFirst moveArmsToGround2  =new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.groundSetPoint2, lilArm, LilArmConstants.groundSetPoint);
-    //MoveArmsToSetPointsLilFirst moveArmsToGround3  =new MoveArmsToSetPointsLilFirst(bigArm, BigArmConstants.groundSetPoint2, lilArm, LilArmConstants.groundSetPoint);
 
     addCommands(
       lilArm.closeLilArmSolenoid(),
       gripper.closeGripper(),
-      //grabItemFromIntake,
       moveArmsToGround,
       gripper.openGripper(),
-      //moveArmsToGround2,
       lilArm.openLilArmSolenoid()
     );
   }

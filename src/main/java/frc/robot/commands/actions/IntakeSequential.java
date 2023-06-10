@@ -15,21 +15,9 @@ public class IntakeSequential extends SequentialCommandGroup {
   public IntakeSequential(LilArm lilArm, BigArm bigArm) {
    //closes the solenoid
    MoveArmsToSetPointsBigFirst moveArmsToIntake = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint);
-   MoveArmsToSetPointsBigFirst moveArmsToIntake2 = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint);
-  
-  
-   
-
    addCommands(
-    // gripper.closeGripper(),
     lilArm.closeLilArmSolenoid(),
-    /*bigArm.TurnBigArmToSetpoint(BigArmConstants.cubeUpperFirstSetPoint).unless(()->bigArm.getCurrentArmPosition()<28000),
-    lilArm.TurnLilArmToSetpoint(LilArmConstants.intakeSetPoint).unless(() -> lilArm.getCurrentArmPosition() > LilArmConstants.intakeSetPoint),//||bigArm.getCurrentArmAngle()>BigArmConstants.intakeReturnDeadZone),
-    */
     moveArmsToIntake
-     //gripper.openGripper()
-     //gripper.closeGripper(
-     //moveArmsToMiddleOfBot
    );
   }
 }
