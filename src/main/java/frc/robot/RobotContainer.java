@@ -26,6 +26,7 @@ import frc.robot.Constants.LilArmConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.actions.IntakeSequential;
 import frc.robot.commands.actions.IntakeParallel;
+import frc.robot.commands.actions.CoolScore;
 import frc.robot.commands.actions.EmergencyStop;
 import frc.robot.commands.actions.GrabItemFromHighIntake;
 import frc.robot.commands.actions.GroundTele;

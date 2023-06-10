@@ -18,8 +18,8 @@ import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
 
-public class coolScoreDontOpen extends ParallelCommandGroup {
-  public coolScoreDontOpen(Swerve swerve,BigArm bigArm, LilArm lilArm, Gripper gripper , Objective objective) {
+public class CoolScoreDontOpen extends ParallelCommandGroup {
+  public CoolScoreDontOpen(Swerve swerve,BigArm bigArm, LilArm lilArm, Gripper gripper , Objective objective) {
     
     // Conditional command to move the arms based on the objective node level
     ConditionalCommand moveArms = new ConditionalCommand(

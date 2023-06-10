@@ -19,7 +19,7 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
 
     public static final SupplyCurrentLimitConfiguration ARM_MOTOR_SUPPLY_CONFIG = new SupplyCurrentLimitConfiguration(true, 30, 35, 0.1); 
-    // TODO: Adjust these as we see fit and with the amount of current we draw
+
     public static final int ARM_STALL_CURRENT_LIMIT = 30;
     public static final int ARM_FREE_CURRENT_LIMIT = 35;
 
@@ -35,7 +35,6 @@ public final class Constants {
 
     public static final class BigArmConstants{
         //bigArm PID values
-        // TODO: Re-adjust these because we're using NEOs
         private static final double bigArmKP = 0.002;
         private static final double bigArmKI = 0.0;
         private static final double bigArmKD = Integer.MAX_VALUE;
@@ -244,7 +243,7 @@ public final class Constants {
     }
 
     public static final class LilArmConstants {
-        /* LilArm PID Values */ // TODO: Re-adjust these because now we're using NEO
+        /* LilArm PID Values */
         private static final double lilArmMotorsKP = 0.1;
         private static final double lilArmMotorsKI = 0.0;
         private static final double lilArmMotorsKD = 0.0;
