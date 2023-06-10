@@ -13,9 +13,9 @@ import frc.robot.subsystems.LilArm;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class IntakeParallel extends SequentialCommandGroup {
+public class MiddleOfBot extends SequentialCommandGroup {
   /** Creates a new IntakeParallel. */
-  public IntakeParallel(LilArm lilArm, BigArm bigArm) {
+  public MiddleOfBot(LilArm lilArm, BigArm bigArm) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(lilArm.closeLilArmSolenoid(), new MoveArmsParallel(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint));

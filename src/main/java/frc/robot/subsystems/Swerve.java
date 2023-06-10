@@ -354,7 +354,7 @@ public class Swerve extends SubsystemBase {
                 List.of(robotPose, endPoint));
     }
 
-    public boolean areWeCloseEnough(){
+    public boolean areWeCloseEnough(){//TODO: find a good distance 
         if(DriverStation.getAlliance()==Alliance.Blue){
             return(poseEstimation.getEstimatedPosition().getX()<Units.inchesToMeters(SwerveConstants.blueAligningX)+SwerveConstants.howCloseWeNeedToBe);
         }

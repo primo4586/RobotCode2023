@@ -310,7 +310,7 @@ public final class Constants {
     public static final class AutoConstants {
         // Self-explanatory, Limits for speed (linear velocity) and speed of rotation (angular velocity)
         public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 1.5;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
         public static final double kMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared =  3* Math.PI;
         public static final PathConstraints pathConstraints = new PathConstraints(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared);
