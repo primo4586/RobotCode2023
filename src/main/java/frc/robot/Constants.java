@@ -98,7 +98,7 @@ public final class Constants {
 
         /* Gear Ratios (Changes Per Module) */
         public static final double driveGearRatio = (8.14 / 1.0); 
-        public static final double angleGearRatio = (150 / 7.0) / 1.0; 
+        public static final double angleGearRatio = (150 / 7.0); 
 
         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
                 new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
@@ -148,7 +148,7 @@ public final class Constants {
         public static final double slowModeAngularVelocity = 2;
 
         /* Neutral Modes */
-        public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
+        public static final NeutralMode angleNeutralMode = NeutralMode.Brake;
         public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
 
         /* Motor Inverts - Ensure that motors are CCW+!!! (Changes Per Module)*/

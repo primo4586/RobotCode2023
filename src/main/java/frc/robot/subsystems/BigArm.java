@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,7 +23,8 @@ public class BigArm extends SubsystemBase {
   private DigitalInput honeSwitch;
 
   public BigArm() {
-    bigArmPID = BigArmConstants.bigArmPID;
+
+  bigArmPID = BigArmConstants.bigArmPID;
 
     // I assumed we're using the NEO 550s which are brushless, change motor type if not. 
     // were using neo v1.1 not 550 nut it doesn't matter
@@ -38,9 +40,20 @@ public class BigArm extends SubsystemBase {
     System.out.println("BigArm Error Code:" + errorCode);
   }
 
-  public void putBigArmInPlace(double setPoint){
-    SmartDashboard.putNumber("Big Arm PID Output",bigArmPID.calculate(getCurrentArmPosition(), setPoint));
-    bigArmMotor.setVoltage(bigArmPID.calculate(getCurrentArmPosition(), setPoint));
+  public void putBigArmInPlace(double setpoint){
+    SmartDashboard.putNumber("bigArmSetPoint", setpoint);
+    if(bigArmPID.calculate(getCurrentArmPosition(),setpoint)>12){
+      bigArmMotor.set(1);
+    SmartDashboard.putNumber("Big Arm PID Output",1);
+    }
+    else if(bigArmPID.calculate(getCurrentArmPosition(),setpoint)<-12){
+      bigArmMotor.set(-1);
+    SmartDashboard.putNumber("Big Arm PID Output",-1);
+    }
+    else{
+    bigArmMotor.set(bigArmPID.calculate(getCurrentArmPosition(),setpoint)/12);
+    SmartDashboard.putNumber("Big Arm PID Output",bigArmPID.calculate(getCurrentArmPosition(), setpoint)/12);
+    }
   }
 
   public void zeroEncoderForIntake(){
@@ -86,6 +99,18 @@ public class BigArm extends SubsystemBase {
     });
   }
 
+  public double getSpeed(){
+    return bigArmMotor.get();
+  }
+
+  public void setEncoder(int encoderSpot){
+    bigArmEncoder.setSelectedSensorPosition(encoderSpot);
+  }
+
+  public int getEncoder(){
+    return bigArmEncoder.getSensorCollection().getQuadraturePosition();
+  }
+
   @Override
   public void periodic() {
       SmartDashboard.putNumber("Big Arm Position", bigArmEncoder.getSelectedSensorPosition());
@@ -97,4 +122,6 @@ public class BigArm extends SubsystemBase {
       bigArmEncoder.setSelectedSensorPosition(0)
     );
   }
+
+
 }

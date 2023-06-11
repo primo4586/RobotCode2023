@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,7 +24,6 @@ public class LilArm extends SubsystemBase {
   private WPI_TalonSRX lilArmEncoder;
 
   private Solenoid lilArmSolenoid;
-
   private PIDController lilArmPID;
 
 
@@ -50,7 +50,7 @@ public class LilArm extends SubsystemBase {
     return lilArmSolenoid.get();
   }
 
-  public void zeroEncoderForIntake(){
+  public void zeroEncoderForIntake() {
     this.lilArmEncoder.setSelectedSensorPosition(LilArmConstants.intakeSetPoint);
   }
 
@@ -67,36 +67,46 @@ public class LilArm extends SubsystemBase {
 
   public void putArmInPlace(double setpoint) {
     SmartDashboard.putNumber("LilArm PID Output", lilArmPID.calculate(getCurrentArmPosition(), setpoint));
-    lilArmMotor.setVoltage(lilArmPID.calculate(getCurrentArmPosition(), setpoint));
+    if(lilArmPID.calculate(getCurrentArmPosition(),setpoint)>12){
+      lilArmMotor.set(1);
+    }
+    else if(lilArmPID.calculate(getCurrentArmPosition(),setpoint)<-12){
+      lilArmMotor.set(-1);
+    }
+    else{
+    lilArmMotor.set(lilArmPID.calculate(getCurrentArmPosition(),setpoint)/12);
+    }
+    //lilArmMotor.setVoltage(lilArmPID.calculate(getCurrentArmPosition(), setpoint));
   }
 
   public void putArmInPlaceWithCustomPID(double setpoint, PIDController pid) {
-    // SmartDashboard.putNumber("LilArm PID Output", pid.calculate(getCurrentArmPosition(), setpoint));
+    // SmartDashboard.putNumber("LilArm PID Output",
+    // pid.calculate(getCurrentArmPosition(), setpoint));
     lilArmMotor.setVoltage(pid.calculate(getCurrentArmPosition(), setpoint));
   }
 
   public Command TurnLilArmToSetpoint(double setpoint) {
     SmartDashboard.putNumber("LilArm Setpoint", setpoint);
     return run(() -> {
-        putArmInPlace(setpoint);
+      putArmInPlace(setpoint);
     })
-    .until(() -> (Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance));
+        .until(() -> (Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance));
   }
 
   public Command TurnLilArmToSetpointOnlyForAuto(double setpoint) {
     // SmartDashboard.putNumber("LilArm Setpoint", setpoint);
     return run(() -> {
-        putArmInPlace(setpoint);
+      putArmInPlace(setpoint);
     })
-    .until(() -> (Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance));
+        .until(() -> (Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance));
   }
 
   public Command TurnLilArmToSetpointWithCustomPID(double setpoint, PIDController pid) {
     // SmartDashboard.putNumber("LilArm Setpoint", setpoint);
     return run(() -> {
-        putArmInPlaceWithCustomPID(setpoint, pid);
+      putArmInPlaceWithCustomPID(setpoint, pid);
     })
-    .until(() -> (Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance));
+        .until(() -> (Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance));
   }
 
   public Command speedByTime(double speed, double time) {
@@ -104,8 +114,7 @@ public class LilArm extends SubsystemBase {
     return setMotorSpeed(() -> speed).beforeStarting(() -> timer.start()).until(() -> timer.hasElapsed(time));
   }
 
-
-  public void setPreference(){
+  public void setPreference() {
     Preferences.setDouble(LilArmConstants.lilArmPreferencesKey, LilArmConstants.resetPoint);
   }
 
@@ -129,6 +138,24 @@ public class LilArm extends SubsystemBase {
     return runOnce(() -> {
       lilArmEncoder.setSelectedSensorPosition(0);
     });
+  }
+
+  public double getSpeed(){
+    return lilArmMotor.get();
+  }
+
+  public void setEncoder(int encoderSpot){
+    lilArmEncoder.setSelectedSensorPosition(encoderSpot);
+  }
+
+  public int getEncoder(){
+    return lilArmEncoder.getSensorCollection().getQuadraturePosition();
+  }
+
+
+  @Override
+  public void simulationPeriodic() {
+
   }
 
   @Override

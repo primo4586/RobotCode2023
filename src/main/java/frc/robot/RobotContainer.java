@@ -50,17 +50,14 @@ public class RobotContainer {
   private Swerve swerve;
   private CameraHandler handler;
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-  public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm, Objective objective) {
-
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm, DaulArmSim daulArmSim, Objective objective) {
     this.swerve = swerve;
     boolean fieldRelative = true;
     boolean openLoop = true;
 
-    bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRightY() * 0.7));
-    lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> operatorController.getLeftY() * 0.5));
+    bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRawAxis(0)*0.7));
+    lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> operatorController.getRawAxis(1)*0.5));
 
     swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis,
         fieldRelative, openLoop, () -> driverController.getRightTriggerAxis() > 0.5));
@@ -132,9 +129,9 @@ public class RobotContainer {
     return swerve.followTrajectory(PathPlanner.loadPath("One Meter Forward", constraints), true);
   }
 
-  public void buildCameras() {
-    driverCamera = CameraServer.startAutomaticCapture("Forward", 0);
-    driverCamera.setVideoMode(PixelFormat.kYUYV, 320, 240, 10);
+    public void buildCameras() {
+      driverCamera = CameraServer.startAutomaticCapture("Forward", 0);
+      //driverCamera.setVideoMode(PixelFormat.kYUYV, 320, 240, 10);
 
   }
 
