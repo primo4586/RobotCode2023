@@ -10,7 +10,7 @@
   {
     "name": "/Preferences/bigArmEncoder",
     "type": "double",
-    "value": 0.0,
+    "value": 4425346.0,
     "properties": {
       "persistent": true
     }

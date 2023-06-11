@@ -41,6 +41,8 @@ public class BigArm extends SubsystemBase {
   }
 
   public void putBigArmInPlace(double setpoint){
+    bigArmEncoder.setSelectedSensorPosition(setpoint);
+
     SmartDashboard.putNumber("bigArmSetPoint", setpoint);
     if(bigArmPID.calculate(getCurrentArmPosition(),setpoint)>12){
       bigArmMotor.set(1);

@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.lib.util.PrimoShuffleboard;
 import frc.robot.autonomous.CommandSelector;
+import frc.robot.commands.autoCommands.TwoPiece;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -21,7 +23,8 @@ public class AutoContainer {
 
     public AutoContainer(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm){
         this.autoPaths = new HashMap<String, Command>(); 
-
+        this.autoPaths.put("blueConeCube", new TwoPiece(true, false, true, bigArm, lilArm, gripper, swerve));
+        this.autoSelector = new CommandSelector(autoPaths, PrimoShuffleboard.getInstance().getCompTabTitle());
     }
 
     public Command getAutonomousCommand() {

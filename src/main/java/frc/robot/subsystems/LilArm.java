@@ -66,6 +66,7 @@ public class LilArm extends SubsystemBase {
   }
 
   public void putArmInPlace(double setpoint) {
+    lilArmEncoder.setSelectedSensorPosition(setpoint);
     SmartDashboard.putNumber("LilArm PID Output", lilArmPID.calculate(getCurrentArmPosition(), setpoint));
     if(lilArmPID.calculate(getCurrentArmPosition(),setpoint)>12){
       lilArmMotor.set(1);

@@ -37,6 +37,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -91,6 +93,8 @@ public class Swerve extends SubsystemBase {
          * documentation & the SwervePoseEstimator class for more.
          */
         poseEstimation.setVisionMeasurementStdDevs(VecBuilder.fill(0.3, 0.3, 0.3));
+
+        swerveOdometry.resetPosition(getTeleopYaw(), getPositions(), new Pose2d(new Translation2d(1.89,4.97),new Rotation2d(Units.degreesToRadians(180))));
     }
 
     /**

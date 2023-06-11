@@ -55,6 +55,11 @@
       "/SmartDashboard/Lil Arm Sim": "Mechanism2d"
     },
     "windows": {
+      "/Shuffleboard/Competition Dashboard/SendableChooser[0]": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Big Arm Sim": {
         "window": {
           "visible": true

@@ -8,7 +8,7 @@
         },
         {
           "decKey": 83,
-          "incKey": 39
+          "incKey": 87
         },
         {
           "decKey": 69,
@@ -91,7 +91,6 @@
     }
   ],
   "robotJoysticks": [
-    {},
     {
       "guid": "Keyboard0"
     }
