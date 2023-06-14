@@ -37,7 +37,7 @@ public final class Constants {
         //bigArm PID values
         private static final double bigArmKP = 0.002;
         private static final double bigArmKI = 0.0;
-        private static final double bigArmKD = Integer.MAX_VALUE;
+        private static final double bigArmKD = 0.0002;
         public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
 
         //bigArm feedforward values
@@ -109,7 +109,7 @@ public final class Constants {
         /* Swerve Current Limiting */
         public static final int angleContinuousCurrentLimit = 25;
         public static final int anglePeakCurrentLimit = 40;
-        public static final double anglePeakCurrentDuration = 0.1;
+        public static final double anglePeakCurrentDuration = 0.0000000001;
         public static final boolean angleEnableCurrentLimit = true;
 
         public static final int driveContinuousCurrentLimit = 35;
@@ -148,7 +148,7 @@ public final class Constants {
         public static final double slowModeAngularVelocity = 2;
 
         /* Neutral Modes */
-        public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
+        public static final NeutralMode angleNeutralMode = NeutralMode.Brake;
         public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
 
         /* Motor Inverts - Ensure that motors are CCW+!!! (Changes Per Module)*/
@@ -246,7 +246,7 @@ public final class Constants {
         /* LilArm PID Values */
         private static final double lilArmMotorsKP = 0.1;
         private static final double lilArmMotorsKI = 0.0;
-        private static final double lilArmMotorsKD = 0.0;
+        private static final double lilArmMotorsKD = 0.0002;
         
         public static final PIDController lilArmPID = new PIDController(lilArmMotorsKP, lilArmMotorsKI, lilArmMotorsKD);
 

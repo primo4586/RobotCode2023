@@ -25,10 +25,10 @@ public class PutItemInTheUpper extends SequentialCommandGroup {
     ConditionalCommand finalSetPoint = new ConditionalCommand(coneUpper, cubeUpperFinalSetPoint, gripper::getShouldGripCone);
 
     addCommands(
-      lilArm.closeLilArmSolenoid(),
+      //lilArm.closeLilArmSolenoid(),
+      lilArm.openLilArmSolenoid(),
       gripper.closeGripper(),
-      finalSetPoint,
-      lilArm.openLilArmSolenoid()
+      finalSetPoint
     );
   }
 }

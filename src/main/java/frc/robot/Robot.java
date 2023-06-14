@@ -8,11 +8,15 @@ package frc.robot;
 import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIOServer;
 import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
+import org.littletonrobotics.junction.LoggedRobot;
+
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.util.PrimoShuffleboard;
@@ -27,7 +31,7 @@ import frc.robot.subsystems.Swerve;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   public static CTREConfigs ctreConfigs;
 
   private Command m_autonomousCommand;
@@ -45,6 +49,10 @@ public class Robot extends TimedRobot {
   private ObjectiveTracker objectiveTracker;
   public final Objective objective = new Objective();
 
+  private PowerDistribution PDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
+
+  double most=0;
+
   // private DigitalInput input = new DigitalInput(3);
 
   /**
@@ -55,6 +63,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     pcm = new PneumaticsControlModule(44);
     pcm.enableCompressorDigital();
+    //pcm.disableCompressor();
     ctreConfigs = new CTREConfigs();
     bigArm = new BigArm();
     gripper = new Gripper();
@@ -87,8 +96,10 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-
-    
+    if(PDH.getCurrent(16)>most){
+      most = PDH.getCurrent(16);
+    }
+    SmartDashboard.putNumber("most", most);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
