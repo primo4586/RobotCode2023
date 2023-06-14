@@ -37,7 +37,7 @@ public class TwoPiece extends SequentialCommandGroup {
           gripper.turnOnLed();
         }, gripper),
 
-        new PutItemInTheUpper(bigArm, lilArm, gripper),
+        //new PutItemInTheUpper(bigArm, lilArm, gripper),
         Commands.waitSeconds(0.4),
         gripper.openGripper(),
         Commands.waitSeconds(0.3),
@@ -51,12 +51,11 @@ public class TwoPiece extends SequentialCommandGroup {
           gripper.turnOnLed();
         }, gripper),
 
-        returnTraj
-            .alongWith(new PutItemInTheUpper(bigArm, lilArm, gripper)),
-        putSecondPiece,
+        returnTraj,
+            //.alongWith(putSecondPiece),
         Commands.waitSeconds(0.4),
         gripper.openGripper(),
-        Commands.waitSeconds(0.4),
-        new IntakeSequential(lilArm, bigArm).alongWith(Commands.waitSeconds(0.2).andThen(gripper.closeGripper())));
+        Commands.waitSeconds(0.4));
+        //new IntakeSequential(lilArm, bigArm).alongWith(Commands.waitSeconds(0.2).andThen(gripper.closeGripper())));
   }
 }

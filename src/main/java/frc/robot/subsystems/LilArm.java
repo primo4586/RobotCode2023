@@ -3,10 +3,9 @@ package frc.robot.subsystems;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Preferences;
@@ -16,41 +15,56 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.LilArmConstants;
 
 public class LilArm extends SubsystemBase {
-  private CANSparkMax lilArmMotor;
+  //// private CANSparkMax lilArmMotor;
+  private WPI_TalonFX lilArmMotor;
   private WPI_TalonSRX lilArmEncoder;
 
   private Solenoid lilArmSolenoid;
 
   private PIDController lilArmPID;
 
+  private RobotContainer robotContainer;
+
+  boolean hold;
 
   /** Creates a new LilArm. */
   public LilArm() {
     lilArmPID = LilArmConstants.lilArmPID;
 
     lilArmEncoder = new WPI_TalonSRX(LilArmConstants.lilArmEncoderID);
-    // I assumed we're using the NEO 550s which are brushless, change motor type if not.
+    // I assumed we're using the NEO 550s which are brushless, change motor type if
+    // not.
     // were using neo v1.1 not 550 nut it doesn't matter
-    lilArmMotor = new CANSparkMax(LilArmConstants.lilArmMotorID, MotorType.kBrushless);
+    lilArmMotor = new WPI_TalonFX(00);//// new CANSparkMax(LilArmConstants.lilArmMotorID, MotorType.kBrushless);
     lilArmSolenoid = new Solenoid(LilArmConstants.PCMID, PneumaticsModuleType.CTREPCM,
         LilArmConstants.lilArmSolenoidID);
 
-    lilArmMotor.setInverted(false); 
-    lilArmMotor.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT_LIMIT, Constants.ARM_FREE_CURRENT_LIMIT);
+    lilArmMotor.setInverted(false);
+    lilArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
+    //// lilArmMotor.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT_LIMIT,
+    //// Constants.ARM_FREE_CURRENT_LIMIT);
 
     lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-    var errorCode = lilArmMotor.burnFlash();
-    System.out.println("LilArm Error Code: " + errorCode);
+    //// var errorCode = lilArmMotor.burnFlash();
+    //// System.out.println("LilArm Error Code: " + errorCode);
+
+    lilArmMotor.setNeutralMode(NeutralMode.Brake);
+    hold = true;
+  }
+
+  public void setRobotContainer(RobotContainer robotContainer) {
+    this.robotContainer = robotContainer;
   }
 
   public boolean isSolenoidOpen() {
     return lilArmSolenoid.get();
   }
 
-  public void zeroEncoderForIntake(){
+  public void zeroEncoderForIntake() {
     this.lilArmEncoder.setSelectedSensorPosition(LilArmConstants.intakeSetPoint);
   }
 
@@ -78,9 +92,10 @@ public class LilArm extends SubsystemBase {
   public Command TurnLilArmToSetpoint(double setpoint) {
     SmartDashboard.putNumber("LilArm Setpoint", setpoint);
     return run(() -> {
-        putArmInPlace(setpoint);
+      putArmInPlace(setpoint);
     })
-    .until(() -> (Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance));
+        .until(() -> (robotContainer.getOperatorLeftStick() > 0.2));
+       //.until(()->Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance);
   }
 
   public Command TurnLilArmToSetpointOnlyForAuto(double setpoint) {

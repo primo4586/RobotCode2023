@@ -72,6 +72,8 @@ public class Robot extends LoggedRobot {
     swerve = new Swerve();
 
     m_robotContainer = new RobotContainer(swerve, gripper ,lilArm, bigArm, objective);
+
+    lilArm.setRobotContainer(m_robotContainer);
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm);
     PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
     PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
@@ -96,10 +98,10 @@ public class Robot extends LoggedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-    if(PDH.getCurrent(16)>most){
-      most = PDH.getCurrent(16);
+    if(PDH.getCurrent(6)>most){
+      most = PDH.getCurrent(6);
     }
-    SmartDashboard.putNumber("most", most);
+    SmartDashboard.putNumber("most", PDH.getCurrent(6));
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

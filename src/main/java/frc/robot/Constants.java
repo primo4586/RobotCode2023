@@ -68,7 +68,7 @@ public final class Constants {
         public static final double highIntakeSetpoint = -28557;
 
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = -84986;
+        public static final double groundSetPoint = 9083;//-84986;
         public static final double groundSetPoint2 = 10000;
 
         public static final double honeSpeed = 0.1;
@@ -148,7 +148,7 @@ public final class Constants {
         public static final double slowModeAngularVelocity = 2;
 
         /* Neutral Modes */
-        public static final NeutralMode angleNeutralMode = NeutralMode.Brake;
+        public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
         public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
 
         /* Motor Inverts - Ensure that motors are CCW+!!! (Changes Per Module)*/
@@ -244,7 +244,7 @@ public final class Constants {
 
     public static final class LilArmConstants {
         /* LilArm PID Values */
-        private static final double lilArmMotorsKP = 0.1;
+        private static final double lilArmMotorsKP = 0.01;
         private static final double lilArmMotorsKI = 0.0;
         private static final double lilArmMotorsKD = 0.0002;
         
@@ -280,7 +280,7 @@ public final class Constants {
         public static final double highIntakeSetpoint = -1010;
  
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = -291;
+        public static final double groundSetPoint = -3302;//-291;
 
         public static final double autoStartPoint = -136;
 

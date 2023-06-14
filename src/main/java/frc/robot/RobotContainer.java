@@ -108,6 +108,7 @@ public class RobotContainer {
     operatorController.x().onTrue(highIntake);
     operatorController.start().onTrue(new EmergencyStop(lilArm, bigArm));
     operatorController.back().onTrue(bigArm.Hone());
+    //operatorController.back().onTrue(lilArm.TurnLilArmToSetpoint(lilArm.getCurrentArmPosition()));
 
     operatorController.povCenter().onTrue(groundIntake);
     operatorController.povDown().onTrue(groundIntake);
@@ -140,5 +141,9 @@ public class RobotContainer {
 
   public UsbCamera getDriverCamera() {
     return driverCamera;
+  }
+
+  public double getOperatorLeftStick(){
+    return operatorController.getLeftY();
   }
 }
