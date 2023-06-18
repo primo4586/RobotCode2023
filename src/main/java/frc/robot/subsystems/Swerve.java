@@ -61,6 +61,7 @@ public class Swerve extends SubsystemBase {
     // Uses the odometry & vision pose estimator, to fuse their data together in
     // order to better estimate the robot's position on the field.
     private final SwerveDrivePoseEstimator poseEstimation;
+    private double characterizationVolts;
 
     public Swerve() {
 
@@ -133,6 +134,12 @@ public class Swerve extends SubsystemBase {
         for (SwerveModule module : mSwerveMods) {
             module.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)), true);
         }
+    }
+
+    public Command stopModulescCommand(){
+        return runOnce(()->{
+            stopModules();
+        });
     }
 
     /**
@@ -252,6 +259,12 @@ public class Swerve extends SubsystemBase {
         //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getState().angle.getDegrees());
         //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
         // }
+
+        /*
+        for (SwerveModule mod : mSwerveMods) {
+            mod.align();
+            mod.runCharacterization(characterizationVolts);
+        }*/
     }
 
     public void updateOdometry() {
@@ -528,5 +541,19 @@ public class Swerve extends SubsystemBase {
         }
         });
 
-    }       
+    }    
+    
+      /** Runs forwards at the commanded voltage. */
+  public void runCharacterizationVolts(double volts) {
+    characterizationVolts = volts;
+  }
+
+  /** Returns the average drive velocity in radians/sec. */
+  public double getCharacterizationVelocity() {
+    double driveVelocityAverage = 0.0;
+    for (SwerveModule mod : mSwerveMods) {
+      driveVelocityAverage += mod.getCharacterizationVelocity();
+    }
+    return driveVelocityAverage / 4.0;
+  }
 }

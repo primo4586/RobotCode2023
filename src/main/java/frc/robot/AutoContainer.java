@@ -15,6 +15,8 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
+import frc.robot.util.FeedForwardCharacterization;
+import frc.robot.util.FeedForwardCharacterization.FeedForwardCharacterizationData;
 
 /** Add your docs here. */
 public class AutoContainer {
@@ -25,6 +27,10 @@ public class AutoContainer {
         this.autoPaths = new HashMap<String, Command>(); 
 
         this.autoPaths.put("blueConeCube", new TwoPiece(true, false, true, bigArm, lilArm, gripper, swerve));
+        this.autoPaths.put("FF", swerve.stopModulescCommand().andThen(new FeedForwardCharacterization(
+            swerve, false,
+            new FeedForwardCharacterizationData("swerve"),
+            swerve::runCharacterizationVolts, swerve::getCharacterizationVelocity)));
         this.autoSelector = new CommandSelector(autoPaths, PrimoShuffleboard.getInstance().getCompTabTitle());
     }
 

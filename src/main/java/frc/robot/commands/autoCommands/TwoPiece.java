@@ -39,7 +39,7 @@ public class TwoPiece extends SequentialCommandGroup {
 
         //new PutItemInTheUpper(bigArm, lilArm, gripper),
         Commands.waitSeconds(0.4),
-        gripper.openGripper(),
+        //gripper.openGripper(),
         Commands.waitSeconds(0.3),
         lilArm.closeLilArmSolenoid(),
         driveBackAndGround, // TODO: fix Ground setPoints

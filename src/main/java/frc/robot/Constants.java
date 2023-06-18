@@ -120,6 +120,7 @@ public final class Constants {
         /* Angle Motor PID Values (Changes Per Module) */
         public static final double angleKP = 0.1;
         public static final double angleKI = 0.0;
+
         public static final double angleKD = 0.0;
         public static final double angleKF = 0.0;
 
@@ -130,8 +131,8 @@ public final class Constants {
         public static final double driveKF = 0.0;
 
         /* Drive Motor Characterization Values (Changes Per Robot) */
-        public static final double driveKS = (0.22754/ 12); // divided by 12 to convert from volts to percent output for CTRE
-        public static final double driveKV = (2.6777 / 12);
+        public static final double driveKS = (0.69031/ 12); // divided by 12 to convert from volts to percent output for CTRE
+        public static final double driveKV = (2.7034 / 12);
         public static final double driveKA = (0.45944 / 12);
 
 

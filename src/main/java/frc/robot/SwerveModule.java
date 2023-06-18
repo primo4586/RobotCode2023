@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import frc.lib.math.Conversions;
 import frc.lib.util.CTREModuleState;
 import frc.lib.util.SwerveModuleConstants;
@@ -13,19 +14,20 @@ import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
 public class SwerveModule {
     public int moduleNumber;
     private double angleOffset;
     private TalonFX mAngleMotor;
-    private TalonFX mDriveMotor;
+    private WPI_TalonFX mDriveMotor;
     private CANCoder angleEncoder;
     private double lastAngle;
 
     private SwerveModuleConstants constants;
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.SwerveConstants.driveKS,
-            Constants.SwerveConstants.driveKV, Constants.SwerveConstants.driveKA);
+            Constants.SwerveConstants.driveKV);//, Constants.SwerveConstants.driveKA);
 
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
         this.moduleNumber = moduleNumber;
@@ -45,7 +47,7 @@ public class SwerveModule {
         configAngleMotor();
 
         /* Drive Motor Config */
-        mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
+        mDriveMotor = new WPI_TalonFX(moduleConstants.driveMotorID);
         configDriveMotor();
         configDriveMotor();
         configDriveMotor();
@@ -141,6 +143,9 @@ public class SwerveModule {
     public Rotation2d getCanCoder() {
         return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
     }
+    public void align(){
+        mAngleMotor.set(ControlMode.Position, angleOffset);
+    }
 
     /**
      * Returns the state of the module (current velocity and angle) in a
@@ -167,5 +172,44 @@ public class SwerveModule {
 
     public SwerveModulePosition getPostion() {
         return new SwerveModulePosition(getMeterDistance(), getState().angle);
+    }
+    public void runCharacterization(double volts) {
+
+        //placeInAppropriate0To360Scope(0,getPostion().angle.getDegrees());
+        if(moduleNumber==2)
+        mDriveMotor.setVoltage(volts);
+        else
+        mDriveMotor.setVoltage(volts);
+    }
+
+
+    public double getCharacterizationVelocity() {
+        return Conversions.falconToMPS(mDriveMotor.getSelectedSensorVelocity(),
+        Constants.SwerveConstants.wheelCircumference, Constants.SwerveConstants.driveGearRatio)/Units.inchesToMeters(4);
+    }
+
+    private double placeInAppropriate0To360Scope(double scopeReference, double newAngle) {
+        double lowerBound;
+        double upperBound;
+        double lowerOffset = scopeReference % 360;
+        if (lowerOffset >= 0) {
+            lowerBound = scopeReference - lowerOffset;
+            upperBound = scopeReference + (360 - lowerOffset);
+        } else {
+            upperBound = scopeReference - lowerOffset;
+            lowerBound = scopeReference - (360 + lowerOffset);
+        }
+        while (newAngle < lowerBound) {
+            newAngle += 360;
+        }
+        while (newAngle > upperBound) {
+            newAngle -= 360;
+        }
+        if (newAngle - scopeReference > 180) {
+            newAngle -= 360;
+        } else if (newAngle - scopeReference < -180) {
+            newAngle += 360;
+        }
+        return newAngle;
     }
 }

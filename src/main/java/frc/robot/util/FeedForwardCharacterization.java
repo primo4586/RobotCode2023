@@ -55,6 +55,7 @@ public class FeedForwardCharacterization extends CommandBase {
     addRequirements(subsystem);
     this.forwards = forwards;
     this.isDrive = false;
+    
     this.dataPrimary = data;
     this.dataSecondary = null;
     this.voltageConsumerSimple = voltageConsumer;
