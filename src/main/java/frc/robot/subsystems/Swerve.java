@@ -1,10 +1,12 @@
 package frc.robot.subsystems;
 
-import java.util.function.Supplier;
-
+import java.util.List;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import frc.robot.SwerveModule;
@@ -22,9 +24,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -32,7 +34,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
@@ -47,7 +48,7 @@ public class Swerve extends SubsystemBase {
     private double teleopRotationOffset = 0;
 
     // Field visualizer for debug purposes
-    // private Field2d field2d = new Field2d();
+     private Field2d field2d = new Field2d();
 
     // Uses vision data to estimate the robot's position on the field.
     private VisionPoseEstimator visionPoseEstimator;
@@ -67,7 +68,7 @@ public class Swerve extends SubsystemBase {
         gyro.configFactoryDefault();
         zeroGyro();
 
-        // SmartDashboard.putData(field2d);
+         SmartDashboard.putData(field2d);
         mSwerveMods = new SwerveModule[] {
                 new SwerveModule(0, SwerveConstants.FrontLeftModule.constants),
                 new SwerveModule(1, SwerveConstants.FrontRightModule.constants),
@@ -256,7 +257,7 @@ public class Swerve extends SubsystemBase {
     public void updateOdometry() {
         poseEstimation.update(getYaw(), getPositions());
         swerveOdometry.update(getYaw(), getPositions());
-        // field2d.getObject("Odometry").setPose(swerveOdometry.getPoseMeters());
+         field2d.getObject("Odometry").setPose(swerveOdometry.getPoseMeters());
 
         if (visionPoseEstimator != null) {
             var result = visionPoseEstimator
@@ -264,11 +265,11 @@ public class Swerve extends SubsystemBase {
 
             if (result != null) {
                 poseEstimation.addVisionMeasurement(result.estimatedPose.toPose2d(), result.timestampSeconds);
-                // field2d.getObject("Vision Position").setPose(result.estimatedPose.toPose2d());
+                 field2d.getObject("Vision Position").setPose(result.estimatedPose.toPose2d());
             }
         }
 
-        // field2d.setRobotPose(getPose());
+         field2d.setRobotPose(getPose());
     }
 
     public Command driveForwardUntilMeters(double driveSpeed, double metersSetpoint) {
@@ -322,7 +323,6 @@ public class Swerve extends SubsystemBase {
      *          this one.
      */
     public Command followTrajectory(PathPlannerTrajectory trajectory, boolean shouldResetOdometry) {
-
         PPSwerveControllerCommand followTrajecotryControllerCommand = new PPSwerveControllerCommand(
                 trajectory,
                 this::getPose,
@@ -340,6 +340,33 @@ public class Swerve extends SubsystemBase {
         }, this);
         return resetOdometryBeforePath.andThen(followTrajecotryControllerCommand);
 
+    }
+
+    public PathPlannerTrajectory generateTrajectoryToAligmentPose(Translation2d targetPose) {
+        if (targetPose == null)
+            return new PathPlannerTrajectory(); // Empty trajectory - 0 seconds duration.
+
+        PathPoint robotPose = new PathPoint(getPose().getTranslation(), getYaw());
+        PathPoint endPoint = new PathPoint(targetPose, Rotation2d.fromDegrees(180));
+
+        field2d.getObject("traj").setTrajectory(PathPlanner.generatePath(
+            new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+                    AutoConstants.kMaxAccelerationMetersPerSecondSquared),
+            List.of(robotPose, endPoint)));
+
+
+        return PathPlanner.generatePath(
+                new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+                        AutoConstants.kMaxAccelerationMetersPerSecondSquared),
+                List.of(robotPose, endPoint));
+    }
+
+    public boolean areWeCloseEnough(){//TODO: find a good distance 
+        if(DriverStation.getAlliance()==Alliance.Blue){
+            return(poseEstimation.getEstimatedPosition().getX()<Units.inchesToMeters(SwerveConstants.blueAligningX)+SwerveConstants.howCloseWeNeedToBe);
+        }
+
+        return(poseEstimation.getEstimatedPosition().getX()>Units.inchesToMeters(SwerveConstants.blueAligningX)-SwerveConstants.howCloseWeNeedToBe);
     }
 
     /**
@@ -494,15 +521,12 @@ public class Swerve extends SubsystemBase {
                 .until(() -> Math.abs(getPitch()) < SwerveConstants.STATION_PITCH_ANGLE_TOLERANCE);
     }
     
-    public void lockWheelsChargeStation() {
-        for (SwerveModule module : mSwerveMods) {
+    public Command lockWheelsChargeStation() {
+        return runOnce(()->{
+            for (SwerveModule module : mSwerveMods) {
             module.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), true);
         }
-    }
-
-    public Command LockWheelsChargeStation(){
-        return runOnce(()->{
-            lockWheelsChargeStation();
         });
-    }        
+
+    }       
 }

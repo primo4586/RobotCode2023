@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "name": "/Preferences/lilArmEncoder",
+    "type": "double",
+    "value": -30.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/bigArmEncoder",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  }
+]

@@ -13,15 +13,11 @@ import frc.robot.subsystems.LilArm;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class GrabItemFromHighIntake extends SequentialCommandGroup {
-  /** Creates a new GrabItemFromHighIntake. */
-  public GrabItemFromHighIntake(BigArm bigArm, LilArm lilArm) {
+public class MiddleOfBot extends SequentialCommandGroup {
+  /** Creates a new IntakeParallel. */
+  public MiddleOfBot(LilArm lilArm, BigArm bigArm) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-
-    //MoveArmsToSetPointsBigFirst moveArmsToHighIntake = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.highIntakeSetpoint, lilArm, LilArmConstants.highIntakeSetpoint);
-    MoveArmsParallel moveArmsToHighIntake = new MoveArmsParallel(bigArm, BigArmConstants.highIntakeSetpoint, lilArm, LilArmConstants.highIntakeSetpoint);
-
-    addCommands(moveArmsToHighIntake);
+    addCommands(lilArm.closeLilArmSolenoid(), new MoveArmsParallel(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint));
   }
 }

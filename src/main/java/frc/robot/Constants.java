@@ -19,7 +19,7 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
 
     public static final SupplyCurrentLimitConfiguration ARM_MOTOR_SUPPLY_CONFIG = new SupplyCurrentLimitConfiguration(true, 30, 35, 0.1); 
-    // TODO: Adjust these as we see fit and with the amount of current we draw
+
     public static final int ARM_STALL_CURRENT_LIMIT = 30;
     public static final int ARM_FREE_CURRENT_LIMIT = 35;
 
@@ -35,10 +35,9 @@ public final class Constants {
 
     public static final class BigArmConstants{
         //bigArm PID values
-        // TODO: Re-adjust these because we're using NEOs
         private static final double bigArmKP = 0.002;
         private static final double bigArmKI = 0.0;
-        private static final double bigArmKD = 300;
+        private static final double bigArmKD = 0.0002;
         public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
 
         //bigArm feedforward values
@@ -69,7 +68,7 @@ public final class Constants {
         public static final double highIntakeSetpoint = -28557;
 
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = 18087;
+        public static final double groundSetPoint = 9083;//-84986;
         public static final double groundSetPoint2 = 10000;
 
         public static final double honeSpeed = 0.1;
@@ -176,6 +175,7 @@ public final class Constants {
             public static final int canCoderID = 13;
             public static final double angleOffset = 325.8;
             public static final SwerveModuleConstants constants = 
+
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
         }
         
@@ -217,6 +217,14 @@ public final class Constants {
 
         /* where to align Constants */
 
+        public static final double[] blueAligningYAxis = {20, 42.19, 64, 86, 108.19, 130, 152, 174.19, 196};
+        public static final double[] redAligningYAxis = {196, 174.19, 152, 130, 108.19, 86, 64, 42.19, 20};
+
+        public static final double blueAligningX = 0;
+        public static final double redAligningX = 0;
+
+        public static final double howCloseWeNeedToBe = 1.541526;
+
         // 3 scoring locations on each side. (Unused)
         public static final List<Translation2d> cubeScoringLocations = List.of();
 
@@ -236,18 +244,12 @@ public final class Constants {
     }
 
     public static final class LilArmConstants {
-        /* LilArm PID Values */ // TODO: Re-adjust these because now we're using NEO
-        private static final double lilArmMotorsKP = 0.1;
+        /* LilArm PID Values */
+        private static final double lilArmMotorsKP = 0.01;
         private static final double lilArmMotorsKI = 0.0;
-        private static final double lilArmMotorsKD = 5;
+        private static final double lilArmMotorsKD = 0.0002;
         
         public static final PIDController lilArmPID = new PIDController(lilArmMotorsKP, lilArmMotorsKI, lilArmMotorsKD);
-
-        // TODO: These can probably be removed? Adjust or remove as needed
-        public static final double lilArmUpperConeKP = 0.14;
-        public static final double lilArmUpperConeKI = 0.0;
-        public static final double lilArmUpperConeKD = 0.0;
-        public static final PIDController lilArmUpperConePID = new PIDController(lilArmUpperConeKP, lilArmUpperConeKI, lilArmUpperConeKD);
 
         public static final String lilArmPreferencesKey = "lilArmEncoder";
 
@@ -279,7 +281,7 @@ public final class Constants {
         public static final double highIntakeSetpoint = -1010;
  
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = -3192;
+        public static final double groundSetPoint = -3302;//-291;
 
         public static final double autoStartPoint = -136;
 
@@ -290,7 +292,7 @@ public final class Constants {
    
     public static final class VisionConstants {
         // Camera's name in Photon's NetworkTable (Set in the PhotonVision UI)
-        public static final String cameraName = "limelightCam";
+        public static final String cameraName = "Arducam_OV9281_USB_Camera";
 
         /**
          * Camera's relative location to the center of the robot.
@@ -300,16 +302,16 @@ public final class Constants {
          */
         public static final Transform3d robotToCam =
                 new Transform3d(
-                        new Translation3d(0.115, 0.0, 0.367),
+                        new Translation3d( 0.31,-0.205, 0.23),
                         new Rotation3d(
                                 0, 0,
-                                0));
+                                Units.degreesToRadians(2)));
     }
 
     public static final class AutoConstants {
         // Self-explanatory, Limits for speed (linear velocity) and speed of rotation (angular velocity)
         public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 1.5;
+        public static final double kMaxAccelerationMetersPerSecondSquared =3;
         public static final double kMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared =  3* Math.PI;
         public static final PathConstraints pathConstraints = new PathConstraints(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared);
@@ -326,4 +328,5 @@ public final class Constants {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
 
+    public static final boolean tuningMode = true;
 }
