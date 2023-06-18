@@ -9,6 +9,8 @@ import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIOS
 import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
@@ -61,6 +63,7 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
+    Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/"));
     pcm = new PneumaticsControlModule(44);
     pcm.enableCompressorDigital();
     //pcm.disableCompressor();
@@ -76,7 +79,7 @@ public class Robot extends LoggedRobot {
     lilArm.setRobotContainer(m_robotContainer);
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm);
     PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
-    PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
+    //PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
   
   objectiveTracker = new ObjectiveTracker(new NodeSelectorIOServer());
   }

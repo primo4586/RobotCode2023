@@ -109,7 +109,7 @@ public final class Constants {
         /* Swerve Current Limiting */
         public static final int angleContinuousCurrentLimit = 25;
         public static final int anglePeakCurrentLimit = 40;
-        public static final double anglePeakCurrentDuration = 0.0000000001;
+        public static final double anglePeakCurrentDuration = 0.1;
         public static final boolean angleEnableCurrentLimit = true;
 
         public static final int driveContinuousCurrentLimit = 35;
@@ -175,6 +175,7 @@ public final class Constants {
             public static final int canCoderID = 13;
             public static final double angleOffset = 325.8;
             public static final SwerveModuleConstants constants = 
+
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
         }
         
@@ -291,7 +292,7 @@ public final class Constants {
    
     public static final class VisionConstants {
         // Camera's name in Photon's NetworkTable (Set in the PhotonVision UI)
-        public static final String cameraName = "limelightCam";
+        public static final String cameraName = "Arducam_OV9281_USB_Camera";
 
         /**
          * Camera's relative location to the center of the robot.
@@ -301,16 +302,16 @@ public final class Constants {
          */
         public static final Transform3d robotToCam =
                 new Transform3d(
-                        new Translation3d(0.115, 0.0, 0.367),
+                        new Translation3d( 0.31,-0.205, 0.23),
                         new Rotation3d(
                                 0, 0,
-                                0));
+                                Units.degreesToRadians(2)));
     }
 
     public static final class AutoConstants {
         // Self-explanatory, Limits for speed (linear velocity) and speed of rotation (angular velocity)
         public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+        public static final double kMaxAccelerationMetersPerSecondSquared =3;
         public static final double kMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared =  3* Math.PI;
         public static final PathConstraints pathConstraints = new PathConstraints(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared);
