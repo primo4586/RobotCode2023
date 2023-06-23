@@ -225,11 +225,7 @@ public final class Constants {
 
         public static final double howCloseWeNeedToBe = 1.541526;
 
-        // 3 scoring locations on each side. (Unused)
-        public static final List<Translation2d> cubeScoringLocations = List.of();
-
-        // 6 scoring locations per side. (Unused)
-        public static final List<Translation2d> coneScoringLocations = List.of();
+        public static final double trajAccuracy = 0.1; //TODO: change to a real number
     }
 
     public static final class Misc {
