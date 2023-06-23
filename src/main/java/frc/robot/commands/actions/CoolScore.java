@@ -1,5 +1,7 @@
 package frc.robot.commands.actions;
 
+import java.util.function.BooleanSupplier;
+
 import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
 import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -19,42 +21,40 @@ import frc.robot.subsystems.Swerve;
 
 public class CoolScore extends SequentialCommandGroup {
   public CoolScore(Swerve swerve, BigArm bigArm, LilArm lilArm, Gripper gripper, Objective objective) {
-    
+
     // Conditional command to move the arms based on the objective node level
     ConditionalCommand moveArms = new ConditionalCommand(
-      new PutItemInTheUpper(bigArm, lilArm, gripper), // If node level is UPPER
-      new ConditionalCommand(
-        new PutItemInTheMiddle(lilArm, bigArm, gripper),
-        Commands.none(), // TODO: replace with appropriate command if necessary
-        () -> objective.nodeLevel == NodeLevel.MID // If node level is MID
-      ),
-      () -> objective.nodeLevel == NodeLevel.HYBRID // If node level is HYBRID
+        new PutItemInTheUpper(bigArm, lilArm, gripper), // If node level is UPPER
+        new ConditionalCommand(
+            new PutItemInTheMiddle(lilArm, bigArm, gripper),
+            Commands.none(), // TODO: replace with appropriate command if necessary
+            () -> objective.nodeLevel == NodeLevel.MID // If node level is MID
+        ),
+        () -> objective.nodeLevel == NodeLevel.HYBRID // If node level is HYBRID
     );
 
-    // Generate trajectory to alignment pose based on alliance color
-    PathPlannerTrajectory blueTrajectory = swerve.generateTrajectoryToAligmentPose(
-      new Translation2d(SwerveConstants.blueAligningX, Units.inchesToMeters(SwerveConstants.redAligningYAxis[objective.getNodeRow()]))
-    );
-    PathPlannerTrajectory redTrajectory = swerve.generateTrajectoryToAligmentPose(
-      new Translation2d(SwerveConstants.redAligningX, Units.inchesToMeters(SwerveConstants.redAligningYAxis[objective.getNodeRow()]))
-    );
+    Translation2d robotEndSpot;
 
-    // Conditional command to follow the appropriate trajectory based on alliance color
-    ConditionalCommand followTrajectory = new ConditionalCommand(
-      swerve.followTrajectory(blueTrajectory, false), // Follow blue trajectory if alliance is Blue
-      swerve.followTrajectory(redTrajectory, false), // Follow red trajectory if alliance is Red
-      () -> DriverStation.getAlliance() == Alliance.Blue
-    );
+    if (DriverStation.getAlliance() == Alliance.Blue)
+      robotEndSpot = new Translation2d(SwerveConstants.blueAligningX,
+          Units.inchesToMeters(SwerveConstants.redAligningYAxis[objective.getNodeRow()]));
+    else
+      robotEndSpot = new Translation2d(SwerveConstants.redAligningX,
+          Units.inchesToMeters(SwerveConstants.redAligningYAxis[objective.getNodeRow()]));
 
     // Parallel command group to drive and score simultaneously
-    ParallelCommandGroup driveAndScore = new ParallelCommandGroup(followTrajectory, moveArms);
+    ParallelCommandGroup driveAndArms = new ParallelCommandGroup(
+        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(robotEndSpot), false).asProxy(),
+        moveArms);
 
-    // Add commands to the sequential command group
+    BooleanSupplier closenesCheck = ()->Math.abs(swerve.getPose().getX() - robotEndSpot.getX()) < SwerveConstants.trajAccuracy &&
+        Math.abs(swerve.getPose().getY() - robotEndSpot.getY()) < SwerveConstants.trajAccuracy;
+
+    ConditionalCommand areWeThere = new ConditionalCommand(Commands.waitSeconds(0.2), driveAndArms, closenesCheck);
+
     addCommands(
-      driveAndScore,
-      Commands.waitSeconds(0.2),
-      gripper.openGripper()
-    );
+        driveAndArms,
+        areWeThere,
+        gripper.openGripper());
   }
 }
-
