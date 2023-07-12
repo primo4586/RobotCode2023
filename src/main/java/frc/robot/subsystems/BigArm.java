@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -16,7 +17,8 @@ import frc.robot.Constants;
 import frc.robot.Constants.BigArmConstants;
 
 public class BigArm extends SubsystemBase {
-  private CANSparkMax bigArmMotor;
+  //private CANSparkMax bigArmMotor;
+  private WPI_TalonFX bigArmMotor;
   private WPI_TalonSRX bigArmEncoder;
   private PIDController bigArmPID;
   private DigitalInput honeSwitch;
@@ -26,16 +28,19 @@ public class BigArm extends SubsystemBase {
 
     // I assumed we're using the NEO 550s which are brushless, change motor type if not. 
     // were using neo v1.1 not 550 nut it doesn't matter
-    bigArmMotor = new CANSparkMax(BigArmConstants.bigArmMotorID, MotorType.kBrushless); 
+    //bigArmMotor = new CANSparkMax(BigArmConstants.bigArmMotorID, MotorType.kBrushless); 
+    bigArmMotor = new WPI_TalonFX(BigArmConstants.bigArmMotorID);
     bigArmEncoder = new WPI_TalonSRX(BigArmConstants.bigArmEncoderID);
     
     bigArmEncoder.setSelectedSensorPosition(BigArmConstants.intakeSetPoint);
-    bigArmMotor.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT_LIMIT, Constants.ARM_FREE_CURRENT_LIMIT);
+    //bigArmMotor.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT_LIMIT, Constants.ARM_FREE_CURRENT_LIMIT);
+    bigArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
+
 
     honeSwitch = new DigitalInput(BigArmConstants.honeSwitchID);
     bigArmMotor.setInverted(true);
-    var errorCode = bigArmMotor.burnFlash();
-    System.out.println("BigArm Error Code:" + errorCode);
+    //var errorCode = bigArmMotor.burnFlash();
+    //System.out.println("BigArm Error Code:" + errorCode);
   }
 
   public void putBigArmInPlace(double setPoint){
