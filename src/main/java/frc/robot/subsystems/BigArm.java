@@ -2,104 +2,105 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.BigArmConstants;
+import frc.robot.Constants.BigConstants;
 
 public class BigArm extends SubsystemBase {
-  //private CANSparkMax bigArmMotor;
   private WPI_TalonFX bigArmMotor;
-  private WPI_TalonSRX bigArmEncoder;
-  private PIDController bigArmPID;
-  private DigitalInput honeSwitch;
+  private DigitalInput homeSwitch;
 
   public BigArm() {
-    bigArmPID = BigArmConstants.bigArmPID;
-
-    // I assumed we're using the NEO 550s which are brushless, change motor type if not. 
-    // were using neo v1.1 not 550 nut it doesn't matter
-    //bigArmMotor = new CANSparkMax(BigArmConstants.bigArmMotorID, MotorType.kBrushless); 
-    bigArmMotor = new WPI_TalonFX(BigArmConstants.bigArmMotorID);
-    bigArmEncoder = new WPI_TalonSRX(BigArmConstants.bigArmEncoderID);
-    
-    bigArmEncoder.setSelectedSensorPosition(BigArmConstants.intakeSetPoint);
-    //bigArmMotor.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT_LIMIT, Constants.ARM_FREE_CURRENT_LIMIT);
-    bigArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
-
-
-    honeSwitch = new DigitalInput(BigArmConstants.honeSwitchID);
-    bigArmMotor.setInverted(true);
-    //var errorCode = bigArmMotor.burnFlash();
-    //System.out.println("BigArm Error Code:" + errorCode);
-  }
-
-  public void putBigArmInPlace(double setPoint){
-    SmartDashboard.putNumber("Big Arm PID Output",bigArmPID.calculate(getCurrentArmPosition(), setPoint));
-    bigArmMotor.setVoltage(bigArmPID.calculate(getCurrentArmPosition(), setPoint));
-  }
-
-  public void zeroEncoderForIntake(){
-    this.bigArmEncoder.setSelectedSensorPosition(BigArmConstants.intakeSetPoint);
-  }
-
-  public Command TurnBigArmToSetpoint(double setPoint){
-    SmartDashboard.putNumber("Big Arm Setpoint", setPoint);
-    return run(()->{
-      putBigArmInPlace(setPoint);
-    })
-    .until(() -> Math.abs(this.getCurrentArmPosition() - setPoint) <= BigArmConstants.ticksTolerance);
-  }
-
-  public double getCurrentArmPosition() {
-    return bigArmEncoder.getSelectedSensorPosition();
-  }
-
-  public Command setMotorSpeed(DoubleSupplier supplier) {
-    return this.run(() -> {
-
-      bigArmMotor.set(supplier.getAsDouble());
-    });
-  }
-
-
-
-  public void setPreference(){
-    Preferences.setDouble(BigArmConstants.bigArmPreferencesKey, getCurrentArmPosition());
-  }
-
-  public boolean getHoneSwitch(){
-    return !honeSwitch.get();
-  }
-
-  public Command Hone(){
-    return run(()->{
-      bigArmMotor.set(BigArmConstants.honeSpeed);
-    })
-    .until(()->getHoneSwitch())
-    .andThen(()->{bigArmMotor.set(0.0);
-      bigArmEncoder.setSelectedSensorPosition(BigArmConstants.honeSetPoint);
-    });
+    bigArmMotor = new WPI_TalonFX(BigConstants.bigArmMotorID);
+    homeSwitch = new DigitalInput(BigConstants.homeSwitchID);
   }
 
   @Override
   public void periodic() {
-      SmartDashboard.putNumber("Big Arm Position", bigArmEncoder.getSelectedSensorPosition());
-      SmartDashboard.putBoolean("Hone Switch value", getHoneSwitch());
+    SmartDashboard.putNumber("Big Arm Position", bigArmMotor.getSelectedSensorPosition());
+    SmartDashboard.putBoolean("Home Switch value", getHomeSwitch());
+  }
+
+  public void setupBigArmMotor() {
+    bigArmMotor.setInverted(true);
+    bigArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
+
+    bigArmMotor.setNeutralMode(NeutralMode.Brake);
+
+    bigArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, BigConstants.kPIDLoopIdx,
+        BigConstants.kTimeoutMs);
+    bigArmMotor.configNeutralDeadband(0.001, BigConstants.kTimeoutMs);
+
+    bigArmMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, BigConstants.kTimeoutMs);
+    bigArmMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, BigConstants.kTimeoutMs);
+
+    bigArmMotor.configNominalOutputForward(0, BigConstants.kTimeoutMs);
+    bigArmMotor.configNominalOutputReverse(0, BigConstants.kTimeoutMs);
+    bigArmMotor.configPeakOutputForward(1, BigConstants.kTimeoutMs);
+    bigArmMotor.configPeakOutputReverse(-1, BigConstants.kTimeoutMs);
+
+    bigArmMotor.selectProfileSlot(BigConstants.kSlotIdx, BigConstants.kPIDLoopIdx);
+    bigArmMotor.config_kF(BigConstants.kSlotIdx, BigConstants.bigArmKF, BigConstants.kTimeoutMs);
+    bigArmMotor.config_kP(BigConstants.kSlotIdx, BigConstants.bigArmKP, BigConstants.kTimeoutMs);
+    bigArmMotor.config_kI(BigConstants.kSlotIdx, BigConstants.bigArmKI, BigConstants.kTimeoutMs);
+    bigArmMotor.config_kD(BigConstants.kSlotIdx, BigConstants.bigArmKD, BigConstants.kTimeoutMs);
+
+    bigArmMotor.configMotionCruiseVelocity(15000, BigConstants.kTimeoutMs);
+    bigArmMotor.configMotionAcceleration(6000, BigConstants.kTimeoutMs);
+
+    bigArmMotor.setSelectedSensorPosition(0, BigConstants.kPIDLoopIdx, BigConstants.kTimeoutMs);
+  }
+
+  public void zeroEncoderForMiddleOfBot() {
+    bigArmMotor.setSelectedSensorPosition(BigConstants.intakeSetPoint);
+  }
+
+  public Command TurnBigArmToSetpoint(double setPoint) {
+    SmartDashboard.putNumber("Big Arm Setpoint", setPoint);
+    return runOnce(() -> {
+      putBigArmInPlace(setPoint);
+    });
+  }
+
+  public void putBigArmInPlace(double setpoint) {
+    bigArmMotor.set(TalonFXControlMode.MotionMagic, setpoint);
+  }
+
+  public double getCurrentArmPosition() {
+    return bigArmMotor.getSelectedSensorPosition();
+  }
+
+  public Command setMotorSpeed(DoubleSupplier speed) {
+    return this.run(() -> {
+      bigArmMotor.set(speed.getAsDouble());
+    });
+  }
+
+  public boolean getHomeSwitch() {
+    return !homeSwitch.get();
+  }
+
+  public Command Home() {
+    return run(() -> {
+      bigArmMotor.set(BigConstants.homeSpeed);
+    })
+        .until(() -> getHomeSwitch())
+        .andThen(() -> {
+          bigArmMotor.set(0.0);
+          bigArmMotor.setSelectedSensorPosition(BigConstants.homeSetPoint);
+        });
   }
 
   public Command zeroEncoder() {
-    return runOnce(() -> 
-      bigArmEncoder.setSelectedSensorPosition(0)
-    );
+    return runOnce(() -> bigArmMotor.setSelectedSensorPosition(0));
   }
 }

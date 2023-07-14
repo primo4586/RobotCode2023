@@ -2,8 +2,8 @@ package frc.robot.commands.autoCommands.utils;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.BigArmConstants;
-import frc.robot.Constants.LilArmConstants;
+import frc.robot.Constants.BigConstants;
+import frc.robot.Constants.LilConstants;
 import frc.robot.commands.actions.MoveArmsParallelOnlyForGroundAuto;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
@@ -13,7 +13,7 @@ public class GroundAuto extends SequentialCommandGroup {
   //TODO: fix setPoints
 
   public GroundAuto(Gripper gripper, LilArm lilArm, BigArm bigArm, boolean shouldExtendLil) {
-    MoveArmsParallelOnlyForGroundAuto moveArmsToGround = new MoveArmsParallelOnlyForGroundAuto(bigArm, BigArmConstants.groundSetPoint, lilArm, LilArmConstants.groundSetPoint);
+    MoveArmsParallelOnlyForGroundAuto moveArmsToGround = new MoveArmsParallelOnlyForGroundAuto(bigArm, BigConstants.groundSetPoint, lilArm, LilConstants.groundSetPoint);
 
     ConditionalCommand openLilArm = new ConditionalCommand(lilArm.openLilArmSolenoid(), Commands.none(), ()-> shouldExtendLil);
 

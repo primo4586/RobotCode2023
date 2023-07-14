@@ -5,8 +5,8 @@
 package frc.robot.commands.actions;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.BigArmConstants;
-import frc.robot.Constants.LilArmConstants;
+import frc.robot.Constants.BigConstants;
+import frc.robot.Constants.LilConstants;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.LilArm;
 
@@ -18,6 +18,6 @@ public class MiddleOfBot extends SequentialCommandGroup {
   public MiddleOfBot(LilArm lilArm, BigArm bigArm) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(lilArm.closeLilArmSolenoid(), new MoveArmsParallel(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint));
+    addCommands(lilArm.closeLilArmSolenoid(), new MoveArmsParallel(bigArm, BigConstants.intakeSetPoint, lilArm, LilConstants.middleOfRobotSetPoint));
   }
 }

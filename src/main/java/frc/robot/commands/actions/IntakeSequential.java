@@ -5,8 +5,8 @@
 package frc.robot.commands.actions;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.BigArmConstants;
-import frc.robot.Constants.LilArmConstants;
+import frc.robot.Constants.BigConstants;
+import frc.robot.Constants.LilConstants;
 import frc.robot.commands.MoveArmsToSetPointsBigFirst;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.LilArm;
@@ -14,7 +14,7 @@ import frc.robot.subsystems.LilArm;
 public class IntakeSequential extends SequentialCommandGroup {
   public IntakeSequential(LilArm lilArm, BigArm bigArm) {
    //closes the solenoid
-   MoveArmsToSetPointsBigFirst moveArmsToIntake = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.intakeSetPoint, lilArm, LilArmConstants.intakeSetPoint);
+   MoveArmsToSetPointsBigFirst moveArmsToIntake = new MoveArmsToSetPointsBigFirst(bigArm, BigConstants.intakeSetPoint, lilArm, LilConstants.middleOfRobotSetPoint);
    addCommands(
     lilArm.closeLilArmSolenoid(),
     moveArmsToIntake

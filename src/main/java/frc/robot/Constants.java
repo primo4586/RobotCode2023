@@ -33,18 +33,19 @@ public final class Constants {
         public static final int isGripperOpenID = 2;
     }
 
-    public static final class BigArmConstants{
+    public static final class BigConstants{
         //bigArm PID values
-        private static final double bigArmKP = 0.002;
-        private static final double bigArmKI = 0.0;
-        private static final double bigArmKD = 0.0002;
+        public static final double bigArmKF = 0.0;
+        public static final double bigArmKP = 0.002;
+        public static final double bigArmKI = 0.0;
+        public static final double bigArmKD = 0.0002;
         public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
 
         //bigArm feedforward values
         public static final double feedForwardVelocity = 0.0;
 
 
-        public static final double bigArmGearRatio = 3000 / 1;// (60 Gear to 50 gear = 60 * 50 = 3000 - god knows why) 
+        public static final double bigArmGearRatio = 125 / 1;
 
         public static final int bigArmMotorID = 16;
         public static final int bigArmEncoderID = 5;
@@ -71,9 +72,13 @@ public final class Constants {
         public static final double groundSetPoint = 9083;//-84986;
         public static final double groundSetPoint2 = 10000;
 
-        public static final double honeSpeed = 0.1;
-        public static final double honeSetPoint = 0.0;
-        public static final int honeSwitchID = 1;
+        public static final double homeSpeed = 0.1;
+        public static final double homeSetPoint = 0.0;
+        public static final int homeSwitchID = 1;
+
+        public static int kTimeoutMs = 30;
+        public static int kSlotIdx = 0;
+        public static int kPIDLoopIdx = 0;
     }
 
     public static final class SwerveConstants {
@@ -243,15 +248,12 @@ public final class Constants {
         public static final double stickDeadband = 0.1;
     }
 
-    public static final class LilArmConstants {
+    public static final class LilConstants {
         /* LilArm PID Values */
-        private static final double lilArmMotorsKP = 0.01;
-        private static final double lilArmMotorsKI = 0.0;
-        private static final double lilArmMotorsKD = 0.0002;
-        
-        public static final PIDController lilArmPID = new PIDController(lilArmMotorsKP, lilArmMotorsKI, lilArmMotorsKD);
-
-        public static final String lilArmPreferencesKey = "lilArmEncoder";
+        public static final double lilArmMotorsKF = 0.01;
+        public static final double lilArmMotorsKP = 0.01;
+        public static final double lilArmMotorsKI = 0.0;
+        public static final double lilArmMotorsKD = 0.0002;
 
         /* LilArm Motors ID */ 
         public static final int lilArmMotorID = 18;
@@ -259,7 +261,7 @@ public final class Constants {
         public static final int lilArmEncoderID = 3;
 
         /* LilArm Motors Gear Ratio */
-        public static final double lilMotorGearRatio = 6000 / 1;
+        public static final double lilMotorGearRatio = 50/1;
 
         /* LilArm Solenoid Ports */
         public static final int PCMID = 44;
@@ -267,25 +269,20 @@ public final class Constants {
 
         public static final double ticksTolerance = 20;
 
-        public static final double coneUpperFinalSetPoint = -1738;//-1696;//-1497;//-1801;//-1793;
-        public static final double coneMiddleSetPoint = -1187;//1189;
-
-
-        public static final double  cubeUpperFinalSetPoint = -1420;
-
+        public static final double coneUpperSetPoint = -1738;
+        public static final double coneMiddleSetPoint = -1187;
+        public static final double  cubeUpperSetPoint = -1420;
         public static final double cubeMiddleSetPoint = -940;
-
-        public static final double intakeSetPoint = -184;//-230;
-        public static final double intakeReturnDeadZone =2345;
-
+        public static final double middleOfRobotSetPoint = -184;
         public static final double highIntakeSetpoint = -1010;
- 
-        public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = -3302;//-291;
-
+        public static final double groundSetPoint = -3302;
         public static final double autoStartPoint = -136;
 
         public static final double resetPoint = -30;
+
+        public static int kTimeoutMs = 30;
+        public static int kSlotIdx = 0;
+        public static int kPIDLoopIdx = 0;
 
     }
 

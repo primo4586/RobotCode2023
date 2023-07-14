@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.LilArmConstants;
+import frc.robot.Constants.LilConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.actions.MiddleOfBot;
 import frc.robot.commands.actions.CoolScore;
@@ -99,7 +99,7 @@ public class RobotContainer {
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
     driverController.x().onTrue(gripper.toggleGripper());
-    driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilArmConstants.autoStartPoint));
+    driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilConstants.autoStartPoint));
     driverController.back().onTrue(lilArm.zeroLilArm());
     driverController.b().onTrue(new ConditionalCommand(coolScore, Commands.none(), () -> swerve.areWeCloseEnough()));
     
@@ -116,7 +116,7 @@ public class RobotContainer {
     operatorController.b().onTrue(middleOfBot);
     operatorController.x().onTrue(highIntake);
     operatorController.start().onTrue(new EmergencyStop(lilArm, bigArm));
-    operatorController.back().onTrue(bigArm.Hone());
+    operatorController.back().onTrue(bigArm.Home());
     //operatorController.back().onTrue(lilArm.TurnLilArmToSetpoint(lilArm.getCurrentArmPosition()));
 
     operatorController.povCenter().onTrue(groundIntake);

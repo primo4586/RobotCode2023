@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.BigArmConstants;
-import frc.robot.Constants.LilArmConstants;
+import frc.robot.Constants.BigConstants;
+import frc.robot.Constants.LilConstants;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -18,8 +18,8 @@ public class PutItemInTheUpper extends SequentialCommandGroup {
   /** Creates a new putItemInPlace.  */
   public PutItemInTheUpper(BigArm bigArm, LilArm lilArm, Gripper gripper) {
     //cone and cube setPoints
-    MoveArmsParallel cubeUpperFinalSetPoint = new MoveArmsParallel(bigArm, BigArmConstants.cubeUpperFinalSetPoint, lilArm, LilArmConstants.cubeUpperFinalSetPoint);
-    Command coneUpper = new ParallelCommandGroup(lilArm.TurnLilArmToSetpoint(LilArmConstants.coneUpperFinalSetPoint),bigArm.TurnBigArmToSetpoint(BigArmConstants.coneUpperFinalSetPoint));
+    MoveArmsParallel cubeUpperFinalSetPoint = new MoveArmsParallel(bigArm, BigConstants.cubeUpperFinalSetPoint, lilArm, LilConstants.cubeUpperSetPoint);
+    Command coneUpper = new ParallelCommandGroup(lilArm.TurnLilArmToSetpoint(LilConstants.coneUpperSetPoint),bigArm.TurnBigArmToSetpoint(BigConstants.coneUpperFinalSetPoint));
 
     //check if we put cone or cube
     ConditionalCommand finalSetPoint = new ConditionalCommand(coneUpper, cubeUpperFinalSetPoint, gripper::getShouldGripCone);
