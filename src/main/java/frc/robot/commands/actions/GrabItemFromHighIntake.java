@@ -5,8 +5,8 @@
 package frc.robot.commands.actions;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.BigArmConstants;
-import frc.robot.Constants.LilArmConstants;
+import frc.robot.Constants.BigConstants;
+import frc.robot.Constants.LilConstants;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.LilArm;
 
@@ -20,7 +20,7 @@ public class GrabItemFromHighIntake extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
 
     //MoveArmsToSetPointsBigFirst moveArmsToHighIntake = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.highIntakeSetpoint, lilArm, LilArmConstants.highIntakeSetpoint);
-    MoveArmsParallel moveArmsToHighIntake = new MoveArmsParallel(bigArm, BigArmConstants.highIntakeSetpoint, lilArm, LilArmConstants.highIntakeSetpoint);
+    MoveArmsParallel moveArmsToHighIntake = new MoveArmsParallel(bigArm, BigConstants.highIntakeSetpoint, lilArm, LilConstants.highIntakeSetpoint);
 
     addCommands(moveArmsToHighIntake);
   }

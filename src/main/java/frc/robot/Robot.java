@@ -12,11 +12,8 @@ import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -76,7 +73,6 @@ public class Robot extends LoggedRobot {
 
     m_robotContainer = new RobotContainer(swerve, gripper ,lilArm, bigArm, objective);
 
-    lilArm.setRobotContainer(m_robotContainer);
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm);
     PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
     //PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
@@ -111,8 +107,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     gripper.turnOffLed();
-    lilArm.setPreference();
-    bigArm.setPreference();
   }
 
   @Override
@@ -123,7 +117,7 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     swerve.zeroGyro();   
     lilArm.zeroEncoderForAuto();
-    bigArm.zeroEncoderForIntake();
+    bigArm.zeroEncoderForMiddleOfBot();
     m_autonomousCommand = autoContainer.getAutonomousCommand();//swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 3.6);
 
     // schedule the autonomous command (example)
@@ -165,7 +159,7 @@ public class Robot extends LoggedRobot {
     //lilArm.zeroEncoderForIntake();
     LiveWindow.disableAllTelemetry();
     lilArm.zeroEncoderForAuto();
-    bigArm.zeroEncoderForIntake();
+    bigArm.zeroEncoderForMiddleOfBot();
     // Cancels all running commands at the start of test mode.
     // CommandScheduler.getInstance().cancelAll();.
 

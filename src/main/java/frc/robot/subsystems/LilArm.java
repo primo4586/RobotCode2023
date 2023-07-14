@@ -4,60 +4,70 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
-import frc.robot.Constants.LilArmConstants;
+import frc.robot.Constants.LilConstants;
 
 public class LilArm extends SubsystemBase {
-  //// private CANSparkMax lilArmMotor;
   private WPI_TalonFX lilArmMotor;
   private WPI_TalonSRX lilArmEncoder;
-
   private Solenoid lilArmSolenoid;
-
-  private PIDController lilArmPID;
-
-  private RobotContainer robotContainer;
-
-  boolean hold;
 
   /** Creates a new LilArm. */
   public LilArm() {
-    lilArmPID = LilArmConstants.lilArmPID;
 
-    lilArmEncoder = new WPI_TalonSRX(LilArmConstants.lilArmEncoderID);
-    // I assumed we're using the NEO 550s which are brushless, change motor type if
-    // not.
-    // were using neo v1.1 not 550 nut it doesn't matter
-    lilArmMotor = new WPI_TalonFX(00);//// new CANSparkMax(LilArmConstants.lilArmMotorID, MotorType.kBrushless);
-    lilArmSolenoid = new Solenoid(LilArmConstants.PCMID, PneumaticsModuleType.CTREPCM,
-        LilArmConstants.lilArmSolenoidID);
+    lilArmEncoder = new WPI_TalonSRX(LilConstants.lilArmEncoderID);
 
-    lilArmMotor.setInverted(false);
-    lilArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
-    //// lilArmMotor.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT_LIMIT,
-    //// Constants.ARM_FREE_CURRENT_LIMIT);
+    lilArmMotor = new WPI_TalonFX(00);
+    lilArmSolenoid = new Solenoid(LilConstants.PCMID, PneumaticsModuleType.CTREPCM,
+        LilConstants.lilArmSolenoidID);
 
     lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-    //// var errorCode = lilArmMotor.burnFlash();
-    //// System.out.println("LilArm Error Code: " + errorCode);
 
-    lilArmMotor.setNeutralMode(NeutralMode.Brake);
-    hold = true;
+    setupLilArmMotor();
   }
 
-  public void setRobotContainer(RobotContainer robotContainer) {
-    this.robotContainer = robotContainer;
+  public void setupLilArmMotor() {
+    lilArmMotor.setInverted(false);
+    lilArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
+
+    lilArmMotor.setNeutralMode(NeutralMode.Brake);
+
+    lilArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, LilConstants.kPIDLoopIdx,
+        LilConstants.kTimeoutMs);
+    lilArmMotor.configNeutralDeadband(0.001, LilConstants.kTimeoutMs);
+
+    lilArmMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, LilConstants.kTimeoutMs);
+    lilArmMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, LilConstants.kTimeoutMs);
+
+    /* Set the peak and nominal outputs */
+    lilArmMotor.configNominalOutputForward(0, LilConstants.kTimeoutMs);
+    lilArmMotor.configNominalOutputReverse(0, LilConstants.kTimeoutMs);
+    lilArmMotor.configPeakOutputForward(1, LilConstants.kTimeoutMs);
+    lilArmMotor.configPeakOutputReverse(-1, LilConstants.kTimeoutMs);
+
+    /* Set Motion Magic gains in slot0 - see documentation */
+    lilArmMotor.selectProfileSlot(LilConstants.kSlotIdx, LilConstants.kPIDLoopIdx);
+    lilArmMotor.config_kF(LilConstants.kSlotIdx, LilConstants.lilArmMotorsKF, LilConstants.kTimeoutMs);
+    lilArmMotor.config_kP(LilConstants.kSlotIdx, LilConstants.lilArmMotorsKD, LilConstants.kTimeoutMs);
+    lilArmMotor.config_kI(LilConstants.kSlotIdx, LilConstants.lilArmMotorsKI, LilConstants.kTimeoutMs);
+    lilArmMotor.config_kD(LilConstants.kSlotIdx, LilConstants.lilArmMotorsKD, LilConstants.kTimeoutMs);
+
+    lilArmMotor.configMotionCruiseVelocity(15000, LilConstants.kTimeoutMs);
+    lilArmMotor.configMotionAcceleration(6000, LilConstants.kTimeoutMs);
+
+    lilArmMotor.setSelectedSensorPosition(
+        lilArmEncoder.getSensorCollection().getPulseWidthPosition() / 2 * LilConstants.lilMotorGearRatio,
+        LilConstants.kPIDLoopIdx, LilConstants.kTimeoutMs);
   }
 
   public boolean isSolenoidOpen() {
@@ -65,67 +75,33 @@ public class LilArm extends SubsystemBase {
   }
 
   public void zeroEncoderForIntake() {
-    this.lilArmEncoder.setSelectedSensorPosition(LilArmConstants.intakeSetPoint);
+    this.lilArmEncoder.setSelectedSensorPosition(LilConstants.middleOfRobotSetPoint);
   }
 
   public void zeroEncoderForAuto() {
-    this.lilArmEncoder.setSelectedSensorPosition(LilArmConstants.autoStartPoint);
+    this.lilArmEncoder.setSelectedSensorPosition(LilConstants.autoStartPoint);
   }
 
-  public Command setMotorSpeed(DoubleSupplier supplier) {
+  public Command setMotorSpeed(DoubleSupplier speed) {
     return this.run(() -> {
 
-      lilArmMotor.set(supplier.getAsDouble());
+      lilArmMotor.set(speed.getAsDouble());
     });
   }
 
   public void putArmInPlace(double setpoint) {
-    SmartDashboard.putNumber("LilArm PID Output", lilArmPID.calculate(getCurrentArmPosition(), setpoint));
-    lilArmMotor.setVoltage(lilArmPID.calculate(getCurrentArmPosition(), setpoint));
-  }
-
-  public void putArmInPlaceWithCustomPID(double setpoint, PIDController pid) {
-    // SmartDashboard.putNumber("LilArm PID Output", pid.calculate(getCurrentArmPosition(), setpoint));
-    lilArmMotor.setVoltage(pid.calculate(getCurrentArmPosition(), setpoint));
+    lilArmMotor.set(TalonFXControlMode.MotionMagic, setpoint);
   }
 
   public Command TurnLilArmToSetpoint(double setpoint) {
     SmartDashboard.putNumber("LilArm Setpoint", setpoint);
-    return run(() -> {
+    return runOnce(() -> {
       putArmInPlace(setpoint);
-    })
-        .until(() -> (robotContainer.getOperatorLeftStick() > 0.2));
-       //.until(()->Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance);
-  }
-
-  public Command TurnLilArmToSetpointOnlyForAuto(double setpoint) {
-    // SmartDashboard.putNumber("LilArm Setpoint", setpoint);
-    return run(() -> {
-        putArmInPlace(setpoint);
-    })
-    .until(() -> (Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance));
-  }
-
-  public Command TurnLilArmToSetpointWithCustomPID(double setpoint, PIDController pid) {
-    // SmartDashboard.putNumber("LilArm Setpoint", setpoint);
-    return run(() -> {
-        putArmInPlaceWithCustomPID(setpoint, pid);
-    })
-    .until(() -> (Math.abs(getCurrentArmPosition() - setpoint) <= LilArmConstants.ticksTolerance));
-  }
-
-  public Command speedByTime(double speed, double time) {
-    Timer timer = new Timer();
-    return setMotorSpeed(() -> speed).beforeStarting(() -> timer.start()).until(() -> timer.hasElapsed(time));
-  }
-
-
-  public void setPreference(){
-    Preferences.setDouble(LilArmConstants.lilArmPreferencesKey, LilArmConstants.resetPoint);
+    });
   }
 
   public double getCurrentArmPosition() {
-    return lilArmEncoder.getSelectedSensorPosition();
+    return lilArmMotor.getSelectedSensorPosition();
   }
 
   public Command openLilArmSolenoid() {
@@ -142,7 +118,7 @@ public class LilArm extends SubsystemBase {
 
   public Command zeroLilArm() {
     return runOnce(() -> {
-      lilArmEncoder.setSelectedSensorPosition(0);
+      lilArmMotor.setSelectedSensorPosition(lilArmEncoder.getSelectedSensorPosition()/ 2 * LilConstants.lilMotorGearRatio);
     });
   }
 
