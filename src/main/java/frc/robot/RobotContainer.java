@@ -98,7 +98,7 @@ public class RobotContainer {
 
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
-    driverController.x().onTrue(gripper.toggleGripper());
+    //driverController.x().onTrue(gripper.toggleGripper());//TODO: think how to do toggle gripper(one button or two)
     driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilConstants.autoStartPoint));
     driverController.back().onTrue(lilArm.zeroLilArm());
     driverController.b().onTrue(new ConditionalCommand(coolScore, Commands.none(), () -> swerve.areWeCloseEnough()));

@@ -27,7 +27,7 @@ public class PutItemInTheUpper extends SequentialCommandGroup {
     addCommands(
       //lilArm.closeLilArmSolenoid(),
       lilArm.openLilArmSolenoid(),
-      gripper.closeGripper(),
+      gripper.getHoldCommand(),
       finalSetPoint
     );
   }

@@ -34,27 +34,21 @@ public class TwoPiece extends SequentialCommandGroup {
     addCommands(
         Commands.runOnce(() -> {
           gripper.setShouldGripCone(shouldStartWithCone);
-          gripper.turnOnLed();
         }, gripper),
 
         //new PutItemInTheUpper(bigArm, lilArm, gripper),
         Commands.waitSeconds(0.4),
-        gripper.openGripper(),
+        gripper.getEjectCommand(),
         Commands.waitSeconds(0.3),
         lilArm.closeLilArmSolenoid(),
-        driveBackAndGround, // TODO: fix Ground setPoints
-        Commands.waitSeconds(0.2),
-        gripper.closeGripper(),
-        Commands.waitSeconds(0.2),
+        driveBackAndGround.alongWith(Commands.waitSeconds(0.2).andThen(gripper.getCollectCommand())), // TODO: fix Ground setPoints
         Commands.runOnce(() -> {
           gripper.setShouldGripCone(shouldFinishWithCone);
-          gripper.turnOnLed();
         }, gripper),
 
-        returnTraj,
-            //.alongWith(putSecondPiece),
+        returnTraj.alongWith(putSecondPiece),
         Commands.waitSeconds(0.4),
-        gripper.openGripper(),
+        gripper.getEjectCommand(),
         Commands.waitSeconds(0.4));
         //new IntakeSequential(lilArm, bigArm).alongWith(Commands.waitSeconds(0.2).andThen(gripper.closeGripper())));
   }

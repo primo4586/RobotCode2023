@@ -9,11 +9,12 @@ import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIOS
 import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -60,14 +61,12 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
-    Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/"));
     pcm = new PneumaticsControlModule(44);
     pcm.enableCompressorDigital();
     //pcm.disableCompressor();
     ctreConfigs = new CTREConfigs();
     bigArm = new BigArm();
     gripper = new Gripper();
-    gripper.turnOnLed();
     lilArm = new LilArm();
     swerve = new Swerve();
 
@@ -75,7 +74,7 @@ public class Robot extends LoggedRobot {
 
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm);
     PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
-    //PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
+    PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
   
   objectiveTracker = new ObjectiveTracker(new NodeSelectorIOServer());
   }
@@ -106,7 +105,6 @@ public class Robot extends LoggedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    gripper.turnOffLed();
   }
 
   @Override
@@ -140,7 +138,6 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    gripper.turnOnLed();
     
     if(!hasReset)  {
       swerve.zeroGyroForAutoEnd();
