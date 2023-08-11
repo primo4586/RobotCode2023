@@ -30,7 +30,6 @@ public class PieceReloadCharge extends SequentialCommandGroup {
     addCommands(
         Commands.runOnce(() -> {
           gripper.setShouldGripCone(shouldStartWithCone);
-          gripper.turnOnLed();
         }, gripper),
 
         new PutItemInTheUpper(bigArm, lilArm, gripper),

@@ -53,7 +53,7 @@ public class CoolScore extends SequentialCommandGroup {
     addCommands(
       driveAndScore,
       Commands.waitSeconds(0.2),
-      gripper.openGripper()
+      gripper.getCollectCommand()
     );
   }
 }

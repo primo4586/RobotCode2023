@@ -14,9 +14,8 @@ public class GroundTele extends SequentialCommandGroup {
 
     addCommands(
       lilArm.closeLilArmSolenoid(),
-      gripper.closeGripper(),
       moveArmsToGround,
-      gripper.openGripper(),
+      gripper.getCollectCommand(),
       lilArm.openLilArmSolenoid()
     );
   }

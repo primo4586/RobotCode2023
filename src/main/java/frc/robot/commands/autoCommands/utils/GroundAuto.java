@@ -19,8 +19,7 @@ public class GroundAuto extends SequentialCommandGroup {
 
     addCommands(
       lilArm.closeLilArmSolenoid(),
-      gripper.closeGripper(),
-      moveArmsToGround.alongWith(Commands.waitSeconds(0.4).andThen(gripper.openGripper())),
+      moveArmsToGround.alongWith(Commands.waitSeconds(0.4).andThen(gripper.getCollectCommand())),
       openLilArm
     );
   }
