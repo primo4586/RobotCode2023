@@ -62,6 +62,7 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
+    objectiveTracker.getSubsystem();
     pcm = new PneumaticsControlModule(44);
     pcm.enableCompressorDigital();
     //pcm.disableCompressor();
@@ -72,9 +73,9 @@ public class Robot extends LoggedRobot {
     swerve = new Swerve();
     telescopicArm = new TelescopicArm();
 
-    m_robotContainer = new RobotContainer(swerve, gripper ,lilArm, bigArm, objective);
+    m_robotContainer = new RobotContainer(swerve, gripper ,lilArm, bigArm, objective, telescopicArm);
 
-    autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm);
+    autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm, telescopicArm);
     PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
     PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
   

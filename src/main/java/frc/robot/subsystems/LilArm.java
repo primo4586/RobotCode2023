@@ -9,8 +9,6 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,7 +18,6 @@ import frc.robot.Constants.LilConstants;
 public class LilArm extends SubsystemBase {
   private WPI_TalonFX lilArmMotor;
   private WPI_TalonSRX lilArmEncoder;
-  private Solenoid lilArmSolenoid;
 
   /** Creates a new LilArm. */
   public LilArm() {
@@ -28,8 +25,6 @@ public class LilArm extends SubsystemBase {
     lilArmEncoder = new WPI_TalonSRX(LilConstants.lilArmEncoderID);
 
     lilArmMotor = new WPI_TalonFX(00);
-    lilArmSolenoid = new Solenoid(LilConstants.PCMID, PneumaticsModuleType.CTREPCM,
-        LilConstants.lilArmSolenoidID);
 
     lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
 
@@ -70,10 +65,6 @@ public class LilArm extends SubsystemBase {
         LilConstants.kPIDLoopIdx, LilConstants.kTimeoutMs);
   }
 
-  public boolean isSolenoidOpen() {
-    return lilArmSolenoid.get();
-  }
-
   public void zeroEncoderForIntake() {
     this.lilArmEncoder.setSelectedSensorPosition(LilConstants.middleOfRobotSetPoint);
   }
@@ -102,18 +93,6 @@ public class LilArm extends SubsystemBase {
 
   public double getCurrentArmPosition() {
     return lilArmMotor.getSelectedSensorPosition();
-  }
-
-  public Command openLilArmSolenoid() {
-    return runOnce(() -> {
-      lilArmSolenoid.set(true);
-    });
-  }
-
-  public Command closeLilArmSolenoid() {
-    return runOnce(() -> {
-      lilArmSolenoid.set(false);
-    });
   }
 
   public Command zeroLilArm() {

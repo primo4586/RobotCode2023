@@ -15,16 +15,17 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.TelescopicArm;
 
 /** Add your docs here. */
 public class AutoContainer {
     private CommandSelector autoSelector;
     private Map<String, Command> autoPaths;
 
-    public AutoContainer(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm){
+    public AutoContainer(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm, TelescopicArm telescopicArm){
         this.autoPaths = new HashMap<String, Command>(); 
 
-        this.autoPaths.put("blueConeCube", new TwoPiece(true, false, true, bigArm, lilArm, gripper, swerve));
+        this.autoPaths.put("blueConeCube", new TwoPiece(true, false, true, bigArm, lilArm, gripper, swerve, telescopicArm));
         this.autoSelector = new CommandSelector(autoPaths, PrimoShuffleboard.getInstance().getCompTabTitle());
     }
 

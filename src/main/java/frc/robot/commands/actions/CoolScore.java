@@ -16,16 +16,17 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.TelescopicArm;
 
 public class CoolScore extends SequentialCommandGroup {
-  public CoolScore(Swerve swerve, BigArm bigArm, LilArm lilArm, Gripper gripper, Objective objective) {
+  public CoolScore(Swerve swerve, BigArm bigArm, LilArm lilArm, Gripper gripper, Objective objective, TelescopicArm telescopicArm) {
     
     // Conditional command to move the arms based on the objective node level
     ConditionalCommand moveArms = new ConditionalCommand(
-      new PutItemInTheUpper(bigArm, lilArm, gripper), // If node level is UPPER
+      new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm), // If node level is UPPER
       new ConditionalCommand(
-        new PutItemInTheMiddle(lilArm, bigArm, gripper),
-        Commands.none(), // TODO: replace with appropriate command if necessary
+        new PutItemInTheMiddle(lilArm, bigArm, gripper, telescopicArm),
+        Commands.none(),
         () -> objective.nodeLevel == NodeLevel.MID // If node level is MID
       ),
       () -> objective.nodeLevel == NodeLevel.HYBRID // If node level is HYBRID

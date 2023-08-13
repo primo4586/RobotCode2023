@@ -1,11 +1,8 @@
 package frc.robot;
 
-import java.util.List;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.pathplanner.lib.PathConstraints;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -54,11 +51,11 @@ public final class Constants {
 
         public static final String bigArmPreferencesKey = "bigArmEncoder" ;
 
-        public static final double coneUpperFinalSetPoint = -78853;//-88152;
+        public static final double coneUpperSetPoint = -78853;//-88152;
         public static final double coneMiddleSetPoint = -47773;
 
 
-        public static final double cubeUpperFinalSetPoint = -72463;
+        public static final double cubeUpperSetPoint = -72463;
 
         public static final double cubeMiddleSetPoint = -56326;
 
@@ -207,14 +204,7 @@ public final class Constants {
         //new charge station align attempt
 
 
-        public static final double preClimbSpeed = 1.8;
-        public static final double reversePreClimbSpeed = 1;
-        public static final double prePreClimbSpeed = 2.3;
-        public static final double afterClimbSpeed = 0.55;
-        public static final double afterAfterClimbSpeed = 0.1;
-        public static final double preClimbTolerance = 9.0;
-        public static final double afterClimbTolerance = 3.5;
-        public static final double maybeAfterClimbSpeed = 0.55;
+        public static final double otherSideSpeed = 1.8;
 
         /* Charge Align Station Constants */
         public static final double ALIGN_STATION_SPEED = .5;
@@ -229,12 +219,6 @@ public final class Constants {
         public static final double redAligningX = 0;
 
         public static final double howCloseWeNeedToBe = 1.541526;
-
-        // 3 scoring locations on each side. (Unused)
-        public static final List<Translation2d> cubeScoringLocations = List.of();
-
-        // 6 scoring locations per side. (Unused)
-        public static final List<Translation2d> coneScoringLocations = List.of();
     }
 
     public static final class Misc {
@@ -310,6 +294,16 @@ public final class Constants {
         public static int kTimeoutMs = 30;
         public static int kSlotIdx = 0;
         public static int kPIDLoopIdx = 0;
+
+        public static final double coneUpperSetPoint = -78853;
+        public static final double coneMiddleSetPoint = -47773;
+
+        public static final double cubeUpperSetPoint = -72463;
+        public static final double cubeMiddleSetPoint = -56326;
+
+        public static final double highIntakeSetpoint = -28557;
+        public static final double middleOfRobotSetPoint = 0.0;
+        public static final double groundSetPoint = 9083;
     }
    
     public static final class VisionConstants {
