@@ -14,7 +14,7 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,6 +24,7 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.TelescopicArm;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -40,8 +41,8 @@ public class Robot extends LoggedRobot {
   private AutoContainer autoContainer;
 
   private LilArm lilArm;
-
   private BigArm bigArm;
+  private TelescopicArm telescopicArm;
   private boolean hasReset = false;
   private Gripper gripper;
   private Swerve swerve;
@@ -69,6 +70,7 @@ public class Robot extends LoggedRobot {
     gripper = new Gripper();
     lilArm = new LilArm();
     swerve = new Swerve();
+    telescopicArm = new TelescopicArm();
 
     m_robotContainer = new RobotContainer(swerve, gripper ,lilArm, bigArm, objective);
 
@@ -76,7 +78,7 @@ public class Robot extends LoggedRobot {
     PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
     PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
   
-  objectiveTracker = new ObjectiveTracker(new NodeSelectorIOServer());
+    objectiveTracker = new ObjectiveTracker(new NodeSelectorIOServer());
   }
 
   /**
@@ -108,7 +110,12 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    if (RobotController.getUserButton()) {
+      telescopicArm.zeroTeles();
+    }
+
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
