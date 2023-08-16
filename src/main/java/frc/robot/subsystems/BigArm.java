@@ -26,7 +26,7 @@ public class BigArm extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Big Arm Position", bigArmMotor.getSelectedSensorPosition());
-    SmartDashboard.putBoolean("Home Switch value", getHomeSwitch());
+    SmartDashboard.putBoolean("Home Switch value", homeSwitch.get());
   }
 
   public void setupBigArmMotor() {
@@ -66,12 +66,8 @@ public class BigArm extends SubsystemBase {
   public Command TurnBigArmToSetpoint(double setPoint) {
     SmartDashboard.putNumber("Big Arm Setpoint", setPoint);
     return runOnce(() -> {
-      putBigArmInPlace(setPoint);
+      bigArmMotor.set(TalonFXControlMode.MotionMagic, setPoint);
     });
-  }
-
-  public void putBigArmInPlace(double setpoint) {
-    bigArmMotor.set(TalonFXControlMode.MotionMagic, setpoint);
   }
 
   public double getCurrentArmPosition() {
@@ -84,15 +80,11 @@ public class BigArm extends SubsystemBase {
     });
   }
 
-  public boolean getHomeSwitch() {
-    return !homeSwitch.get();
-  }
-
   public Command Home() {
     return run(() -> {
       bigArmMotor.set(BigConstants.homeSpeed);
     })
-        .until(() -> getHomeSwitch())
+        .until(() -> homeSwitch.get())
         .andThen(() -> {
           bigArmMotor.set(0.0);
           bigArmMotor.setSelectedSensorPosition(BigConstants.homeSetPoint);

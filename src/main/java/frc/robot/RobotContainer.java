@@ -26,11 +26,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.LilConstants;
 import frc.robot.commands.*;
-import frc.robot.commands.actions.MiddleOfBot;
 import frc.robot.commands.actions.CoolScore;
 import frc.robot.commands.actions.EmergencyStop;
 import frc.robot.commands.actions.GrabItemFromHighIntake;
-import frc.robot.commands.actions.GroundTele;
+import frc.robot.commands.actions.Ground;
+import frc.robot.commands.actions.MiddleOfBot;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.subsystems.*;
@@ -50,12 +50,10 @@ public class RobotContainer {
 
   /* Subsystems */
   private Swerve swerve;
-  private CameraHandler handler;
-
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm, Objective objective) {
+  public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm, Objective objective, TelescopicArm telescopicArm) {
 
     this.swerve = swerve;
     boolean fieldRelative = true;
@@ -72,7 +70,7 @@ public class RobotContainer {
         fieldRelative, openLoop, () -> driverController.getRightTriggerAxis() > 0.5));
 
     // Configure the button bindings
-    configureButtonBindings(swerve, gripper, lilArm, bigArm, objective);
+    configureButtonBindings(swerve, gripper, lilArm, bigArm, objective, telescopicArm);
     if (Robot.isReal()) {
       buildCameras();
     }
@@ -87,20 +85,20 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm,
-      Objective objective) {
+      Objective objective, TelescopicArm telescopicArm) {
 
-    CoolScore coolScore = new CoolScore(swerve, bigArm, lilArm, gripper, objective);
+    CoolScore coolScore = new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm);
 
-    PutItemInTheUpper putItemInTheUpper = new PutItemInTheUpper(bigArm, lilArm, gripper);
-    PutItemInTheMiddle putItemInTheMiddle =  new PutItemInTheMiddle(lilArm, bigArm, gripper);
-    GrabItemFromHighIntake highIntake = new GrabItemFromHighIntake(bigArm, lilArm);
-    MiddleOfBot middleOfBot = new MiddleOfBot(lilArm, bigArm);
-    GroundTele groundIntake = new GroundTele(gripper, lilArm, bigArm);
+    PutItemInTheUpper putItemInTheUpper = new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm);
+    PutItemInTheMiddle putItemInTheMiddle =  new PutItemInTheMiddle(lilArm, bigArm, gripper, telescopicArm);
+    GrabItemFromHighIntake highIntake = new GrabItemFromHighIntake(bigArm, lilArm, gripper, telescopicArm);
+    Ground groundIntake = new Ground(gripper, lilArm, bigArm, telescopicArm);
+    MiddleOfBot middleOfBot = new MiddleOfBot(lilArm, bigArm, telescopicArm);
 
 
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
-    driverController.x().onTrue(gripper.toggleGripper());
+    //driverController.x().onTrue(gripper.toggleGripper());//TODO: think how to do toggle gripper(one button or two)
     driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilConstants.autoStartPoint));
     driverController.back().onTrue(lilArm.zeroLilArm());
     driverController.b().onTrue(new ConditionalCommand(coolScore, Commands.none(), () -> swerve.areWeCloseEnough()));
@@ -111,8 +109,6 @@ public class RobotContainer {
     /* Operator Buttons */
 
     operatorController.leftBumper().onTrue(gripper.changeWhatWeGrip());
-    operatorController.rightBumper().onTrue(lilArm.closeLilArmSolenoid());
-    operatorController.rightTrigger().onTrue(lilArm.openLilArmSolenoid());
     operatorController.y().onTrue(putItemInTheUpper);
     operatorController.a().onTrue(putItemInTheMiddle);
     operatorController.b().onTrue(middleOfBot);

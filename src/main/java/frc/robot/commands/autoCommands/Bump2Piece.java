@@ -11,61 +11,62 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.commands.actions.IntakeSequential;
+import frc.robot.Constants.BigConstants;
+import frc.robot.Constants.LilConstants;
+import frc.robot.Constants.TelescopicArmConstants;
+import frc.robot.commands.actions.Ground;
+import frc.robot.commands.actions.GroundOnlyArms;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
-import frc.robot.commands.autoCommands.utils.GroundAuto;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.TelescopicArm;
 
 public class Bump2Piece extends SequentialCommandGroup {
-  public Bump2Piece(boolean shouldStartWithCone, boolean shouldFinishWithCone, boolean areWeBlue, BigArm bigArm,LilArm lilArm, Gripper gripper, Swerve swerve) {
+  public Bump2Piece(boolean shouldStartWithCone, boolean shouldFinishWithCone, boolean areWeBlue, BigArm bigArm,
+      LilArm lilArm, Gripper gripper, Swerve swerve, TelescopicArm telescopicArm) {
 
     ConditionalCommand driveBack = new ConditionalCommand(
-      swerve.followTrajectory(PathPlanner.loadPath(shouldStartWithCone ? "blueLowerCone" : "blueLowerCube",AutoConstants.pathConstraints), false),
-      swerve.followTrajectory(PathPlanner.loadPath(shouldStartWithCone ? "redLowerCone" : "redLowerCube",AutoConstants.pathConstraints), false),
-      ()-> areWeBlue);
+        swerve.followTrajectory(PathPlanner.loadPath(shouldStartWithCone ? "blueLowerCone" : "blueLowerCube",
+            AutoConstants.pathConstraints), false),
+        swerve.followTrajectory(
+            PathPlanner.loadPath(shouldStartWithCone ? "redLowerCone" : "redLowerCube", AutoConstants.pathConstraints),
+            false),
+        () -> areWeBlue);
 
-    ConditionalCommand putSecondPiece = new ConditionalCommand(new PutItemInTheMiddle(lilArm, bigArm, gripper),
-        new PutItemInTheUpper(bigArm, lilArm, gripper), () -> shouldStartWithCone == shouldFinishWithCone);
+    ConditionalCommand putSecondPiece = new ConditionalCommand(new PutItemInTheMiddle(lilArm, bigArm, gripper, telescopicArm),
+        new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm), () -> shouldStartWithCone == shouldFinishWithCone);
 
     ConditionalCommand returnTraj = new ConditionalCommand(
-        swerve.followTrajectory(PathPlanner.loadPath("blueLowerReturn",AutoConstants.pathConstraints), false),
-        swerve.followTrajectory(PathPlanner.loadPath("redLowerReturn",AutoConstants.pathConstraints), false),
+        swerve.followTrajectory(PathPlanner.loadPath("blueLowerReturn", AutoConstants.pathConstraints), false),
+        swerve.followTrajectory(PathPlanner.loadPath("redLowerReturn", AutoConstants.pathConstraints), false),
         () -> areWeBlue);
 
     addCommands(
-
-        Commands.runOnce(() -> {
-          gripper.setShouldGripCone(shouldStartWithCone);
-          gripper.turnOnLed();
-        }, gripper),
-
-        new PutItemInTheUpper(bigArm, lilArm, gripper),
-        Commands.waitSeconds(0.4),
-        gripper.openGripper(),
-        Commands.waitSeconds(0.3),
-        lilArm.closeLilArmSolenoid(),
-        driveBack
-        .alongWith(new GroundAuto(gripper, lilArm, bigArm, false)), // TODO: fix Ground setPoints
-        lilArm.openLilArmSolenoid(),
-        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(areWeBlue ? new Translation2d(6.55, 0.92) : new Translation2d(9.91,0.92)), false),
-        Commands.waitSeconds(0.2),
-        gripper.closeGripper(),
-        Commands.waitSeconds(0.2),
+        Commands.runOnce(()->gripper.setShouldGripCone(shouldFinishWithCone),gripper),
+        new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm),
+        gripper.getEjectCommand(),
+            Commands.waitSeconds(0.3),
+        new GroundOnlyArms(gripper, lilArm, bigArm, telescopicArm),
+            driveBack,
+        new Ground(gripper, lilArm, bigArm, telescopicArm),
+        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(
+                areWeBlue ? new Translation2d(6.55, 0.92) : new Translation2d(9.91, 0.92)), false)
+            .alongWith(Commands.waitSeconds(0.2).andThen(gripper.getCollectCommand())),//TODO: test otf traj and maybe change it
         Commands.runOnce(() -> {
           gripper.setShouldGripCone(shouldFinishWithCone);
-          gripper.turnOnLed();
         }, gripper),
         returnTraj
-            .alongWith(new PutItemInTheUpper(bigArm, lilArm, gripper)),
-        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(areWeBlue ? new Translation2d(1.90,1.07) : new Translation2d(14.65,1.07)), areWeBlue),
+            .alongWith(new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm)),
+        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(
+            areWeBlue ? new Translation2d(1.90, 1.07) : new Translation2d(14.65, 1.07)), false),
         putSecondPiece,
-        Commands.waitSeconds(0.4),
-        gripper.openGripper(),
-        Commands.waitSeconds(0.4),
-        new IntakeSequential(lilArm, bigArm).alongWith(Commands.waitSeconds(0.2).andThen(gripper.closeGripper())));
+        gripper.getEjectCommand(),
+        Commands.waitSeconds(0.2),
+        telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
+        bigArm.TurnBigArmToSetpoint(BigConstants.middleOfRobotSetPoint),
+        lilArm.TurnLilArmToSetpoint(LilConstants.middleOfRobotSetPoint));
   }
 }

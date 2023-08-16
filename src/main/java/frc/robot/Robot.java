@@ -11,7 +11,7 @@ import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
-import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,6 +21,7 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.TelescopicArm;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -37,8 +38,8 @@ public class Robot extends TimedRobot {
   private AutoContainer autoContainer;
 
   private LilArm lilArm;
-
   private BigArm bigArm;
+  private TelescopicArm telescopicArm;
   private boolean hasReset = false;
   private Gripper gripper;
   private Swerve swerve;
@@ -47,9 +48,7 @@ public class Robot extends TimedRobot {
   private NetworkTable table = NetworkTableInstance.getDefault().getTable("nodeselector");
   private IntegerSubscriber nodeSubscriber=table.getIntegerTopic("node_dashboard_to_robot").subscribe(-1);
 
-  private PowerDistribution PDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
-
-  // private DigitalInput input = new DigitalInput(3);
+  //private PowerDistribution PDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -63,47 +62,37 @@ public class Robot extends TimedRobot {
     ctreConfigs = new CTREConfigs();
     bigArm = new BigArm();
     gripper = new Gripper();
-    gripper.turnOnLed();
     lilArm = new LilArm();
     swerve = new Swerve();
+    telescopicArm = new TelescopicArm();
 
-    m_robotContainer = new RobotContainer(swerve, gripper ,lilArm, bigArm, objective);
+    m_robotContainer = new RobotContainer(swerve, gripper ,lilArm, bigArm, objective, telescopicArm);
 
-    autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm);
+    autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm, telescopicArm);
     PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
     //PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
   }
 
-  /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
-   */
+
   @Override
   public void robotPeriodic() {
-    // gripper.turnOffLed();
-    // SmartDashboard.putBoolean("Port View", input.get());
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     objective.updateInputs(nodeSubscriber.getAsLong());
     objective.putObjectiveAsText();
   }
 
-  /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    gripper.turnOffLed();
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    if (RobotController.getUserButton()) {
+      telescopicArm.zeroTeles();
+    }
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  }
+  
   @Override
   public void autonomousInit() {
     swerve.zeroGyro();   
@@ -131,7 +120,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    gripper.turnOnLed();
     
     if(!hasReset)  {
       swerve.zeroGyroForAutoEnd();

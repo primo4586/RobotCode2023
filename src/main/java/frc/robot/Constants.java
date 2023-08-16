@@ -53,11 +53,11 @@ public final class Constants {
 
         public static final String bigArmPreferencesKey = "bigArmEncoder" ;
 
-        public static final double coneUpperFinalSetPoint = -78853;//-88152;
+        public static final double coneUpperSetPoint = -78853;//-88152;
         public static final double coneMiddleSetPoint = -47773;
 
 
-        public static final double cubeUpperFinalSetPoint = -72463;
+        public static final double cubeUpperSetPoint = -72463;
 
         public static final double cubeMiddleSetPoint = -56326;
 
@@ -208,14 +208,7 @@ public final class Constants {
         //new charge station align attempt
 
 
-        public static final double preClimbSpeed = 1.8;
-        public static final double reversePreClimbSpeed = 1;
-        public static final double prePreClimbSpeed = 2.3;
-        public static final double afterClimbSpeed = 0.55;
-        public static final double afterAfterClimbSpeed = 0.1;
-        public static final double preClimbTolerance = 9.0;
-        public static final double afterClimbTolerance = 3.5;
-        public static final double maybeAfterClimbSpeed = 0.55;
+        public static final double otherSideSpeed = 1.8;
 
         /* Charge Align Station Constants */
         public static final double ALIGN_STATION_SPEED = .5;
@@ -250,13 +243,13 @@ public final class Constants {
         public static final double lilArmMotorsKI = 0.0;
         public static final double lilArmMotorsKD = 0.0002;
 
-        /* LilArm Motors ID */ 
+        /* LilArm Motors ID */
         public static final int lilArmMotorID = 18;
 
         public static final int lilArmEncoderID = 3;
 
         /* LilArm Motors Gear Ratio */
-        public static final double lilMotorGearRatio = 50/1;
+        public static final double lilMotorGearRatio = 50 / 1;
 
         /* LilArm Solenoid Ports */
         public static final int PCMID = 44;
@@ -266,7 +259,7 @@ public final class Constants {
 
         public static final double coneUpperSetPoint = -1738;
         public static final double coneMiddleSetPoint = -1187;
-        public static final double  cubeUpperSetPoint = -1420;
+        public static final double cubeUpperSetPoint = -1420;
         public static final double cubeMiddleSetPoint = -940;
         public static final double middleOfRobotSetPoint = -184;
         public static final double highIntakeSetpoint = -1010;
@@ -281,6 +274,41 @@ public final class Constants {
 
     }
 
+    public static final class TelescopicArmConstants {
+        public static final int teleMotorID = 0;
+
+        // TelescopicArm PID values
+        public static final double TelesKF = 0.0;
+        public static final double TelesKP = 0.002;
+        public static final double TelesKI = 0.0;
+        public static final double TelesKD = 0.0002;
+        public static final PIDController TelesPID = new PIDController(TelesKP, TelesKI, TelesKD);
+
+        // TelescopicArm feedforward values
+        public static final double feedForwardVelocity = 0.0;
+
+        public static final double TelesGearRatio = 125 / 1;
+
+        public static final int TelesEncoderID = 5;
+
+        public static final double ticksTolerance = 500;
+
+        public static final int homeSwitchID = 2;
+
+        public static int kTimeoutMs = 30;
+        public static int kSlotIdx = 0;
+        public static int kPIDLoopIdx = 0;
+
+        public static final double coneUpperSetPoint = -78853;
+        public static final double coneMiddleSetPoint = -47773;
+
+        public static final double cubeUpperSetPoint = -72463;
+        public static final double cubeMiddleSetPoint = -56326;
+
+        public static final double highIntakeSetpoint = -28557;
+        public static final double middleOfRobotSetPoint = 0.0;
+        public static final double groundSetPoint = 9083;
+    }
    
     public static final class VisionConstants {
         // Camera's name in Photon's NetworkTable (Set in the PhotonVision UI)

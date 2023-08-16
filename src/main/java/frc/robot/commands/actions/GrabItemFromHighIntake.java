@@ -4,24 +4,23 @@
 
 package frc.robot.commands.actions;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants.BigConstants;
 import frc.robot.Constants.LilConstants;
+import frc.robot.Constants.TelescopicArmConstants;
 import frc.robot.subsystems.BigArm;
+import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
+import frc.robot.subsystems.TelescopicArm;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class GrabItemFromHighIntake extends SequentialCommandGroup {
-  /** Creates a new GrabItemFromHighIntake. */
-  public GrabItemFromHighIntake(BigArm bigArm, LilArm lilArm) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+public class GrabItemFromHighIntake extends ParallelCommandGroup {
 
-    //MoveArmsToSetPointsBigFirst moveArmsToHighIntake = new MoveArmsToSetPointsBigFirst(bigArm, BigArmConstants.highIntakeSetpoint, lilArm, LilArmConstants.highIntakeSetpoint);
-    MoveArmsParallel moveArmsToHighIntake = new MoveArmsParallel(bigArm, BigConstants.highIntakeSetpoint, lilArm, LilConstants.highIntakeSetpoint);
-
-    addCommands(moveArmsToHighIntake);
+  public GrabItemFromHighIntake(BigArm bigArm, LilArm lilArm,Gripper gripper, TelescopicArm telescopicArm) {
+   
+    addCommands(
+      telescopicArm.putTelesInSetpoint(TelescopicArmConstants.highIntakeSetpoint),
+      bigArm.TurnBigArmToSetpoint(BigConstants.highIntakeSetpoint),
+      lilArm.TurnLilArmToSetpoint(LilConstants.highIntakeSetpoint).andThen(gripper.getCollectCommand())
+    );
   }
 }

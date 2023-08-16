@@ -1,134 +1,132 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.GripperConstants;
+import frc.robot.GripperConstants;
 
 public class Gripper extends SubsystemBase {
-  private boolean shouldGripCone;
-  private Solenoid gripperOpenSolenoid;
-  private Solenoid gripperCloseSolenoid;
-  
-  private AddressableLED m_led = new AddressableLED(0);
-  private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(39);
-  private boolean fakeIsGripperOpen;
 
-  /** Creates a new Gripper. */
-  public Gripper() {
+    private final CANSparkMax motor = GripperConstants.MOTOR;
 
-    shouldGripCone = true;
+    private GripperConstants.GripperState state = GripperConstants.GripperState.STOP;
 
-    gripperOpenSolenoid = new Solenoid(GripperConstants.PCMID, PneumaticsModuleType.CTREPCM, GripperConstants.solenoidOpenID);
-    gripperCloseSolenoid = new Solenoid(GripperConstants.PCMID, PneumaticsModuleType.CTREPCM, GripperConstants.solenoidCloseID);
-    if (shouldGripCone){
-      gripperOpenSolenoid.set(false);
-      gripperCloseSolenoid.set(true);
+    private boolean shouldGripCone;
+
+    public Gripper() {
+        setPowerDistributionPortRequirements();
+        setDefaultCommand(
+                new StartEndCommand(
+                        () -> setState(GripperConstants.GripperState.HOLD),
+                        () -> setState(GripperConstants.GripperState.STOP),
+                        this));
+        shouldGripCone = true;
     }
-    else{
-      gripperOpenSolenoid.set(false);
-      gripperCloseSolenoid.set(false);
+
+    /**
+     * @return a command that makes the gripper collect, and stops the gripper at
+     *         the end of it
+     */
+    public CommandBase getCollectCommand() {
+        return new ProxyCommand(new StartEndCommand(
+                () -> setState(GripperConstants.GripperState.COLLECT),
+                () -> setState(GripperConstants.GripperState.STOP),
+                this));
     }
-    
-    m_led.setLength(m_ledBuffer.getLength());
-    
-    fakeIsGripperOpen = false;
 
-    turnOnLed();
-  }
+    /**
+     * @return a command that makes the gripper collect slowly, and stops the
+     *         gripper at the end of it
+     */
+    public CommandBase getSlowCollectCommand() {
+        return new ProxyCommand(new StartEndCommand(
+                () -> setState(GripperConstants.GripperState.SLOW_COLLECT),
+                () -> setState(GripperConstants.GripperState.STOP),
+                this));
+    }
 
-  public boolean getShouldGripCone() {
-    return this.shouldGripCone;
-  }
+    /**
+     * @return a command that makes the gripper eject, and stops the gripper at the
+     *         end of it
+     */
+    public CommandBase getEjectCommand() {
+        return new ProxyCommand(new StartEndCommand(
+                () -> setState(GripperConstants.GripperState.EJECT),
+                () -> setState(GripperConstants.GripperState.STOP),
+                this));
+    }
 
-  public void toggleShouldWeGripACone() {
-    this.shouldGripCone = !shouldGripCone;
-  }
+    /**
+     * @return a command that makes the gripper eject slowly, and stops the gripper
+     *         at the end of it
+     */
+    public CommandBase getSlowEjectCommand() {
+        return new ProxyCommand(new StartEndCommand(
+                () -> setState(GripperConstants.GripperState.SLOW_EJECT),
+                () -> setState(GripperConstants.GripperState.STOP),
+                this));
+    }
 
-  public boolean isGripperOpen(){
-    return fakeIsGripperOpen;
-  }
+    /**
+     * @return a command that makes the gripper hold, and stops the gripper at the
+     *         end of it
+     */
+    public CommandBase getHoldCommand() {
+        return new ProxyCommand(new StartEndCommand(
+                () -> setState(GripperConstants.GripperState.HOLD),
+                () -> setState(GripperConstants.GripperState.STOP),
+                this));
+    }
 
-  public Command toggleGripper(){
-    return new ConditionalCommand(closeGripper(), openGripper(), this::isGripperOpen);
-  }
+    /**
+     * @return a command that stops the gripper
+     */
+    public InstantCommand getStopCommand() {
+        return new InstantCommand(
+                () -> setState(GripperConstants.GripperState.STOP),
+                this);
+    }
 
-  public void setShouldGripCone(boolean shouldGripCone) {
-    this.shouldGripCone = shouldGripCone;
-  }
+    public CommandBase getFullEjectCommand() {
+        return new ProxyCommand(new StartEndCommand(
+                () -> setState(GripperConstants.GripperState.FULL_EJECT),
+                () -> setState(GripperConstants.GripperState.STOP),
+                this));
+    }
 
-  public Command openGripper(){
-    return runOnce(()->{
-      fakeIsGripperOpen = true;
-        gripperCloseSolenoid.set(false);
-        gripperOpenSolenoid.set(true);
-    });
-  }
+    public boolean isHolding() {
+        return state == GripperConstants.GripperState.HOLD;
+    }
 
-  public Command closeGripper(){
-    return runOnce(()->{
-      fakeIsGripperOpen = false;
-        gripperCloseSolenoid.set(true);
-        gripperOpenSolenoid.set(false);
-      // else{
-      //   gripperCloseSolenoid.set(false);
-      //   gripperOpenSolenoid.set(false);
-      //}
-    });
-  }
+    private void setPowerDistributionPortRequirements() {
+        GripperConstants.HOLD_TRIGGER_CONFIG.setup(
+                () -> {
+                    if (state.power < 0)
+                        setState(GripperConstants.GripperState.HOLD);
+                });
+    }
 
-  public Command changeWhatWeGrip() {
-    return runOnce(() -> {
-      toggleShouldWeGripACone();
+    private void setState(GripperConstants.GripperState state) {
+        this.state = state;
+        motor.set(state.power);
+    }
 
-      if(shouldGripCone){
-        for (var i = 0; i < m_ledBuffer.getLength(); i++) 
-          m_ledBuffer.setRGB(i, 255, 100, 0);
-        }
-      else{
-        for (var i = 0; i < m_ledBuffer.getLength(); i++)
-          m_ledBuffer.setRGB(i,180,31,235);
-        }
-     
-      m_led.setData(m_ledBuffer);
-      m_led.start();
-    });
-  }
-public void turnOffLed() {
-    for (var i = 0; i < m_ledBuffer.getLength(); i++)
-      m_ledBuffer.setRGB(i,0,0,0);
+    public Command changeWhatWeGrip() {
+        shouldGripCone = !shouldGripCone;
+        return Commands.none();
+    }
 
-    m_led.setData(m_ledBuffer);
-    m_led.start();
-}
+    public boolean getShouldGripCone() {
+        return shouldGripCone;
+    }
 
-public void turnOnLed() {
-    if(shouldGripCone){
-      for (var i = 0; i < m_ledBuffer.getLength(); i++) 
-        m_ledBuffer.setRGB(i, 255, 100, 0);
-      }
-    else{
-      for (var i = 0; i < m_ledBuffer.getLength(); i++)
-        m_ledBuffer.setRGB(i,180,31,235);
-      }
-   
-    m_led.setData(m_ledBuffer);
-    m_led.start();
-}
-
-public boolean getFakeIsGripperOpen(){
-  return fakeIsGripperOpen;
-}
-
-@Override
-public void periodic() {
-    super.periodic();
-    SmartDashboard.putBoolean("cone?", getShouldGripCone());
-}
-
+    public void setShouldGripCone(boolean shouldGripCone) {
+        this.shouldGripCone = shouldGripCone;
+    }
 }

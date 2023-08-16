@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.autoCommands.utils;
+package frc.robot.commands.utils;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class GamePieceCharge extends SequentialCommandGroup {
   /** Creates a new GamePieceCharge. */
-  public GamePieceCharge() {
+  public GamePieceCharge() {//TODO: the command
     addCommands();
   }
 }
