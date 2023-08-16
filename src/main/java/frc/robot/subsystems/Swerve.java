@@ -4,11 +4,11 @@ import java.util.List;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
+import frc.robot.util.PathPlannerAddIn;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.Misc;
@@ -333,7 +333,6 @@ public class Swerve extends SubsystemBase {
                 this::setModuleStatesClosedLoop,
                 false, // Assuming we don't need to flip the trajectory, we set this to false.
                 this);
-
         InstantCommand resetOdometryBeforePath = new InstantCommand(() -> {
             if (shouldResetOdometry)
                 resetPose(trajectory.getInitialHolonomicPose());
@@ -349,16 +348,16 @@ public class Swerve extends SubsystemBase {
         PathPoint robotPose = new PathPoint(getPose().getTranslation(), getYaw());
         PathPoint endPoint = new PathPoint(targetPose, Rotation2d.fromDegrees(180));
 
-        field2d.getObject("traj").setTrajectory(PathPlanner.generatePath(
+        field2d.getObject("traj").setTrajectory(PathPlannerAddIn.generatePath(
             new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
                     AutoConstants.kMaxAccelerationMetersPerSecondSquared),
-            List.of(robotPose, endPoint)));
+            List.of(robotPose, endPoint),getStates()[0].speedMetersPerSecond));//TODO:remove
 
 
-        return PathPlanner.generatePath(
+        return PathPlannerAddIn.generatePath(
                 new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
                         AutoConstants.kMaxAccelerationMetersPerSecondSquared),
-                List.of(robotPose, endPoint));
+                List.of(robotPose, endPoint),getStates()[0].speedMetersPerSecond);
     }
 
     public boolean areWeCloseEnough(){//TODO: find a good distance 

@@ -223,6 +223,8 @@ public final class Constants {
         public static final double redAligningX = 0;
 
         public static final double howCloseWeNeedToBe = 1.541526;
+
+        public static final double trajAccuracy = 0.1; //TODO: change to a real number
     }
 
     public static final class Misc {

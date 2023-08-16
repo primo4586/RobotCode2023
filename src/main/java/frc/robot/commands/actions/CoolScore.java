@@ -1,9 +1,9 @@
 package frc.robot.commands.actions;
 
+
 import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.NodeLevel;
 import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.Objective;
-
-import com.pathplanner.lib.PathPlannerTrajectory;
+import java.util.function.BooleanSupplier;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -33,30 +33,28 @@ public class CoolScore extends SequentialCommandGroup {
       () -> objective.nodeLevel == NodeLevel.HYBRID // If node level is HYBRID
     );
 
-    // Generate trajectory to alignment pose based on alliance color
-    PathPlannerTrajectory blueTrajectory = swerve.generateTrajectoryToAligmentPose(
-      new Translation2d(SwerveConstants.blueAligningX, Units.inchesToMeters(SwerveConstants.redAligningYAxis[objective.getNodeRow()]))
-    );
-    PathPlannerTrajectory redTrajectory = swerve.generateTrajectoryToAligmentPose(
-      new Translation2d(SwerveConstants.redAligningX, Units.inchesToMeters(SwerveConstants.redAligningYAxis[objective.getNodeRow()]))
-    );
+    Translation2d robotEndSpot;
 
-    // Conditional command to follow the appropriate trajectory based on alliance color
-    ConditionalCommand followTrajectory = new ConditionalCommand(
-      swerve.followTrajectory(blueTrajectory, false), // Follow blue trajectory if alliance is Blue
-      swerve.followTrajectory(redTrajectory, false), // Follow red trajectory if alliance is Red
-      () -> DriverStation.getAlliance() == Alliance.Blue
-    );
+    if (DriverStation.getAlliance() == Alliance.Blue)
+      robotEndSpot = new Translation2d(SwerveConstants.blueAligningX,
+          Units.inchesToMeters(SwerveConstants.redAligningYAxis[objective.getNodeRow()]));
+    else
+      robotEndSpot = new Translation2d(SwerveConstants.redAligningX,
+          Units.inchesToMeters(SwerveConstants.redAligningYAxis[objective.getNodeRow()]));
 
     // Parallel command group to drive and score simultaneously
-    ParallelCommandGroup driveAndScore = new ParallelCommandGroup(followTrajectory, moveArms);
+    ParallelCommandGroup driveAndArms = new ParallelCommandGroup(
+        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(robotEndSpot), false).asProxy(),
+        moveArms);
 
-    // Add commands to the sequential command group
+    BooleanSupplier closenesCheck = ()->Math.abs(swerve.getPose().getX() - robotEndSpot.getX()) < SwerveConstants.trajAccuracy &&
+        Math.abs(swerve.getPose().getY() - robotEndSpot.getY()) < SwerveConstants.trajAccuracy;
+
+    ConditionalCommand areWeThere = new ConditionalCommand(Commands.waitSeconds(0.2), driveAndArms, closenesCheck);
+
     addCommands(
-      driveAndScore,
-      Commands.waitSeconds(0.2),
-      gripper.getCollectCommand()
+      driveAndArms,
+      areWeThere
     );
   }
 }
-
