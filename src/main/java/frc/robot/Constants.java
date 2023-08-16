@@ -1,10 +1,9 @@
 package frc.robot;
 
-import java.util.List;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.pathplanner.lib.PathConstraints;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -146,14 +145,16 @@ public final class Constants {
         /** Percent output to motors. */
         public static final double maxPercentVelocity = 1; 
         /** radians / second */
-        public static final double maxAngularVelocity = 5; 
+        public static final double maxAngularVelocity = 5;
+
+        public static double voltageComp = 12;
 
         /* Swerve Slow Mode Reduce Values */
         public static final double slowModeSpeed = maxSpeed / 4;
         public static final double slowModeAngularVelocity = 2;
 
         /* Neutral Modes */
-        public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
+        public static final IdleMode angleNeutralMode = IdleMode.kCoast;
         public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
 
         /* Motor Inverts - Ensure that motors are CCW+!!! (Changes Per Module)*/
@@ -229,12 +230,6 @@ public final class Constants {
         public static final double redAligningX = 0;
 
         public static final double howCloseWeNeedToBe = 1.541526;
-
-        // 3 scoring locations on each side. (Unused)
-        public static final List<Translation2d> cubeScoringLocations = List.of();
-
-        // 6 scoring locations per side. (Unused)
-        public static final List<Translation2d> coneScoringLocations = List.of();
     }
 
     public static final class Misc {
