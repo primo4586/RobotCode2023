@@ -73,7 +73,9 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings(swerve, gripper, lilArm, bigArm, objective);
-    buildCameras();
+    if (Robot.isReal()) {
+      buildCameras();
+    }
   }
 
   /**
