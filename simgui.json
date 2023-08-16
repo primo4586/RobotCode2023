@@ -65,6 +65,21 @@
   "NetworkTables": {
     "transitory": {
       "Shuffleboard": {
+        ".metadata": {
+          "Competition Dashboard": {
+            "Cone?": {
+              "open": true
+            },
+            "open": true
+          },
+          "open": true
+        },
+        ".recording": {
+          "open": true
+        },
+        "Competition Dashboard": {
+          "open": true
+        },
         "open": true
       },
       "SmartDashboard": {
@@ -74,6 +89,9 @@
         "TunableNumbers": {
           "open": true
         },
+        "open": true
+      },
+      "nodeselector": {
         "open": true
       }
     }

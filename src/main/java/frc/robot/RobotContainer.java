@@ -5,7 +5,7 @@
 
 package frc.robot;
 
-import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
+import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.Objective;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import com.pathplanner.lib.PathConstraints;

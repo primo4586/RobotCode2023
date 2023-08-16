@@ -1,7 +1,7 @@
 package frc.robot.commands.actions;
 
-import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
-import org.littletonrobotics.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
+import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.NodeLevel;
+import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.Objective;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
