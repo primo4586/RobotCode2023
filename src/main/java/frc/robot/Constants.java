@@ -312,7 +312,8 @@ public final class Constants {
    
     public static final class VisionConstants {
         // Camera's name in Photon's NetworkTable (Set in the PhotonVision UI)
-        public static final String cameraName = "Arducam_OV9281_USB_Camera";
+        public static final String rightCameraName = "Arducam_OV9281_USB_Camera";
+        public static final String leftCameraName = "Arducam_OV9281_USB_Camera";
 
         /**
          * Camera's relative location to the center of the robot.
@@ -320,12 +321,19 @@ public final class Constants {
          * Rotation is in radians.
          * (Changes Per Robot)
          */
-        public static final Transform3d robotToCam =
+        public static final Transform3d rightRobotToCam =
                 new Transform3d(
                         new Translation3d( 0.31,-0.205, 0.23),
                         new Rotation3d(
                                 0, 0,
                                 Units.degreesToRadians(2)));
+                                
+        public static final Transform3d leftRobotToCam =
+        new Transform3d(
+                new Translation3d( 0.31,-0.205, 0.23),
+                new Rotation3d(
+                        0, 0,
+                        Units.degreesToRadians(2)));
     }
 
     public static final class AutoConstants {

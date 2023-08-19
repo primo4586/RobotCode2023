@@ -1,7 +1,6 @@
 package frc.robot;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
@@ -12,18 +11,17 @@ import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.VisionConstants;
 
 // more descriptive comments
 public class VisionPoseEstimator {
 
-    public PhotonCamera limeLight;
-    public PhotonPoseEstimator robotPoseEstimator;
+    public PhotonCamera frontRightCam;
+    public PhotonCamera frontLeftCam;
+    public PhotonPoseEstimator frontRightPoseEstimator;
+    public PhotonPoseEstimator frontLeftPoseEstimator;
     private AprilTagFieldLayout apriltagLayout;
 
     public VisionPoseEstimator(PoseStrategy strategy) {
@@ -33,14 +31,14 @@ public class VisionPoseEstimator {
             apriltagLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
 
             // Photon wrapper for the NT data.
-            limeLight = new PhotonCamera(VisionConstants.cameraName);
-
-            var camList = new ArrayList<Pair<PhotonCamera, Transform3d>>();
-            camList.add(new Pair<PhotonCamera, Transform3d>(limeLight, VisionConstants.robotToCam));
+            frontRightCam = new PhotonCamera(VisionConstants.rightCameraName);
+            frontLeftCam = new PhotonCamera(VisionConstants.leftCameraName);
 
             // Uses the given pose strategy to take the data from the vision camera and
             // according to the strategy, gives the estimated position from vision data.
-            robotPoseEstimator = new PhotonPoseEstimator(apriltagLayout, strategy, limeLight, VisionConstants.robotToCam);
+            frontRightPoseEstimator = new PhotonPoseEstimator(apriltagLayout, strategy, frontRightCam, VisionConstants.rightRobotToCam);
+            frontLeftPoseEstimator = new PhotonPoseEstimator(apriltagLayout, strategy, frontLeftCam, VisionConstants.leftRobotToCam);
+
         } catch (IOException e) {
             apriltagLayout = null;
             DriverStation.reportError("AprilTag Field was not able to load!!! Vision data is not able to be processed.",
@@ -63,28 +61,38 @@ public class VisionPoseEstimator {
             return null;
         }
 
-        robotPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+        frontRightPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+        frontLeftPoseEstimator.setReferencePose(prevEstimatedRobotPose);
 
         // Gets the latest best target result from the pose estimator, using the
         // PoseStrategy it's set to.
         // Returns a pair of the estimated position, and the latency it took to generate
         // it.
-        Optional<EstimatedRobotPose> result = robotPoseEstimator.update();
+        Optional<EstimatedRobotPose> rightResult = frontRightPoseEstimator.update();
+        Optional<EstimatedRobotPose> leftResult = frontRightPoseEstimator.update();
 
         // Additional of the latest result, so we can have the pose ambguity data
-        PhotonPipelineResult lastResult = limeLight.getLatestResult();
+        PhotonPipelineResult rightLastResult = frontRightCam.getLatestResult();
+        PhotonPipelineResult leftLastResult = frontLeftCam.getLatestResult();
 
         // Rejects the result only if the result doesn't exist or if the ambguity is
         // over 20% and therefore the data is unreliable.
-        if (result.isPresent() && lastResult.hasTargets() && lastResult.getBestTarget().getPoseAmbiguity() < 0.2) {
+        if (rightResult.isPresent() && rightLastResult.hasTargets() && rightLastResult.getBestTarget().getPoseAmbiguity() < 0.2) {
 
-            SmartDashboard.putNumber("Best target ambguitiy", limeLight.getLatestResult().getBestTarget().getPoseAmbiguity());
+            //SmartDashboard.putNumber("Best target ambguitiy", frontRightCam.getLatestResult().getBestTarget().getPoseAmbiguity());
+            if(leftResult.isPresent() && leftLastResult.hasTargets() && leftLastResult.getBestTarget().getPoseAmbiguity() < rightLastResult.getBestTarget().getPoseAmbiguity()){
+                return leftResult.get();
+            }
     
             // Returns the data with the Pose3d, and the timestamp relative to the robot's time of when the pose was estimated at. (EstimatedRobotPose)
-            return result.get();
-        } else {
-            return null;
+            return rightResult.get();
+        } 
+        
+        if(leftResult.isPresent() && leftLastResult.hasTargets() && leftLastResult.getBestTarget().getPoseAmbiguity() < 0.2){
+            return leftResult.get();
         }
+        
+        return null;
     }
 
     public AprilTagFieldLayout getApriltagLayout() {
