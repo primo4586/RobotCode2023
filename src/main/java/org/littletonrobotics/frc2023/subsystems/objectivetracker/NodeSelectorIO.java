@@ -9,7 +9,10 @@ package org.littletonrobotics.frc2023.subsystems.objectivetracker;
 
 import java.nio.file.Paths;
 
-
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.IntegerPublisher;
+import edu.wpi.first.networktables.IntegerSubscriber;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -24,6 +27,13 @@ public interface NodeSelectorIO {
   }
 
   public static class Objective {
+    private final IntegerPublisher nodePublisher;
+    private final IntegerSubscriber nodeSubscriber;
+    private final IntegerPublisher timePublisher;
+    private final BooleanPublisher isAutoPublisher;
+
+
+    
     public double selectedNode = -1;
     public int nodeRow;
     public NodeLevel nodeLevel;
@@ -32,6 +42,14 @@ public interface NodeSelectorIO {
         int nodeRow,
         NodeLevel nodeLevel,
         boolean lastIntakeFront) {
+
+      var table = NetworkTableInstance.getDefault().getTable("nodeselector");
+      nodePublisher = table.getIntegerTopic("node_robot_to_dashboard").publish();
+      nodeSubscriber = table.getIntegerTopic("node_dashboard_to_robot").subscribe(-1);
+      table.getBooleanTopic("cone_tipped_dashboard_to_robot").subscribe(false);
+      timePublisher = table.getIntegerTopic("match_time").publish();
+      isAutoPublisher = table.getBooleanTopic("is_auto").publish();
+
       this.nodeRow = nodeRow;
       this.nodeLevel = nodeLevel;
       // Start server
@@ -69,10 +87,15 @@ public interface NodeSelectorIO {
       return (this.nodeLevel);
     }
 
-    public void updateInputs(long selectedNode) {
+    public void updateInputs() {
       // Read updates from node selector
-      this.selectedNode = selectedNode;
-      if ( selectedNode != -1) {
+      timePublisher.set((long) Math.ceil(Math.max(0.0, DriverStation.getMatchTime())));
+      isAutoPublisher.set(DriverStation.isAutonomous());
+      for (var value : nodeSubscriber.readQueueValues()) {
+        selectedNode = value;
+      }
+
+      if (selectedNode != -1) {
         if (DriverStation.getAlliance() == Alliance.Blue) {
           nodeRow = 8 - ((int) selectedNode % 9);
         } else {
@@ -87,6 +110,27 @@ public interface NodeSelectorIO {
         }
         selectedNode = -1;
       }
+
+      // Send current node to selector
+      {
+        int selected;
+        if (DriverStation.getAlliance() == Alliance.Blue) {
+          selected = 8 - nodeRow;
+        } else {
+          selected = nodeRow;
+        }
+        switch (nodeLevel) {
+          case HYBRID -> selected += 0;
+          case MID -> selected += 9;
+          case HIGH -> selected += 18;
+        }
+        setSelected(selected);
+      }
+      putObjectiveAsText();
+    }
+    
+    public void setSelected(long selected) {
+      nodePublisher.set(selected);
     }
 
     public void putObjectiveAsText(){

@@ -7,9 +7,6 @@ package frc.robot;
 
 import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.Objective;
 
-import edu.wpi.first.networktables.IntegerSubscriber;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -45,8 +42,6 @@ public class Robot extends TimedRobot {
   private Swerve swerve;
   private PneumaticsControlModule pcm;
   public final Objective objective = new Objective();
-  private NetworkTable table = NetworkTableInstance.getDefault().getTable("nodeselector");
-  private IntegerSubscriber nodeSubscriber=table.getIntegerTopic("node_dashboard_to_robot").subscribe(-1);
 
   //private PowerDistribution PDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
 
@@ -77,8 +72,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    objective.updateInputs(nodeSubscriber.getAsLong());
-    objective.putObjectiveAsText();
+    objective.updateInputs();
   }
 
   @Override
