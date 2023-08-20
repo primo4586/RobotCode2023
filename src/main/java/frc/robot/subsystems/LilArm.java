@@ -3,12 +3,11 @@ package frc.robot.subsystems;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,53 +15,46 @@ import frc.robot.Constants;
 import frc.robot.Constants.LilConstants;
 
 public class LilArm extends SubsystemBase {
-  private WPI_TalonFX lilArmMotor;
+  private TalonFX lilArmMotor;
   private WPI_TalonSRX lilArmEncoder;
+  private MotionMagicVoltage motionMagicVoltage;
 
   /** Creates a new LilArm. */
   public LilArm() {
 
     lilArmEncoder = new WPI_TalonSRX(LilConstants.lilArmEncoderID);
 
-    lilArmMotor = new WPI_TalonFX(00);
+    lilArmMotor = new TalonFX(00);
 
     lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+
+    motionMagicVoltage = new MotionMagicVoltage(0, true, LilConstants.lilArmKV, 0, false);
 
     setupLilArmMotor();
   }
 
   public void setupLilArmMotor() {
     lilArmMotor.setInverted(false);
-    lilArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
+    TalonFXConfiguration motorConfig = new TalonFXConfiguration();
+    motorConfig.Slot0.kP = LilConstants.lilArmKP;
+    motorConfig.Slot0.kI = LilConstants.lilArmKI;
+    motorConfig.Slot0.kD = LilConstants.lilArmKD;
+    motorConfig.Slot0.kV = LilConstants.lilArmKV;
+    motorConfig.Slot0.kS = LilConstants.lilArmKS;
 
-    lilArmMotor.setNeutralMode(NeutralMode.Brake);
+    motorConfig.MotionMagic.MotionMagicCruiseVelocity = LilConstants.maxSpeed;
+    motorConfig.MotionMagic.MotionMagicAcceleration = LilConstants.maxAcceleration;
+    motorConfig.MotionMagic.MotionMagicJerk = LilConstants.maxJerk;
+    motionMagicVoltage.Slot = 0;
 
-    lilArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, LilConstants.kPIDLoopIdx,
-        LilConstants.kTimeoutMs);
-    lilArmMotor.configNeutralDeadband(0.001, LilConstants.kTimeoutMs);
+    motorConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.armEnableCurrentLimit;
+    motorConfig.CurrentLimits.SupplyCurrentThreshold = Constants.armContinuousCurrentLimit;
+    motorConfig.CurrentLimits.SupplyTimeThreshold = Constants.armPeakCurrentDuration;
+    motorConfig.CurrentLimits.SupplyCurrentLimit = Constants.armPeakCurrentLimit;
 
-    lilArmMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, LilConstants.kTimeoutMs);
-    lilArmMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, LilConstants.kTimeoutMs);
+    lilArmMotor.getConfigurator().apply(motorConfig);
 
-    /* Set the peak and nominal outputs */
-    lilArmMotor.configNominalOutputForward(0, LilConstants.kTimeoutMs);
-    lilArmMotor.configNominalOutputReverse(0, LilConstants.kTimeoutMs);
-    lilArmMotor.configPeakOutputForward(1, LilConstants.kTimeoutMs);
-    lilArmMotor.configPeakOutputReverse(-1, LilConstants.kTimeoutMs);
-
-    /* Set Motion Magic gains in slot0 - see documentation */
-    lilArmMotor.selectProfileSlot(LilConstants.kSlotIdx, LilConstants.kPIDLoopIdx);
-    lilArmMotor.config_kF(LilConstants.kSlotIdx, LilConstants.lilArmMotorsKF, LilConstants.kTimeoutMs);
-    lilArmMotor.config_kP(LilConstants.kSlotIdx, LilConstants.lilArmMotorsKD, LilConstants.kTimeoutMs);
-    lilArmMotor.config_kI(LilConstants.kSlotIdx, LilConstants.lilArmMotorsKI, LilConstants.kTimeoutMs);
-    lilArmMotor.config_kD(LilConstants.kSlotIdx, LilConstants.lilArmMotorsKD, LilConstants.kTimeoutMs);
-
-    lilArmMotor.configMotionCruiseVelocity(15000, LilConstants.kTimeoutMs);
-    lilArmMotor.configMotionAcceleration(6000, LilConstants.kTimeoutMs);
-
-    lilArmMotor.setSelectedSensorPosition(
-        lilArmEncoder.getSensorCollection().getPulseWidthPosition() / 2 * LilConstants.lilMotorGearRatio,
-        LilConstants.kPIDLoopIdx, LilConstants.kTimeoutMs);
+    lilArmMotor.setRotorPosition(0);
   }
 
   public void zeroEncoderForIntake() {
@@ -80,24 +72,20 @@ public class LilArm extends SubsystemBase {
     });
   }
 
-  public void putArmInPlace(double setpoint) {
-    lilArmMotor.set(TalonFXControlMode.MotionMagic, setpoint);
-  }
-
   public Command TurnLilArmToSetpoint(double setpoint) {
     SmartDashboard.putNumber("LilArm Setpoint", setpoint);
     return runOnce(() -> {
-      putArmInPlace(setpoint);
+      lilArmMotor.setControl(motionMagicVoltage.withPosition(setpoint));
     });
   }
 
   public double getCurrentArmPosition() {
-    return lilArmMotor.getSelectedSensorPosition();
+    return lilArmMotor.getRotorPosition().getValue();
   }
 
   public Command zeroLilArm() {
     return runOnce(() -> {
-      lilArmMotor.setSelectedSensorPosition(lilArmEncoder.getSelectedSensorPosition()/ 2 * LilConstants.lilMotorGearRatio);
+      lilArmMotor.setRotorPosition(0);
     });
   }
 

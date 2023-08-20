@@ -18,7 +18,10 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
 
-    public static final SupplyCurrentLimitConfiguration ARM_MOTOR_SUPPLY_CONFIG = new SupplyCurrentLimitConfiguration(true, 30, 35, 0.1); 
+    public static final int armContinuousCurrentLimit = 35;
+    public static final int armPeakCurrentLimit = 50;
+    public static final double armPeakCurrentDuration = 0.1;
+    public static final boolean armEnableCurrentLimit = true;
 
     public static final int ARM_STALL_CURRENT_LIMIT = 30;
     public static final int ARM_FREE_CURRENT_LIMIT = 35;
@@ -35,11 +38,11 @@ public final class Constants {
 
     public static final class BigConstants{
         //bigArm PID values
-        public static final double bigArmKF = 0.0;
+        public static final double bigArmKV = 0.0;
         public static final double bigArmKP = 0.002;
         public static final double bigArmKI = 0.0;
         public static final double bigArmKD = 0.0002;
-        public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
+        public static final double bigArmKS = 0.0002;
 
         //bigArm feedforward values
         public static final double feedForwardVelocity = 0.0;
@@ -76,9 +79,13 @@ public final class Constants {
         public static final double homeSetPoint = 0.0;
         public static final int homeSwitchID = 1;
 
-        public static int kTimeoutMs = 30;
-        public static int kSlotIdx = 0;
-        public static int kPIDLoopIdx = 0;
+        public static final double maxSpeed = 0;
+        public static final double maxAcceleration = 0;
+        public static final double maxJerk = 0;
+
+        public static final int kTimeoutMs = 30;
+        public static final int kSlotIdx = 0;
+        public static final int kPIDLoopIdx = 0;
     }
 
     public static final class SwerveConstants {
@@ -239,10 +246,11 @@ public final class Constants {
 
     public static final class LilConstants {
         /* LilArm PID Values */
-        public static final double lilArmMotorsKF = 0.01;
-        public static final double lilArmMotorsKP = 0.01;
-        public static final double lilArmMotorsKI = 0.0;
-        public static final double lilArmMotorsKD = 0.0002;
+        public static final double lilArmKS = 0.01;
+        public static final double lilArmKV = 0.01;
+        public static final double lilArmKP = 0.01;
+        public static final double lilArmKI = 0.0;
+        public static final double lilArmKD = 0.0002;
 
         /* LilArm Motors ID */
         public static final int lilArmMotorID = 18;
@@ -268,6 +276,10 @@ public final class Constants {
         public static final double autoStartPoint = -136;
 
         public static final double resetPoint = -30;
+        
+        public static final double maxSpeed = 0;
+        public static final double maxAcceleration = 0;
+        public static final double maxJerk = 0;
 
         public static int kTimeoutMs = 30;
         public static int kSlotIdx = 0;
@@ -279,7 +291,8 @@ public final class Constants {
         public static final int teleMotorID = 0;
 
         // TelescopicArm PID values
-        public static final double TelesKF = 0.0;
+        public static final double TelesKV = 0.0;
+        public static final double TelesKS = 0.0;
         public static final double TelesKP = 0.002;
         public static final double TelesKI = 0.0;
         public static final double TelesKD = 0.0002;
@@ -295,6 +308,10 @@ public final class Constants {
         public static final double ticksTolerance = 500;
 
         public static final int homeSwitchID = 2;
+
+        public static final double maxSpeed = 0;
+        public static final double maxAcceleration = 0;
+        public static final double maxJerk = 0;
 
         public static int kTimeoutMs = 30;
         public static int kSlotIdx = 0;

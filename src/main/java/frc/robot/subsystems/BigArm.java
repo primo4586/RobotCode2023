@@ -2,11 +2,10 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,63 +14,60 @@ import frc.robot.Constants;
 import frc.robot.Constants.BigConstants;
 
 public class BigArm extends SubsystemBase {
-  private WPI_TalonFX bigArmMotor;
+  private TalonFX bigArmMotor;
   private DigitalInput homeSwitch;
 
+  private MotionMagicVoltage motionMagicVoltage;
+
   public BigArm() {
-    bigArmMotor = new WPI_TalonFX(BigConstants.bigArmMotorID);
+    bigArmMotor = new TalonFX(BigConstants.bigArmMotorID);
     homeSwitch = new DigitalInput(BigConstants.homeSwitchID);
+    motionMagicVoltage = new MotionMagicVoltage(0, true, BigConstants.bigArmKV, 0, false);
+    setupBigArmMotor();
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Big Arm Position", bigArmMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Big Arm Position", bigArmMotor.getRotorPosition().getValue());
     SmartDashboard.putBoolean("Home Switch value", homeSwitch.get());
   }
 
   public void setupBigArmMotor() {
-    bigArmMotor.setInverted(true);
-    bigArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
+    TalonFXConfiguration motorConfig = new TalonFXConfiguration();
+    motorConfig.Slot0.kP = BigConstants.bigArmKP;
+    motorConfig.Slot0.kI = BigConstants.bigArmKI;
+    motorConfig.Slot0.kD = BigConstants.bigArmKD;
+    motorConfig.Slot0.kV = BigConstants.bigArmKV;
+    motorConfig.Slot0.kS = BigConstants.bigArmKS;
 
-    bigArmMotor.setNeutralMode(NeutralMode.Brake);
+    motorConfig.MotionMagic.MotionMagicCruiseVelocity = BigConstants.maxSpeed;
+    motorConfig.MotionMagic.MotionMagicAcceleration = BigConstants.maxAcceleration;
+    motorConfig.MotionMagic.MotionMagicJerk = BigConstants.maxJerk;
+    motionMagicVoltage.Slot = 0;
+    
+    motorConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.armEnableCurrentLimit;
+    motorConfig.CurrentLimits.SupplyCurrentThreshold = Constants.armContinuousCurrentLimit;
+    motorConfig.CurrentLimits.SupplyTimeThreshold = Constants.armPeakCurrentDuration;
+    motorConfig.CurrentLimits.SupplyCurrentLimit = Constants.armPeakCurrentLimit;
+    
+    bigArmMotor.getConfigurator().apply(motorConfig);
 
-    bigArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, BigConstants.kPIDLoopIdx,
-        BigConstants.kTimeoutMs);
-    bigArmMotor.configNeutralDeadband(0.001, BigConstants.kTimeoutMs);
-
-    bigArmMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, BigConstants.kTimeoutMs);
-    bigArmMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, BigConstants.kTimeoutMs);
-
-    bigArmMotor.configNominalOutputForward(0, BigConstants.kTimeoutMs);
-    bigArmMotor.configNominalOutputReverse(0, BigConstants.kTimeoutMs);
-    bigArmMotor.configPeakOutputForward(1, BigConstants.kTimeoutMs);
-    bigArmMotor.configPeakOutputReverse(-1, BigConstants.kTimeoutMs);
-
-    bigArmMotor.selectProfileSlot(BigConstants.kSlotIdx, BigConstants.kPIDLoopIdx);
-    bigArmMotor.config_kF(BigConstants.kSlotIdx, BigConstants.bigArmKF, BigConstants.kTimeoutMs);
-    bigArmMotor.config_kP(BigConstants.kSlotIdx, BigConstants.bigArmKP, BigConstants.kTimeoutMs);
-    bigArmMotor.config_kI(BigConstants.kSlotIdx, BigConstants.bigArmKI, BigConstants.kTimeoutMs);
-    bigArmMotor.config_kD(BigConstants.kSlotIdx, BigConstants.bigArmKD, BigConstants.kTimeoutMs);
-
-    bigArmMotor.configMotionCruiseVelocity(15000, BigConstants.kTimeoutMs);
-    bigArmMotor.configMotionAcceleration(6000, BigConstants.kTimeoutMs);
-
-    bigArmMotor.setSelectedSensorPosition(0, BigConstants.kPIDLoopIdx, BigConstants.kTimeoutMs);
+    bigArmMotor.setRotorPosition(0);
   }
 
   public void zeroEncoderForMiddleOfBot() {
-    bigArmMotor.setSelectedSensorPosition(BigConstants.intakeSetPoint);
+    bigArmMotor.setRotorPosition(BigConstants.intakeSetPoint);
   }
 
   public Command TurnBigArmToSetpoint(double setPoint) {
     SmartDashboard.putNumber("Big Arm Setpoint", setPoint);
     return runOnce(() -> {
-      bigArmMotor.set(TalonFXControlMode.MotionMagic, setPoint);
+      bigArmMotor.setControl(motionMagicVoltage.withPosition(0));
     });
   }
 
   public double getCurrentArmPosition() {
-    return bigArmMotor.getSelectedSensorPosition();
+    return bigArmMotor.getRotorPosition().getValue();
   }
 
   public Command setMotorSpeed(DoubleSupplier speed) {
@@ -87,11 +83,11 @@ public class BigArm extends SubsystemBase {
         .until(() -> homeSwitch.get())
         .andThen(() -> {
           bigArmMotor.set(0.0);
-          bigArmMotor.setSelectedSensorPosition(BigConstants.homeSetPoint);
+          bigArmMotor.setRotorPosition(BigConstants.homeSetPoint);
         });
   }
 
   public Command zeroEncoder() {
-    return runOnce(() -> bigArmMotor.setSelectedSensorPosition(0));
+    return runOnce(() -> bigArmMotor.setRotorPosition(0));
   }
 }
