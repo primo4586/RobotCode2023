@@ -11,7 +11,6 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import frc.robot.SwerveModule;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.Misc;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants;
 import frc.robot.VisionPoseEstimator;
@@ -48,7 +47,7 @@ public class Swerve extends SubsystemBase {
     private double teleopRotationOffset = 0;
 
     // Field visualizer for debug purposes
-     private Field2d field2d = new Field2d();
+    private Field2d field2d = new Field2d();
 
     // Uses vision data to estimate the robot's position on the field.
     private VisionPoseEstimator visionPoseEstimator;
@@ -68,7 +67,7 @@ public class Swerve extends SubsystemBase {
         gyro.configFactoryDefault();
         zeroGyro();
 
-         SmartDashboard.putData(field2d);
+        SmartDashboard.putData(field2d);
         mSwerveMods = new SwerveModule[] {
                 new SwerveModule(0, SwerveConstants.FrontLeftModule.constants),
                 new SwerveModule(1, SwerveConstants.FrontRightModule.constants),
@@ -149,7 +148,6 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-
     public void setModulesStatesClosedLoopReveresed(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.maxSpeed);
 
@@ -192,8 +190,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyroForAutoEnd() {
-        
-        gyro.setYaw(gyro.getYaw()+ 180);
+
+        gyro.setYaw(gyro.getYaw() + 180);
     }
 
     /**
@@ -248,16 +246,19 @@ public class Swerve extends SubsystemBase {
         // SmartDashboard.putNumber("Teleop Gyro", getTeleopYaw().getDegrees());
 
         // for (SwerveModule mod : mSwerveMods) {
-        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getState().angle.getDegrees());
-        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+        // SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder",
+        // mod.getCanCoder().getDegrees());
+        // SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated",
+        // mod.getState().angle.getDegrees());
+        // SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity",
+        // mod.getState().speedMetersPerSecond);
         // }
     }
 
     public void updateOdometry() {
         poseEstimation.update(getYaw(), getPositions());
         swerveOdometry.update(getYaw(), getPositions());
-         field2d.getObject("Odometry").setPose(swerveOdometry.getPoseMeters());
+        field2d.getObject("Odometry").setPose(swerveOdometry.getPoseMeters());
 
         if (visionPoseEstimator != null) {
             var result = visionPoseEstimator
@@ -265,11 +266,11 @@ public class Swerve extends SubsystemBase {
 
             if (result != null) {
                 poseEstimation.addVisionMeasurement(result.estimatedPose.toPose2d(), result.timestampSeconds);
-                 field2d.getObject("Vision Position").setPose(result.estimatedPose.toPose2d());
+                field2d.getObject("Vision Position").setPose(result.estimatedPose.toPose2d());
             }
         }
 
-         field2d.setRobotPose(getPose());
+        field2d.setRobotPose(getPose());
     }
 
     public Command driveForwardUntilMeters(double driveSpeed, double metersSetpoint) {
@@ -305,7 +306,6 @@ public class Swerve extends SubsystemBase {
         };
     }
 
-    
     /**
      * Follows a given trajectory from PathPlanner
      * 
@@ -350,10 +350,9 @@ public class Swerve extends SubsystemBase {
         PathPoint endPoint = new PathPoint(targetPose, Rotation2d.fromDegrees(180));
 
         field2d.getObject("traj").setTrajectory(PathPlanner.generatePath(
-            new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
-                    AutoConstants.kMaxAccelerationMetersPerSecondSquared),
-            List.of(robotPose, endPoint)));
-
+                new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+                        AutoConstants.kMaxAccelerationMetersPerSecondSquared),
+                List.of(robotPose, endPoint)));
 
         return PathPlanner.generatePath(
                 new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
@@ -361,12 +360,14 @@ public class Swerve extends SubsystemBase {
                 List.of(robotPose, endPoint));
     }
 
-    public boolean areWeCloseEnough(){//TODO: find a good distance 
-        if(DriverStation.getAlliance()==Alliance.Blue){
-            return(poseEstimation.getEstimatedPosition().getX()<Units.inchesToMeters(SwerveConstants.blueAligningX)+SwerveConstants.howCloseWeNeedToBe);
+    public boolean areWeCloseEnough() {// TODO: find a good distance
+        if (DriverStation.getAlliance() == Alliance.Blue) {
+            return (poseEstimation.getEstimatedPosition().getX() < Units.inchesToMeters(SwerveConstants.blueAligningX)
+                    + SwerveConstants.howCloseWeNeedToBe);
         }
 
-        return(poseEstimation.getEstimatedPosition().getX()>Units.inchesToMeters(SwerveConstants.blueAligningX)-SwerveConstants.howCloseWeNeedToBe);
+        return (poseEstimation.getEstimatedPosition().getX() > Units.inchesToMeters(SwerveConstants.blueAligningX)
+                - SwerveConstants.howCloseWeNeedToBe);
     }
 
     /**
@@ -376,7 +377,8 @@ public class Swerve extends SubsystemBase {
      * you're on the red side. This follow trajectory
      * command accounts for that.
      * 
-     * @param blueTrajectory       Trajectory to follow, built on the blue side of the field
+     * @param blueTrajectory      Trajectory to follow, built on the blue side of
+     *                            the field
      * @param shouldResetOdometry Should odometry be reset before following the
      *                            trajectory or not
      * 
@@ -384,9 +386,11 @@ public class Swerve extends SubsystemBase {
      *         the start auto, we would have the Driver Station data to know
      *         what alliance we are, and flip the trajectory if necessary.
      */
-    public Command followTrajectoryModifiedToRedAlliance(PathPlannerTrajectory blueTrajectory, boolean shouldResetOdometry) {
+    public Command followTrajectoryModifiedToRedAlliance(PathPlannerTrajectory blueTrajectory,
+            boolean shouldResetOdometry) {
 
-        PathPlannerTrajectory newTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(blueTrajectory, Alliance.Red);
+        PathPlannerTrajectory newTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(blueTrajectory,
+                Alliance.Red);
 
         return followTrajectory(newTrajectory, shouldResetOdometry);
     }
@@ -396,68 +400,55 @@ public class Swerve extends SubsystemBase {
         return run(() -> {
             drive(speed, 0, true, true);
         })
-        .andThen(run(()->drive(new Translation2d(0.0,0.0), 0, true, true)))
-        .beforeStarting(() -> timer.start())
-        .until(() -> timer.hasElapsed(timeSeconds));
+                .andThen(run(() -> drive(new Translation2d(0.0, 0.0), 0, true, true)))
+                .beforeStarting(() -> timer.start())
+                .until(() -> timer.hasElapsed(timeSeconds));
     }
 
     public Command driveUntilPitchChangeAtSpeed(double speed, double angleDeltaTolerance, double delay) {
-        double[] startingPitch = {0};
+        double[] startingPitch = { 0 };
         Timer timer = new Timer();
         return runOnce(() -> {
             startingPitch[0] = getRoll();
             timer.start();
         }).andThen(
-            run(() -> 
-                drive(new Translation2d(speed, 0), 0, true, true)
-            )
-        ).until(() -> {
-            double deltaAngle = startingPitch[0] - getRoll();
-            return timer.hasElapsed(delay) && deltaAngle >= angleDeltaTolerance;
-        });
+                run(() -> drive(new Translation2d(speed, 0), 0, true, true))).until(() -> {
+                    double deltaAngle = startingPitch[0] - getRoll();
+                    return timer.hasElapsed(delay) && deltaAngle >= angleDeltaTolerance;
+                });
     }
 
-
     public Command driveUntilPitchChangeAtSpeed(double speed, double angleDeltaTolerance) {
-        double[] startingPitch = {0};
+        double[] startingPitch = { 0 };
         return runOnce(() -> {
             startingPitch[0] = getRoll();
         }).andThen(
-            run(() -> 
-                drive(new Translation2d(speed, 0), 0, true, false)
-            )
-        ).until(() -> {
-            double deltaAngle = startingPitch[0] - getRoll();
-            return Math.abs(deltaAngle) >= angleDeltaTolerance;
-        });
+                run(() -> drive(new Translation2d(speed, 0), 0, true, false))).until(() -> {
+                    double deltaAngle = startingPitch[0] - getRoll();
+                    return Math.abs(deltaAngle) >= angleDeltaTolerance;
+                });
     }
 
     public Command driveUntilPitchAtSpeed(double speed, double targetPitch) {
-        double[] startingPitch = {0};
+        double[] startingPitch = { 0 };
         return runOnce(() -> {
             startingPitch[0] = getRoll();
         }).andThen(
-            run(() -> 
-                drive(new Translation2d(speed, 0), 0, true, false)
-            )
-        ).until(() -> {
-            return Math.abs(getRoll()) >= targetPitch;
-        });
+                run(() -> drive(new Translation2d(speed, 0), 0, true, false))).until(() -> {
+                    return Math.abs(getRoll()) >= targetPitch;
+                });
     }
-
 
     public Command driveUntilPitchAtSpeedLower(double speed, double targetPitch) {
-        double[] startingPitch = {0};
+        double[] startingPitch = { 0 };
         return runOnce(() -> {
             startingPitch[0] = getRoll();
         }).andThen(
-            run(() -> 
-                drive(new Translation2d(speed, 0), 0, true, false)
-            )
-        ).until(() -> {
-            return Math.abs(getRoll()) <= targetPitch;
-        });
+                run(() -> drive(new Translation2d(speed, 0), 0, true, false))).until(() -> {
+                    return Math.abs(getRoll()) <= targetPitch;
+                });
     }
+
     public Command followTrajectoryWithReveresedInputs(PathPlannerTrajectory trajectory, boolean shouldResetOdometry) {
 
         PPSwerveControllerCommand followTrajecotryControllerCommand = new PPSwerveControllerCommand(
@@ -479,28 +470,6 @@ public class Swerve extends SubsystemBase {
 
     }
 
-
-    /**
-     * Auto-aligns the robot to a given setpoint degree
-     * 
-     * @param degrees degree to align the robot to
-     * @return a command that aligns the robot until its' aligned.
-     */
-    public Command gyroAlignCommand(double degrees) {
-
-        PIDController pid = new PIDController(Misc.gyroAlignKP, 0, 0);
-
-        return run(() -> {
-            drive(
-                    new Translation2d(),
-                    pid.calculate(getYaw().getDegrees(), degrees),
-                    false,
-                    false);
-        })
-                .until(() -> pid.atSetpoint())
-                .finallyDo((interrupted) -> pid.close());
-    }
-
     public Command chargeStationAlign() {
         return run(() -> {
             Translation2d moveDirection = new Translation2d();
@@ -520,13 +489,13 @@ public class Swerve extends SubsystemBase {
         })
                 .until(() -> Math.abs(getPitch()) < SwerveConstants.STATION_PITCH_ANGLE_TOLERANCE);
     }
-    
+
     public Command lockWheelsChargeStation() {
-        return runOnce(()->{
+        return runOnce(() -> {
             for (SwerveModule module : mSwerveMods) {
-            module.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), true);
-        }
+                module.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), true);
+            }
         });
 
-    }       
+    }
 }

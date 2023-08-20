@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.pathplanner.lib.PathConstraints;
 import com.revrobotics.CANSparkMax.IdleMode;
 
@@ -98,7 +99,7 @@ public final class Constants {
         public static final double wheelCircumference = wheelDiameter * Math.PI;
 
         public static final double openLoopRamp = 0.25;
-        public static final double closedLoopRamp = 0.0;
+        public static final ClosedLoopRampsConfigs closedLoopRamp = new ClosedLoopRampsConfigs();
 
         /* Gear Ratios (Changes Per Module) */
         public static final double driveGearRatio = (8.14 / 1.0); 
