@@ -223,6 +223,9 @@ public final class Constants {
         public static final double redAligningX = 0;
 
         public static final double howCloseWeNeedToBe = 1.541526;
+
+        public static final double minAutoCollectRotation = 0.5;
+        public static final double minAutoCollectSpeed = 0.5;
     }
 
     public static final class Misc {
