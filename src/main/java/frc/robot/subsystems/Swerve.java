@@ -1,14 +1,12 @@
 package frc.robot.subsystems;
-
-import java.util.List;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
-import frc.robot.util.PathPlannerAddIn;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.Misc;
@@ -345,19 +343,16 @@ public class Swerve extends SubsystemBase {
         if (targetPose == null)
             return new PathPlannerTrajectory(); // Empty trajectory - 0 seconds duration.
 
-        PathPoint robotPose = new PathPoint(getPose().getTranslation(), getYaw());
+        PathPoint robotPose = new PathPoint(getPose().getTranslation(), getYaw(),getStates()[0].speedMetersPerSecond);
         PathPoint endPoint = new PathPoint(targetPose, Rotation2d.fromDegrees(180));
 
-        field2d.getObject("traj").setTrajectory(PathPlannerAddIn.generatePath(
-            new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
-                    AutoConstants.kMaxAccelerationMetersPerSecondSquared),
-            List.of(robotPose, endPoint),getStates()[0].speedMetersPerSecond));//TODO:remove
+        PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+                AutoConstants.kMaxAccelerationMetersPerSecondSquared), robotPose, endPoint);
+
+        field2d.getObject("traj").setTrajectory(trajectory);//TODO:remove
 
 
-        return PathPlannerAddIn.generatePath(
-                new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
-                        AutoConstants.kMaxAccelerationMetersPerSecondSquared),
-                List.of(robotPose, endPoint),getStates()[0].speedMetersPerSecond);
+        return trajectory;
     }
 
     public boolean areWeCloseEnough(){//TODO: find a good distance 

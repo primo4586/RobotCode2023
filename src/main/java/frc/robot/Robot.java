@@ -7,6 +7,8 @@ package frc.robot;
 
 import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.Objective;
 
+import com.pathplanner.lib.server.PathPlannerServer;
+
 import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -56,6 +58,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    PathPlannerServer.startServer(5813);
     pcm = new PneumaticsControlModule(44);
     pcm.enableCompressorDigital();
     //pcm.disableCompressor();
