@@ -1,6 +1,4 @@
 package frc.robot.subsystems;
-
-import java.util.List;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.pathplanner.lib.PathConstraints;
@@ -38,6 +36,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
@@ -352,7 +351,7 @@ public class Swerve extends SubsystemBase {
      *          the overload method with the useAllianceColor argument instead of
      *          this one.
      */
-    public Command followTrajectory(PathPlannerTrajectory trajectory, boolean shouldResetOdometry) {
+    public ProxyCommand followTrajectory(PathPlannerTrajectory trajectory, boolean shouldResetOdometry) {
         PPSwerveControllerCommand followTrajecotryControllerCommand = new PPSwerveControllerCommand(
                 trajectory,
                 this::getPose,
@@ -363,12 +362,11 @@ public class Swerve extends SubsystemBase {
                 this::setModuleStatesClosedLoop,
                 false, // Assuming we don't need to flip the trajectory, we set this to false.
                 this);
-
         InstantCommand resetOdometryBeforePath = new InstantCommand(() -> {
             if (shouldResetOdometry)
                 resetPose(trajectory.getInitialHolonomicPose());
         }, this);
-        return resetOdometryBeforePath.andThen(followTrajecotryControllerCommand);
+        return resetOdometryBeforePath.andThen(followTrajecotryControllerCommand).asProxy();
 
     }
 
@@ -376,19 +374,16 @@ public class Swerve extends SubsystemBase {
         if (targetPose == null)
             return new PathPlannerTrajectory(); // Empty trajectory - 0 seconds duration.
 
-        PathPoint robotPose = new PathPoint(getPose().getTranslation(), getYaw());
+        PathPoint robotPose = new PathPoint(getPose().getTranslation(), getYaw(),getStates()[0].speedMetersPerSecond);
         PathPoint endPoint = new PathPoint(targetPose, Rotation2d.fromDegrees(180));
 
-        field2d.getObject("traj").setTrajectory(PathPlanner.generatePath(
-            new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
-                    AutoConstants.kMaxAccelerationMetersPerSecondSquared),
-            List.of(robotPose, endPoint)));
+        PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+                AutoConstants.kMaxAccelerationMetersPerSecondSquared), robotPose, endPoint);
+
+        field2d.getObject("traj").setTrajectory(trajectory);//TODO:remove
 
 
-        return PathPlanner.generatePath(
-                new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
-                        AutoConstants.kMaxAccelerationMetersPerSecondSquared),
-                List.of(robotPose, endPoint));
+        return trajectory;
     }
 
     public boolean areWeCloseEnough(){//TODO: find a good distance 
@@ -414,7 +409,7 @@ public class Swerve extends SubsystemBase {
      *         the start auto, we would have the Driver Station data to know
      *         what alliance we are, and flip the trajectory if necessary.
      */
-    public Command followTrajectoryModifiedToRedAlliance(PathPlannerTrajectory blueTrajectory, boolean shouldResetOdometry) {
+    public ProxyCommand followTrajectoryModifiedToRedAlliance(PathPlannerTrajectory blueTrajectory, boolean shouldResetOdometry) {
 
         PathPlannerTrajectory newTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(blueTrajectory, Alliance.Red);
 
@@ -488,7 +483,7 @@ public class Swerve extends SubsystemBase {
             return Math.abs(getRoll()) <= targetPitch;
         });
     }
-    public Command followTrajectoryWithReveresedInputs(PathPlannerTrajectory trajectory, boolean shouldResetOdometry) {
+    public ProxyCommand followTrajectoryWithReveresedInputs(PathPlannerTrajectory trajectory, boolean shouldResetOdometry) {
 
         PPSwerveControllerCommand followTrajecotryControllerCommand = new PPSwerveControllerCommand(
                 trajectory,
@@ -505,7 +500,7 @@ public class Swerve extends SubsystemBase {
             if (shouldResetOdometry)
                 resetPose(trajectory.getInitialHolonomicPose());
         }, this);
-        return resetOdometryBeforePath.andThen(followTrajecotryControllerCommand);
+        return resetOdometryBeforePath.andThen(followTrajecotryControllerCommand).asProxy();
 
     }
 

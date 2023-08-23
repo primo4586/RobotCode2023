@@ -226,6 +226,8 @@ public final class Constants {
 
         public static final double minAutoCollectRotation = 0.5;
         public static final double minAutoCollectSpeed = 0.5;
+        
+        public static final double trajAccuracy = 0.1; //TODO: change to a real number
     }
 
     public static final class Misc {
