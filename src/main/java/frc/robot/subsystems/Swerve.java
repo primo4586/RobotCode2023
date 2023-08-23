@@ -1,4 +1,6 @@
 package frc.robot.subsystems;
+import java.util.List;
+
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.pathplanner.lib.PathConstraints;
@@ -374,16 +376,30 @@ public class Swerve extends SubsystemBase {
         if (targetPose == null)
             return new PathPlannerTrajectory(); // Empty trajectory - 0 seconds duration.
 
-        PathPoint robotPose = new PathPoint(getPose().getTranslation(), getYaw(),getStates()[0].speedMetersPerSecond);
+        PathPoint robotPose = new PathPoint(getPose().getTranslation(), getYaw(), getStates()[0].speedMetersPerSecond);
         PathPoint endPoint = new PathPoint(targetPose, Rotation2d.fromDegrees(180));
 
-        PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
-                AutoConstants.kMaxAccelerationMetersPerSecondSquared), robotPose, endPoint);
+        PathPlannerTrajectory trajectory = PathPlanner
+                .generatePath(new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+                        AutoConstants.kMaxAccelerationMetersPerSecondSquared), robotPose, endPoint);
 
         field2d.getObject("traj").setTrajectory(trajectory);//TODO:remove
 
+        return trajectory;
+    }
+    
+    public PathPlannerTrajectory generateTrajectoryToAligmentPose(List<PathPoint> trajectoryPoints) {
+        if (trajectoryPoints == null)
+            return new PathPlannerTrajectory(); // Empty trajectory - 0 seconds duration.
+
+        PathPlannerTrajectory trajectory = PathPlanner
+                .generatePath(new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+                        AutoConstants.kMaxAccelerationMetersPerSecondSquared), trajectoryPoints);
+
+        field2d.getObject("traj").setTrajectory(trajectory);// TODO:remove
 
         return trajectory;
+        
     }
 
     public boolean areWeCloseEnough(){//TODO: find a good distance 

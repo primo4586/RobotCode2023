@@ -87,7 +87,7 @@ public class RobotContainer {
   private void configureButtonBindings(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm,
       Objective objective, TelescopicArm telescopicArm) {
 
-    CoolScore coolScore = new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm);
+    Command coolScore = new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy();
 
     PutItemInTheUpper putItemInTheUpper = new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm);
     PutItemInTheMiddle putItemInTheMiddle =  new PutItemInTheMiddle(lilArm, bigArm, gripper, telescopicArm);

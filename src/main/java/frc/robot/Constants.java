@@ -220,7 +220,7 @@ public final class Constants {
         public static final double[] redAligningYAxis = {196, 174.19, 152, 130, 108.19, 86, 64, 42.19, 20};
 
         public static final double blueAligningX = 0;
-        public static final double redAligningX = 0;
+        public static final double redAligningX = 14.64;
 
         public static final double howCloseWeNeedToBe = 1.541526;
 
