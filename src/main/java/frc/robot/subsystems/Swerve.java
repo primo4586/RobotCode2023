@@ -1,6 +1,4 @@
 package frc.robot.subsystems;
-
-import java.util.List;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.pathplanner.lib.PathConstraints;
@@ -363,7 +361,6 @@ public class Swerve extends SubsystemBase {
                 this::setModuleStatesClosedLoop,
                 false, // Assuming we don't need to flip the trajectory, we set this to false.
                 this);
-
         InstantCommand resetOdometryBeforePath = new InstantCommand(() -> {
             if (shouldResetOdometry)
                 resetPose(trajectory.getInitialHolonomicPose());
@@ -376,19 +373,16 @@ public class Swerve extends SubsystemBase {
         if (targetPose == null)
             return new PathPlannerTrajectory(); // Empty trajectory - 0 seconds duration.
 
-        PathPoint robotPose = new PathPoint(getPose().getTranslation(), getYaw());
+        PathPoint robotPose = new PathPoint(getPose().getTranslation(), getYaw(),getStates()[0].speedMetersPerSecond);
         PathPoint endPoint = new PathPoint(targetPose, Rotation2d.fromDegrees(180));
 
-        field2d.getObject("traj").setTrajectory(PathPlanner.generatePath(
-            new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
-                    AutoConstants.kMaxAccelerationMetersPerSecondSquared),
-            List.of(robotPose, endPoint)));
+        PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+                AutoConstants.kMaxAccelerationMetersPerSecondSquared), robotPose, endPoint);
+
+        field2d.getObject("traj").setTrajectory(trajectory);//TODO:remove
 
 
-        return PathPlanner.generatePath(
-                new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
-                        AutoConstants.kMaxAccelerationMetersPerSecondSquared),
-                List.of(robotPose, endPoint));
+        return trajectory;
     }
 
     public boolean areWeCloseEnough(){//TODO: find a good distance 
