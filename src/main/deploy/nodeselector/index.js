@@ -7,6 +7,12 @@
 
 import { NT4_Client } from "./NT4.js";
 
+const middleOfBotRobotToDashboardTopic = "/nodeselector/middleOfBot_robot_to_dashboard";
+const middleOfBotDashboardToRobotTopic = "/nodeselector/middleOfBot_dashboard_to_robot";
+const highIntakeRobotToDashboardTopic = "/nodeselector/highIntake_robot_to_dashboard";
+const highIntakeDashboardToRobotTopic = "/nodeselector/highIntake_dashboard_to_robot";
+const groundRobotToDashboardTopic = "/nodeselector/ground_robot_to_dashboard";
+const groundDashboardToRobotTopic = "/nodeselector/ground_dashboard_to_robot";
 const nodeRobotToDashboardTopic = "/nodeselector/node_robot_to_dashboard";
 const nodeDashboardToRobotTopic = "/nodeselector/node_dashboard_to_robot";
 const matchTimeTopic = "/nodeselector/match_time";
@@ -15,6 +21,9 @@ const isAutoTopic = "/nodeselector/is_auto";
 let active = null;
 let matchTime = 0;
 let isAuto = false;
+let middleOfBot = false;
+let highIntake = false;
+let ground = false;
 
 function displayActive(index) {
   active = index;
@@ -30,6 +39,27 @@ function sendActive(index) {
   if (index !== active) {
     client.addSample(nodeDashboardToRobotTopic, index);
   }
+}
+
+function displaymiddleOfBot(newmiddleOfBot) {
+  middleOfBot = newmiddleOfBot;
+}
+function sendMiddleOfBot() {
+  client.addSample(middleOfBotDashboardToRobotTopic, true);
+}
+
+function displayhighIntake(newhighIntake) {
+  highIntake = newhighIntake;
+}
+function sendHighIntake() {
+  client.addSample(highIntakeDashboardToRobotTopic, true);
+}
+
+function displayGround(newGround) {
+  ground = newGround;
+}
+function sendGround() {
+  client.addSample(groundDashboardToRobotTopic, true);
 }
 
 function displayTime(time, isAuto) {
@@ -51,6 +81,7 @@ function displayTime(time, isAuto) {
   element.innerText = Math.floor(time / 60).toString() + ":" + secondsString;
 }
 
+
 let client = new NT4_Client(
   window.location.hostname,
   "NodeSelector",
@@ -65,7 +96,13 @@ let client = new NT4_Client(
     if (topic.name === nodeRobotToDashboardTopic) {
       document.body.style.backgroundColor = "white";
       displayActive(value);
-    } else if (topic.name === matchTimeTopic) {
+    } else if (topic.name === middleOfBotRobotToDashboardTopic) {
+      displaymiddleOfBot(value);
+    } else if (topic.name === highIntakeRobotToDashboardTopic) {
+      displayhighIntake(value);
+    } else if (topic.name === groundRobotToDashboardTopic) {
+      displayGround(value);
+    }else if (topic.name === matchTimeTopic) {
       matchTime = value;
       displayTime(matchTime, isAuto);
     } else if (topic.name === isAutoTopic) {
@@ -81,6 +118,9 @@ let client = new NT4_Client(
     document.body.style.backgroundColor = "red";
     displayActive(null);
     displayTime(0, false);
+    displaymiddleOfBot(false);
+    displayhighIntake(false);
+    displayGround(false);
   }
 );
 
@@ -89,6 +129,9 @@ window.addEventListener("load", () => {
   client.subscribe(
     [
       nodeRobotToDashboardTopic,
+      middleOfBotRobotToDashboardTopic,
+      highIntakeRobotToDashboardTopic,
+      groundRobotToDashboardTopic,
       matchTimeTopic,
       isAutoTopic,
     ],
@@ -97,6 +140,9 @@ window.addEventListener("load", () => {
     0.02
   );
   client.publishTopic(nodeDashboardToRobotTopic, "int");
+  client.publishTopic(middleOfBotDashboardToRobotTopic, "boolean");
+  client.publishTopic(highIntakeDashboardToRobotTopic, "boolean");
+  client.publishTopic(groundDashboardToRobotTopic, "boolean");
   client.connect();
 
   // Add node click listeners
@@ -131,5 +177,50 @@ window.addEventListener("load", () => {
         );
       }
     });
+  });
+
+  // Add cone orientation listeners
+  const middleOfBotClickedDiv =
+    document.getElementsByClassName("middleOfBot")[0];
+  middleOfBotClickedDiv.addEventListener("click", () => {
+    sendMiddleOfBot();
+  });
+  middleOfBotClickedDiv.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+    sendMiddleOfBot();
+  });
+  middleOfBotClickedDiv.addEventListener("touchstart", () => {
+    event.preventDefault();
+    sendMiddleOfBot();
+  });
+
+  // Add cone orientation listeners
+  const highIntakeClickedDiv =
+    document.getElementsByClassName("highIntake")[0];
+  highIntakeClickedDiv.addEventListener("click", () => {
+    sendHighIntake();
+  });
+  highIntakeClickedDiv.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+    sendHighIntake();
+  });
+  highIntakeClickedDiv.addEventListener("touchstart", () => {
+    event.preventDefault();
+    sendHighIntake();
+  });
+  
+  // Add cone orientation listeners
+  const groundClickedDiv =
+    document.getElementsByClassName("ground")[0];
+  groundClickedDiv.addEventListener("click", () => {
+    sendGround();
+  });
+  groundClickedDiv.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+    sendGround();
+  });
+  groundClickedDiv.addEventListener("touchstart", () => {
+    event.preventDefault();
+    sendGround();
   });
 });

@@ -15,7 +15,11 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import frc.lib.util.PrimoShuffleboard;
+import frc.robot.commands.actions.Ground;
+import frc.robot.commands.actions.HighIntake;
+import frc.robot.commands.actions.MiddleOfBot;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -76,6 +80,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     objective.updateInputs();
+    checkNodeSelectorButtons();
   }
 
   @Override
@@ -143,5 +148,21 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
+  
+  public void checkNodeSelectorButtons() {
+    if (objective.middleOfBotSubscriber.getAsBoolean()) {
+      objective.middleOfBotPublisher.set(false);
+      CommandScheduler.getInstance().schedule(new MiddleOfBot(lilArm, bigArm, telescopicArm));
+    }
+    if (objective.highIntakeSubscriber.getAsBoolean()) {
+      objective.highIntakePublisher.set(false);
+      CommandScheduler.getInstance().schedule(new HighIntake(bigArm, lilArm, gripper, telescopicArm));
+    }
+    if (objective.groundSubscriber.getAsBoolean()) {
+      objective.groundPublisher.set(false);
+      CommandScheduler.getInstance().schedule(new Ground(gripper, lilArm, bigArm, telescopicArm));
+    }
+  }
 }

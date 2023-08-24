@@ -28,7 +28,7 @@ import frc.robot.Constants.LilConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.actions.CoolScore;
 import frc.robot.commands.actions.EmergencyStop;
-import frc.robot.commands.actions.GrabItemFromHighIntake;
+import frc.robot.commands.actions.HighIntake;
 import frc.robot.commands.actions.Ground;
 import frc.robot.commands.actions.MiddleOfBot;
 import frc.robot.commands.actions.PutItemInTheMiddle;
@@ -87,11 +87,9 @@ public class RobotContainer {
   private void configureButtonBindings(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm,
       Objective objective, TelescopicArm telescopicArm) {
 
-    Command coolScore = new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy();
-
     PutItemInTheUpper putItemInTheUpper = new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm);
     PutItemInTheMiddle putItemInTheMiddle =  new PutItemInTheMiddle(lilArm, bigArm, gripper, telescopicArm);
-    GrabItemFromHighIntake highIntake = new GrabItemFromHighIntake(bigArm, lilArm, gripper, telescopicArm);
+    HighIntake highIntake = new HighIntake(bigArm, lilArm, gripper, telescopicArm);
     Ground groundIntake = new Ground(gripper, lilArm, bigArm, telescopicArm);
     MiddleOfBot middleOfBot = new MiddleOfBot(lilArm, bigArm, telescopicArm);
 
@@ -101,7 +99,7 @@ public class RobotContainer {
     //driverController.x().onTrue(gripper.toggleGripper());//TODO: think how to do toggle gripper(one button or two)
     driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilConstants.autoStartPoint));
     driverController.back().onTrue(lilArm.zeroLilArm());
-    driverController.b().onTrue(new ConditionalCommand(coolScore, Commands.none(), () -> swerve.areWeCloseEnough()));
+    driverController.b().onTrue(new ConditionalCommand(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm), Commands.none(), () -> swerve.areWeCloseEnough()));
     
     driverController.a().onTrue(new ProxyCommand(()-> swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(new Translation2d(14.591, 1.36)),false)));
 

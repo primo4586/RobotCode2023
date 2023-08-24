@@ -10,6 +10,7 @@ package org.littletonrobotics.frc2023.subsystems.objectivetracker;
 import java.nio.file.Paths;
 
 import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.IntegerPublisher;
 import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.actions.MiddleOfBot;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 
@@ -31,6 +33,12 @@ public interface NodeSelectorIO {
     private final IntegerSubscriber nodeSubscriber;
     private final IntegerPublisher timePublisher;
     private final BooleanPublisher isAutoPublisher;
+    public final BooleanPublisher middleOfBotPublisher;
+    public final BooleanSubscriber middleOfBotSubscriber;
+    public final BooleanPublisher highIntakePublisher;
+    public final BooleanSubscriber highIntakeSubscriber;
+    public final BooleanPublisher groundPublisher;
+    public final BooleanSubscriber groundSubscriber;
 
 
     
@@ -49,6 +57,12 @@ public interface NodeSelectorIO {
       table.getBooleanTopic("cone_tipped_dashboard_to_robot").subscribe(false);
       timePublisher = table.getIntegerTopic("match_time").publish();
       isAutoPublisher = table.getBooleanTopic("is_auto").publish();
+      middleOfBotPublisher = table.getBooleanTopic("middleOfBot_dashboard_to_robot").publish();
+      middleOfBotSubscriber = table.getBooleanTopic("middleOfBot_dashboard_to_robot").subscribe(false);
+      highIntakePublisher = table.getBooleanTopic("highIntake_dashboard_to_robot").publish();
+      highIntakeSubscriber = table.getBooleanTopic("highIntake_dashboard_to_robot").subscribe(false);
+      groundPublisher = table.getBooleanTopic("ground_dashboard_to_robot").publish();
+      groundSubscriber = table.getBooleanTopic("ground_dashboard_to_robot").subscribe(false);
 
       this.nodeRow = nodeRow;
       this.nodeLevel = nodeLevel;

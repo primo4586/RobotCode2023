@@ -14,6 +14,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -27,65 +28,80 @@ public class CoolScoreDriveOnly extends ParallelCommandGroup {
     Alliance alliance = DriverStation.getAlliance();
     double aligningX = (alliance == Alliance.Blue) ? SwerveConstants.blueAligningX : SwerveConstants.redAligningX;
     double aligningY = Units.inchesToMeters(SwerveConstants.redAligningYAxis[objective.getNodeRow()]);
-    Translation2d endSpotTranslation = new Translation2d(aligningX, aligningY);
-    PathPoint endPoint = new PathPoint(endSpotTranslation, new Rotation2d(0));
+    Translation2d endSpotTranslatio2d = new Translation2d(aligningX, aligningY);
+    PathPoint endPoint = new PathPoint(endSpotTranslatio2d, new Rotation2d(0));
 
     Pose2d pose = swerve.getPose();
-    PathPoint robotPose = new PathPoint(pose.getTranslation(), swerve.getYaw(),
-        swerve.getStates()[0].speedMetersPerSecond);
+    PathPoint robotPose = new PathPoint(
+        pose.getTranslation(), swerve.getYaw(), swerve.getStates()[0].speedMetersPerSecond);
 
-    List<PathPoint> trajectoryPoints = List.of(robotPose);
-
-    Command lowerDrive = Commands.none();
     Command drive;
+    CommandBase lowerDrive = Commands.none();
 
     if (pose.getY() > 3.35) {
       if (pose.getX() > 5.4) {
-        trajectoryPoints.addAll(List.of(
-            new PathPoint(new Translation2d(5.42, 4.7), new Rotation2d(0)),
-            new PathPoint(new Translation2d(2.3, 4.7), new Rotation2d(0)),
-            endPoint));
+        PathPoint alignToEnterCommunity = new PathPoint(new Translation2d(5.42, 4.7), new Rotation2d(0));
+        PathPoint enterCommunity = new PathPoint(new Translation2d(2.3, 4.7), new Rotation2d(0));
+        drive = swerve.followTrajectory(
+            swerve.generateTrajectoryToAligmentPose(
+                List.of(robotPose, alignToEnterCommunity, enterCommunity, endPoint)),
+            false);
       } else if (pose.getX() > 2.47) {
-        trajectoryPoints.addAll(List.of(
-            new PathPoint(new Translation2d(2.3, 4.7), new Rotation2d(0)),
-            endPoint));
+        PathPoint enterCommunity = new PathPoint(new Translation2d(2.3, 4.7), new Rotation2d(0));
+        drive = swerve.followTrajectory(
+            swerve.generateTrajectoryToAligmentPose(List.of(robotPose, enterCommunity, endPoint)),
+            false);
       } else {
-        trajectoryPoints.addAll(List.of(endPoint));
+        drive = swerve.followTrajectory(
+            swerve.generateTrajectoryToAligmentPose(List.of(robotPose, endPoint)),
+            false);
       }
     } else {
       if (pose.getX() > 5.4) {
-        trajectoryPoints.addAll(List.of(
-            new PathPoint(new Translation2d(5.42, 0.9), new Rotation2d(0)),
-            new PathPoint(new Translation2d(2.3, 0.9), new Rotation2d(0))));
-        lowerDrive = swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(trajectoryPoints), false)
-            .asProxy();
+        PathPoint alignToEnterCommunity = new PathPoint(new Translation2d(5.42, 0.9), new Rotation2d(0));
+        PathPoint enterCommunity = new PathPoint(new Translation2d(2.3, 0.9), new Rotation2d(0));
+        lowerDrive = swerve.followTrajectory(
+            swerve.generateTrajectoryToAligmentPose(
+                List.of(robotPose, alignToEnterCommunity, enterCommunity)),
+            false).asProxy();
+
+        drive = swerve.followTrajectory(
+            swerve.generateTrajectoryToAligmentPose(
+                List.of(new PathPoint(pose.getTranslation(), swerve.getYaw(),
+                    swerve.getStates()[0].speedMetersPerSecond), endPoint)),
+            false).asProxy();
       } else if (pose.getX() > 3.3) {
-        trajectoryPoints.addAll(List.of(
-            new PathPoint(new Translation2d(2.3, 0.9), new Rotation2d(0)),
-            endPoint));
-        lowerDrive = swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(trajectoryPoints), false)
-            .asProxy();
+        PathPoint enterCommunity = new PathPoint(new Translation2d(2.3, 0.9), new Rotation2d(0));
+        lowerDrive = swerve.followTrajectory(
+            swerve.generateTrajectoryToAligmentPose(List.of(robotPose, enterCommunity)),
+            false).asProxy();
+
+        drive = swerve.followTrajectory(
+            swerve.generateTrajectoryToAligmentPose(
+                List.of(new PathPoint(pose.getTranslation(), swerve.getYaw(),
+                    swerve.getStates()[0].speedMetersPerSecond), endPoint)),
+            false).asProxy();
+
       } else if (pose.getX() > 2.47) {
-        trajectoryPoints.addAll(List.of(
-            new PathPoint(new Translation2d(2.3, 0.9), new Rotation2d(0)),
-            endPoint));
+        PathPoint enterCommunity = new PathPoint(new Translation2d(2.3, 0.9), new Rotation2d(0));
+        drive = swerve.followTrajectory(
+            swerve.generateTrajectoryToAligmentPose(List.of(robotPose, enterCommunity, endPoint)),
+            false);
       } else {
-        trajectoryPoints.addAll(List.of(endPoint));
+        drive = swerve.followTrajectory(
+            swerve.generateTrajectoryToAligmentPose(List.of(robotPose, endPoint)),
+            false);
       }
     }
 
-    drive = swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(trajectoryPoints), false);
+    BooleanSupplier closenesCheck = () -> Math
+        .abs(swerve.getPose().getX() - endSpotTranslatio2d.getX()) < SwerveConstants.trajAccuracy &&
+        Math.abs(swerve.getPose().getY() - endSpotTranslatio2d.getY()) < SwerveConstants.trajAccuracy;
 
-    BooleanSupplier closenessCheck = () -> {
-      Translation2d currentPos = swerve.getPose().getTranslation();
-      return Math.abs(currentPos.getX() - endSpotTranslation.getX()) < SwerveConstants.trajAccuracy &&
-          Math.abs(currentPos.getY() - endSpotTranslation.getY()) < SwerveConstants.trajAccuracy;
-    };
-
-    ConditionalCommand areWeThere = new ConditionalCommand(
-        Commands.none(),
-        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(List.of(endPoint)), false).asProxy(),
-        closenessCheck);
+    ConditionalCommand areWeThere = new ConditionalCommand(Commands.none(), swerve.followTrajectory(
+        swerve.generateTrajectoryToAligmentPose(List.of(new PathPoint(pose.getTranslation(), swerve.getYaw(),
+            swerve.getStates()[0].speedMetersPerSecond), endPoint)),
+        false).asProxy(), closenesCheck);
 
     addCommands(
         lowerDrive,

@@ -13,9 +13,9 @@ import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.TelescopicArm;
 
-public class GrabItemFromHighIntake extends ParallelCommandGroup {
+public class HighIntake extends ParallelCommandGroup {
 
-  public GrabItemFromHighIntake(BigArm bigArm, LilArm lilArm,Gripper gripper, TelescopicArm telescopicArm) {
+  public HighIntake(BigArm bigArm, LilArm lilArm,Gripper gripper, TelescopicArm telescopicArm) {
    
     addCommands(
       telescopicArm.putTelesInSetpoint(TelescopicArmConstants.highIntakeSetpoint),
