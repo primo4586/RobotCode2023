@@ -1,7 +1,9 @@
 package frc.robot;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.util.CurrentWatcher;
-import com.revrobotics.CANSparkMax;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 public class GripperConstants {
     private static final int MOTOR_ID = 13;
@@ -10,21 +12,24 @@ public class GripperConstants {
     private static final double
             HOLD_TRIGGER_DURATION = 0.05,
             HOLD_TRIGGER_CURRENT = 40,
-            CURRENT_LIMIT = 30;
+            CURRENT_LIMIT = 32;
 
-    public static final CANSparkMax MOTOR = new CANSparkMax(MOTOR_ID, MotorType.kBrushless);
+    public static final WPI_TalonFX MOTOR = new WPI_TalonFX(MOTOR_ID);
 
     public static final CurrentWatcher.CurrentWatcherConfig HOLD_TRIGGER_CONFIG = new CurrentWatcher.CurrentWatcherConfig(
-            MOTOR::getOutputCurrent,
+            MOTOR::getStatorCurrent,
             HOLD_TRIGGER_CURRENT,
             HOLD_TRIGGER_DURATION
     );
+
     static {
-        MOTOR.restoreFactoryDefaults();
+        MOTOR.configFactoryDefault();
 
         MOTOR.setInverted(INVERTED);
-        MOTOR.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        MOTOR.setSmartCurrentLimit((int)CURRENT_LIMIT);
+        MOTOR.setNeutralMode(NeutralMode.Brake);
+        MOTOR.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
+                true, CURRENT_LIMIT, CURRENT_LIMIT, 0.001
+        ));
     }
     public enum GripperState {
         STOP(0),

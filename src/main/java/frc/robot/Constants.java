@@ -108,7 +108,7 @@ public final class Constants {
                 new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
                 new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
                 new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
-                new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
+                new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));//TODO: check if data is correct
 
         /* Swerve Current Limiting */
         public static final int angleContinuousCurrentLimit = 25;

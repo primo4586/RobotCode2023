@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -13,7 +12,7 @@ import frc.robot.GripperConstants;
 
 public class Gripper extends SubsystemBase {
 
-    private final CANSparkMax motor = GripperConstants.MOTOR;
+    private final WPI_TalonFX motor = GripperConstants.MOTOR;
 
     private GripperConstants.GripperState state = GripperConstants.GripperState.STOP;
 

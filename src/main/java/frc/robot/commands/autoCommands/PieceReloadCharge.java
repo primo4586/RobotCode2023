@@ -23,10 +23,10 @@ public class PieceReloadCharge extends SequentialCommandGroup {
   public PieceReloadCharge(boolean shouldStartWithCone, boolean UpperPiece, boolean areWeBlue, Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm, TelescopicArm telescopicArm) {
 
     ConditionalCommand driveToPiece = new ConditionalCommand(
-        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(new Translation2d(6.65, 3.357626)),
+        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(new Translation2d(6.8, 3.357626)),
             false),
-        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(UpperPiece ? new Translation2d(6.65, 2.138426) : new Translation2d(6.65, 3.357626)),
-            false),
+        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(UpperPiece ? new Translation2d(6.8, 2.138426) : new Translation2d(6.65, 3.357626)),
+            false),//TODO: change red place
         () -> areWeBlue);
 
     addCommands(

@@ -19,9 +19,7 @@ public class GroundOnlyArms extends SequentialCommandGroup {
 
     addCommands(
       telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
-      moveArms,
-      gripper.getCollectCommand(),
-      telescopicArm.putTelesInSetpoint(TelescopicArmConstants.groundSetPoint)
+      moveArms
     );
   }
 }

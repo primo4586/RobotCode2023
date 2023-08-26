@@ -112,6 +112,15 @@
       font-size: 8vh;
       text-align: center;
       } 
+      div.middleOfBot svg{
+        
+        position: absolute;
+        top: 50%;
+        height: 80%;
+        transform: translate(-50%, -50%);
+        left: 50%;
+      }
+
       div.highIntake {
       position: absolute;
       right: 17%;
@@ -119,9 +128,18 @@
       bottom: 0%;
       height: 20%;
       background-color: rgb(239, 115, 32);
-      font-size: 8vh;
+      font-size: 5vh;
       text-align: center;
       } 
+      div.highIntake svg{
+        
+        position: absolute;
+        top: 50%;
+        height: 80%;
+        transform: translate(-50%, -50%);
+        left: 50%;
+      }
+
       div.ground {
       position: absolute;
       right: 0.5%;
@@ -132,6 +150,14 @@
       font-size: 8vh;
       text-align: center;
       } 
+      div.ground svg{
+        
+        position: absolute;
+        top: 50%;
+        height: 80%;
+        transform: translate(-50%, -50%);
+        left: 50%;
+      }
     </style>
   </head>
 
@@ -175,11 +201,48 @@
     </table>
 
     <div class="time teleop-1">0:00</div>
-    <div class="middleOfBot">middle Of Bot</div>
-    <div class="highIntake">high intake</div>
-    <div class="ground">ground</div>
+
+    <div class="middleOfBot">
+      home
+      <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 24 24">
+        <path d="M 12 3.90625 L 11.75 4.0625 L 0.25 11.0625 L 0.75 11.9375 L 12 5.09375 L 23.25 11.9375 L 23.75 11.0625 L 20 8.78125 L 20 4 L 18 4 L 18 7.5625 L 12.25 4.0625 Z M 12 6.5 L 2 12.5 L 2 24 L 22 24 L 22 12.5 Z M 9 13 L 15 13 L 15 22 L 9 22 Z"
+        transform="translate(0,5)"/>
+      </svg>
+    </div>
+
+    <div class="highIntake">
+      <svg width="200" height="150" xmlns="http://www.w3.org/2000/svg">
+        <!-- Shelf -->
+        <rect x="10" y="80" width="180" height="10" fill="#ccc" />
+    
+        <!-- Squared Cube -->
+        <rect x="100" y="00" width="80" height="80" rx="10" ry="10" fill="purple" />
+    
+        <!-- Cube Detail -->
+        <line x1="100" y1="70" x2="100" y2="70" stroke="#000000" stroke-width="1" />
+    
+        <!-- Adjusted Path -->
+        <path d="M7.03 1.88c.252-1.01 1.688-1.01 1.94 0l2.905 11.62H14a.5.5 0 0 1 0 1H2a.5.5 0 0 1 0-1h2.125L7.03 1.88z"
+          transform="translate(11, 1) scale(5.5)" fill="orange" />
+      </svg>
+      <br>
+      <br>
+      high Intake
+    </div>
+
+
+    <div class="ground">
+      ground
+      <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ground -->
+        <rect x="20" y="140" width="160" height="10" fill="#000" />
+
+        <!-- Cube -->
+        <rect x="60" y="60" width="80" height="80" rx="10" ry="10" fill="purple" />
+      </svg>
+    </div>
+
   </body>
 </html>
-
 
 
