@@ -99,21 +99,19 @@ public class RobotContainer {
     //driverController.x().onTrue(gripper.toggleGripper());//TODO: think how to do toggle gripper(one button or two)
     driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilConstants.autoStartPoint));
     driverController.back().onTrue(lilArm.zeroLilArm());
-    driverController.b().onTrue(new ConditionalCommand(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm), Commands.none(), () -> swerve.areWeCloseEnough()));
+    driverController.x().onTrue(gripper.getEjectCommand().asProxy());
+    driverController.a().onTrue(new ConditionalCommand(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy(), Commands.none(), () -> swerve.areWeCloseEnough()));
+    //driverController.b().onTrue();
     
-    driverController.a().onTrue(new ProxyCommand(()-> swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(new Translation2d(14.591, 1.36)),false)));
-
-    //driverController.a().onTrue(new InstantCommand(()->swerve.generateTrajectoryToAligmentPose(new Translation2d(14.591, 1.36))));
     /* Operator Buttons */
 
-    operatorController.leftBumper().onTrue(gripper.changeWhatWeGrip());
+    operatorController.rightBumper().onTrue(gripper.changeWhatWeGrip());
     operatorController.y().onTrue(putItemInTheUpper);
     operatorController.a().onTrue(putItemInTheMiddle);
     operatorController.b().onTrue(middleOfBot);
     operatorController.x().onTrue(highIntake);
     operatorController.start().onTrue(new EmergencyStop(lilArm, bigArm, telescopicArm));
     operatorController.back().onTrue(bigArm.Home());
-    //operatorController.back().onTrue(lilArm.TurnLilArmToSetpoint(lilArm.getCurrentArmPosition()));
 
     operatorController.povCenter().onTrue(groundIntake);
     operatorController.povDown().onTrue(groundIntake);
@@ -124,6 +122,9 @@ public class RobotContainer {
     operatorController.povUp().onTrue(groundIntake);
     operatorController.povUpLeft().onTrue(groundIntake);
     operatorController.povUpRight().onTrue(groundIntake);
+
+    operatorController.leftTrigger().onTrue(telescopicArm.setMotorSpeed(-0.1));
+    operatorController.rightTrigger().onTrue(telescopicArm.setMotorSpeed(0.1));
   }
 
   /**

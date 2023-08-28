@@ -15,7 +15,7 @@ import frc.robot.subsystems.TelescopicArm;
 public class AutoCollectCube extends SequentialCommandGroup {
   public AutoCollectCube(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm, TelescopicArm telescopicArm) {
     Ground ground = new Ground(gripper, lilArm, bigArm, telescopicArm);
-    DriveToCube driveToCube = new DriveToCube(swerve);
+    DriveToCube driveToCube = new DriveToCube(swerve,gripper);
     addCommands(
       ground,
       driveToCube

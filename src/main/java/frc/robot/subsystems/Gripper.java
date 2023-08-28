@@ -35,7 +35,7 @@ public class Gripper extends SubsystemBase {
     public CommandBase getCollectCommand() {
         return new ProxyCommand(new StartEndCommand(
                 () -> setState(GripperConstants.GripperState.COLLECT),
-                () -> setState(GripperConstants.GripperState.STOP),
+                () -> setState(GripperConstants.GripperState.HOLD),
                 this));
     }
 
@@ -46,7 +46,7 @@ public class Gripper extends SubsystemBase {
     public CommandBase getSlowCollectCommand() {
         return new ProxyCommand(new StartEndCommand(
                 () -> setState(GripperConstants.GripperState.SLOW_COLLECT),
-                () -> setState(GripperConstants.GripperState.STOP),
+                () -> setState(GripperConstants.GripperState.HOLD),
                 this));
     }
 

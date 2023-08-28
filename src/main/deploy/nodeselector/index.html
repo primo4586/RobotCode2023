@@ -104,11 +104,11 @@
 
       div.middleOfBot {
       position: absolute;
-      left: 50.5%;
+      right: 17%;
       width: 16%;
       bottom: 0%;
       height: 20%;
-      background-color: rgb(0, 166, 255);
+      background-color: rgb(239, 115, 32);
       font-size: 8vh;
       text-align: center;
       } 
@@ -123,11 +123,11 @@
 
       div.highIntake {
       position: absolute;
-      right: 17%;
+      right: 0.5%;
       width: 16%;
       bottom: 0%;
       height: 20%;
-      background-color: rgb(239, 115, 32);
+      background-color: rgb(0, 166, 255);
       font-size: 5vh;
       text-align: center;
       } 
@@ -142,7 +142,7 @@
 
       div.ground {
       position: absolute;
-      right: 0.5%;
+      left: 50.5%;
       width: 16%;
       bottom: 0%;
       height: 20%;
@@ -202,6 +202,17 @@
 
     <div class="time teleop-1">0:00</div>
 
+        <div class="ground">
+          ground
+      <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ground -->
+        <rect x="20" y="140" width="160" height="10" fill="#000" />
+        
+        <!-- Cube -->
+        <rect x="60" y="60" width="80" height="80" rx="10" ry="10" fill="purple" />
+      </svg>
+    </div>
+
     <div class="middleOfBot">
       home
       <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 24 24">
@@ -228,18 +239,6 @@
       <br>
       <br>
       high Intake
-    </div>
-
-
-    <div class="ground">
-      ground
-      <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-        <!-- Ground -->
-        <rect x="20" y="140" width="160" height="10" fill="#000" />
-
-        <!-- Cube -->
-        <rect x="60" y="60" width="80" height="80" rx="10" ry="10" fill="purple" />
-      </svg>
     </div>
 
   </body>

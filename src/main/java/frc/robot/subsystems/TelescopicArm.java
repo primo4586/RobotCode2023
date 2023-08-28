@@ -75,4 +75,11 @@ public class TelescopicArm extends SubsystemBase {
     telesMotor.setSelectedSensorPosition(0);
     telesMotor.setNeutralMode(NeutralMode.Brake);
   }
+  
+  public Command setMotorSpeed(Double speed) {
+    return this.run(() -> {
+
+      telesMotor.set(speed);
+    });
+  }
 }

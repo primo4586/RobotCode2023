@@ -7,13 +7,16 @@ package frc.robot.commands.utils;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.Swerve;
 
 public class DriveToCube extends CommandBase {
   /** Creates a new DriveToCube. */
   Swerve swerve;
+  Gripper gripper;
 
-  public DriveToCube(Swerve swerve) {
+  public DriveToCube(Swerve swerve, Gripper gripper) {
+    this.gripper = gripper;
     this.swerve = swerve;
     addRequirements(swerve);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -41,6 +44,6 @@ public class DriveToCube extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return swerve.getTargetExist() && swerve.getTargetClass() == "cube";
+    return gripper.isHolding();
   }
 }
