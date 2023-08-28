@@ -9,13 +9,15 @@ import frc.robot.Constants.BigConstants;
 import frc.robot.Constants.LilConstants;
 import frc.robot.Constants.TelescopicArmConstants;
 import frc.robot.subsystems.BigArm;
+import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.TelescopicArm;
 
 public class MiddleOfBot extends ParallelCommandGroup {
   /** Creates a new MiddleOfBot. */
-  public MiddleOfBot(LilArm lilArm, BigArm bigArm, TelescopicArm telescopicArm) {
+  public MiddleOfBot(LilArm lilArm, BigArm bigArm, TelescopicArm telescopicArm, Gripper gripper) {
     addCommands(
+      gripper.getHoldCommand(),
       telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
       bigArm.TurnBigArmToSetpoint(BigConstants.intakeSetPoint),
       lilArm.TurnLilArmToSetpoint(LilConstants.middleOfRobotSetPoint)

@@ -13,9 +13,11 @@ import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.util.PrimoShuffleboard;
+import frc.robot.commands.actions.AutoCollectCube;
 import frc.robot.commands.actions.Ground;
 import frc.robot.commands.actions.HighIntake;
 import frc.robot.commands.actions.MiddleOfBot;
@@ -153,7 +155,7 @@ public class Robot extends TimedRobot {
   public void checkNodeSelectorButtons() {
     if (objective.middleOfBotSubscriber.getAsBoolean()) {
       objective.middleOfBotPublisher.set(false);
-      CommandScheduler.getInstance().schedule(new MiddleOfBot(lilArm, bigArm, telescopicArm));
+      CommandScheduler.getInstance().schedule(new MiddleOfBot(lilArm, bigArm, telescopicArm, gripper));
     }
     if (objective.highIntakeSubscriber.getAsBoolean()) {
       objective.highIntakePublisher.set(false);
@@ -161,7 +163,13 @@ public class Robot extends TimedRobot {
     }
     if (objective.groundSubscriber.getAsBoolean()) {
       objective.groundPublisher.set(false);
+      if (objective.groundDoubleClickSubscriber.getAsBoolean()) {
+        objective.groundDoubleClickPublisher.set(false);
+        CommandScheduler.getInstance().schedule(new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm));
+      }
+      else {
       CommandScheduler.getInstance().schedule(new Ground(gripper, lilArm, bigArm, telescopicArm));
+      }
     }
   }
 }

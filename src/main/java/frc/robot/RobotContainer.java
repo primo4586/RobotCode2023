@@ -91,7 +91,7 @@ public class RobotContainer {
     PutItemInTheMiddle putItemInTheMiddle =  new PutItemInTheMiddle(lilArm, bigArm, gripper, telescopicArm);
     HighIntake highIntake = new HighIntake(bigArm, lilArm, gripper, telescopicArm);
     Ground groundIntake = new Ground(gripper, lilArm, bigArm, telescopicArm);
-    MiddleOfBot middleOfBot = new MiddleOfBot(lilArm, bigArm, telescopicArm);
+    MiddleOfBot middleOfBot = new MiddleOfBot(lilArm, bigArm, telescopicArm, gripper);
 
 
     /* Driver Buttons */
@@ -111,7 +111,7 @@ public class RobotContainer {
     operatorController.a().onTrue(putItemInTheMiddle);
     operatorController.b().onTrue(middleOfBot);
     operatorController.x().onTrue(highIntake);
-    operatorController.start().onTrue(new EmergencyStop(lilArm, bigArm));
+    operatorController.start().onTrue(new EmergencyStop(lilArm, bigArm, telescopicArm));
     operatorController.back().onTrue(bigArm.Home());
     //operatorController.back().onTrue(lilArm.TurnLilArmToSetpoint(lilArm.getCurrentArmPosition()));
 

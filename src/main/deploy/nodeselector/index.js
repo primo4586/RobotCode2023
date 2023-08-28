@@ -12,6 +12,7 @@ const middleOfBotDashboardToRobotTopic = "/nodeselector/middleOfBot_dashboard_to
 const highIntakeRobotToDashboardTopic = "/nodeselector/highIntake_robot_to_dashboard";
 const highIntakeDashboardToRobotTopic = "/nodeselector/highIntake_dashboard_to_robot";
 const groundRobotToDashboardTopic = "/nodeselector/ground_robot_to_dashboard";
+const groundDoubleClick = "/nodeselector/ground_double_click";
 const groundDashboardToRobotTopic = "/nodeselector/ground_dashboard_to_robot";
 const nodeRobotToDashboardTopic = "/nodeselector/node_robot_to_dashboard";
 const nodeDashboardToRobotTopic = "/nodeselector/node_dashboard_to_robot";
@@ -60,6 +61,10 @@ function displayGround(newGround) {
 }
 function sendGround() {
   client.addSample(groundDashboardToRobotTopic, true);
+}
+
+function sendGroundDoubleClick() {
+  client.addSample(groundDoubleClick, true);
 }
 
 function displayTime(time, isAuto) {
@@ -143,6 +148,7 @@ window.addEventListener("load", () => {
   client.publishTopic(middleOfBotDashboardToRobotTopic, "boolean");
   client.publishTopic(highIntakeDashboardToRobotTopic, "boolean");
   client.publishTopic(groundDashboardToRobotTopic, "boolean");
+  client.publishTopic(groundDoubleClick, "boolean");
   client.connect();
 
   // Add node click listeners
@@ -179,7 +185,7 @@ window.addEventListener("load", () => {
     });
   });
 
-  // Add cone orientation listeners
+  // Add middleOfBot listeners
   const middleOfBotClickedDiv =
     document.getElementsByClassName("middleOfBot")[0];
   middleOfBotClickedDiv.addEventListener("click", () => {
@@ -194,7 +200,7 @@ window.addEventListener("load", () => {
     sendMiddleOfBot();
   });
 
-  // Add cone orientation listeners
+  // Add HighIntake listeners
   const highIntakeClickedDiv =
     document.getElementsByClassName("highIntake")[0];
   highIntakeClickedDiv.addEventListener("click", () => {
@@ -209,9 +215,9 @@ window.addEventListener("load", () => {
     sendHighIntake();
   });
   
-  // Add cone orientation listeners
-  const groundClickedDiv =
-    document.getElementsByClassName("ground")[0];
+  // Add ground listeners
+  const groundClickedDiv = document.getElementsByClassName("ground")[0];
+
   groundClickedDiv.addEventListener("click", () => {
     sendGround();
   });
@@ -219,8 +225,14 @@ window.addEventListener("load", () => {
     event.preventDefault();
     sendGround();
   });
-  groundClickedDiv.addEventListener("touchstart", () => {
+  groundClickedDiv.addEventListener("touchstart", (event) => {
     event.preventDefault();
     sendGround();
   });
+
+  groundClickedDiv.addEventListener("dblclick", () => {
+    event.preventDefault();
+    sendGroundDoubleClick();
+  });
+
 });

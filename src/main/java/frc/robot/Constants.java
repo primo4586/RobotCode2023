@@ -55,11 +55,12 @@ public final class Constants {
 
         public static final double coneUpperSetPoint = -78853;//-88152;
         public static final double coneMiddleSetPoint = -47773;
+        public static final double coneLowerSetPoint = -56326;
 
 
         public static final double cubeUpperSetPoint = -72463;
-
         public static final double cubeMiddleSetPoint = -56326;
+        public static final double cubeLowerSetPoint = -56326;
 
         public static final double intakeSetPoint = 2838;//-1711;
         public static final double intakeReturnSetPoint = 37000;
@@ -220,7 +221,7 @@ public final class Constants {
         public static final double[] redAligningYAxis = {196, 174.19, 152, 130, 108.19, 86, 64, 42.19, 20};
 
         public static final double blueAligningX = 0;
-        public static final double redAligningX = 14.64;
+        public static final double redAligningX = 14.65;
 
         public static final double howCloseWeNeedToBe = 1.541526;
 
@@ -264,8 +265,12 @@ public final class Constants {
 
         public static final double coneUpperSetPoint = -1738;
         public static final double coneMiddleSetPoint = -1187;
+        public static final double coneLowerSetPoint = -56326;
+
         public static final double cubeUpperSetPoint = -1420;
         public static final double cubeMiddleSetPoint = -940;
+        public static final double cubeLowerSetPoint = -56326;
+
         public static final double middleOfRobotSetPoint = -184;
         public static final double highIntakeSetpoint = -1010;
         public static final double groundSetPoint = -3302;
@@ -306,9 +311,11 @@ public final class Constants {
 
         public static final double coneUpperSetPoint = -78853;
         public static final double coneMiddleSetPoint = -47773;
+        public static final double coneLowerSetPoint = -56326;
 
         public static final double cubeUpperSetPoint = -72463;
         public static final double cubeMiddleSetPoint = -56326;
+        public static final double cubeLowerSetPoint = -56326;
 
         public static final double highIntakeSetpoint = -28557;
         public static final double middleOfRobotSetPoint = 0.0;

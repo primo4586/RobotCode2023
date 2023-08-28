@@ -6,13 +6,12 @@ import frc.robot.Constants.BigConstants;
 import frc.robot.Constants.LilConstants;
 import frc.robot.Constants.TelescopicArmConstants;
 import frc.robot.subsystems.BigArm;
-import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.TelescopicArm;
 
 public class GroundOnlyArms extends SequentialCommandGroup {
 
-  public GroundOnlyArms(Gripper gripper, LilArm lilArm, BigArm bigArm, TelescopicArm telescopicArm) {
+  public GroundOnlyArms(LilArm lilArm, BigArm bigArm, TelescopicArm telescopicArm) {
 
     ParallelCommandGroup moveArms = new ParallelCommandGroup(bigArm.TurnBigArmToSetpoint(BigConstants.groundSetPoint),
         lilArm.TurnLilArmToSetpoint(LilConstants.groundSetPoint));

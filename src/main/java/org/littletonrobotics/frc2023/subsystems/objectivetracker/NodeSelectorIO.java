@@ -38,6 +38,8 @@ public interface NodeSelectorIO {
     public final BooleanSubscriber highIntakeSubscriber;
     public final BooleanPublisher groundPublisher;
     public final BooleanSubscriber groundSubscriber;
+    public final BooleanPublisher groundDoubleClickPublisher;
+    public final BooleanSubscriber groundDoubleClickSubscriber;
 
 
     
@@ -62,6 +64,8 @@ public interface NodeSelectorIO {
       highIntakeSubscriber = table.getBooleanTopic("highIntake_dashboard_to_robot").subscribe(false);
       groundPublisher = table.getBooleanTopic("ground_dashboard_to_robot").publish();
       groundSubscriber = table.getBooleanTopic("ground_dashboard_to_robot").subscribe(false);
+      groundDoubleClickPublisher = table.getBooleanTopic("ground_double_click").publish();
+      groundDoubleClickSubscriber = table.getBooleanTopic("ground_double_click").subscribe(false);
 
       this.nodeRow = nodeRow;
       this.nodeLevel = nodeLevel;

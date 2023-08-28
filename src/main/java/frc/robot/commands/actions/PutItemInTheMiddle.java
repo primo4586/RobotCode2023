@@ -32,6 +32,7 @@ public class PutItemInTheMiddle extends SequentialCommandGroup {
     ConditionalCommand putArmsInMiddleSetPoint = new ConditionalCommand(coneMiddleSetPoint, cubeMiddleSetPoint,gripper::getShouldGripCone);
 
     addCommands(
+      gripper.getHoldCommand(),
       putArmsInMiddleSetPoint
     );
   }

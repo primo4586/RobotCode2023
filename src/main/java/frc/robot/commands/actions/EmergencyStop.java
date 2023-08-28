@@ -7,14 +7,15 @@ package frc.robot.commands.actions;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.LilArm;
+import frc.robot.subsystems.TelescopicArm;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class EmergencyStop extends InstantCommand {
-  public EmergencyStop(LilArm lilArm, BigArm bigArm) {
+  public EmergencyStop(LilArm lilArm, BigArm bigArm,TelescopicArm telescopicArm) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(lilArm,bigArm);
+    addRequirements(lilArm,bigArm,telescopicArm);
   }
 
   // Called when the command is initially scheduled.

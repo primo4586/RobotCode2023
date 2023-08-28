@@ -383,7 +383,7 @@ public class Swerve extends SubsystemBase {
                 .generatePath(new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
                         AutoConstants.kMaxAccelerationMetersPerSecondSquared), robotPose, endPoint);
 
-        field2d.getObject("traj").setTrajectory(trajectory);//TODO:remove
+        field2d.getObject("traj").setTrajectory(trajectory);
 
         return trajectory;
     }
@@ -396,7 +396,7 @@ public class Swerve extends SubsystemBase {
                 .generatePath(new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
                         AutoConstants.kMaxAccelerationMetersPerSecondSquared), trajectoryPoints);
 
-        field2d.getObject("traj").setTrajectory(trajectory);// TODO:remove
+        field2d.getObject("traj").setTrajectory(trajectory);
 
         return trajectory;
         

@@ -35,7 +35,7 @@ public class PieceReloadCharge extends SequentialCommandGroup {
         }, gripper),
         new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm),
         gripper.getEjectCommand(),
-        new GroundOnlyArms(gripper, lilArm, bigArm, telescopicArm),//TODO: test if possible to do this while driving back
+        new GroundOnlyArms(lilArm, bigArm, telescopicArm),//TODO: test if possible to do this while driving back
         new DriveUntilOtherSide(swerve, true),
         new Ground(gripper, lilArm, bigArm, telescopicArm),
         driveToPiece.alongWith(gripper.getCollectCommand()),
