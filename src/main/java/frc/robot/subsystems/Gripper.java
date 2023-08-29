@@ -113,7 +113,7 @@ public class Gripper extends SubsystemBase {
 
     private void setState(GripperConstants.GripperState state) {
         this.state = state;
-        motor.set(state.power);
+        motor.set(shouldGripCone?state.power:-state.power);
     }
 
     public Command changeWhatWeGrip() {
