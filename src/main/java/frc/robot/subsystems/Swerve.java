@@ -13,8 +13,8 @@ import frc.robot.SwerveModule;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.Misc;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.vision.VisionPoseEstimator;
 import frc.robot.Constants;
-import frc.robot.VisionPoseEstimator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -27,10 +27,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.DoubleSubscriber;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StringSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -67,15 +63,7 @@ public class Swerve extends SubsystemBase {
     // order to better estimate the robot's position on the field.
     private final SwerveDrivePoseEstimator poseEstimation;
 
-    // limelight
-    // x = target pose relative to cam on x axis
-    // y = target pose relative to cam on y axis
-    // targetExist = is there a target
-    private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    private DoubleSubscriber x = table.getDoubleTopic("tx").subscribe(0.0);
-    private DoubleSubscriber y = table.getDoubleTopic("ty").subscribe(0.0);
-    private DoubleSubscriber targetExist = table.getDoubleTopic("tv").subscribe(0.0);
-    private StringSubscriber targetClass = table.getStringTopic("tclass").subscribe("nothing"); 
+
 
     public Swerve() {
 
@@ -99,22 +87,6 @@ public class Swerve extends SubsystemBase {
          * documentation & the SwervePoseEstimator class for more.
          */
         poseEstimation.setVisionMeasurementStdDevs(VecBuilder.fill(0.3, 0.3, 0.3));
-    }
-    
-    public double getX(){
-        return x.getAsDouble();
-    }
-
-    public double getY() {
-        return y.getAsDouble();
-    }
-
-    public boolean getTargetExist() {
-        return targetExist.getAsDouble() == 1;
-    }
-
-    public String getTargetClass() {
-        return targetClass.get();
     }
 
     /**

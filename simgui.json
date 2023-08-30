@@ -66,6 +66,12 @@
   },
   "NetworkTables": {
     "transitory": {
+      "CameraPublisher": {
+        "ground cam": {
+          "open": true
+        },
+        "open": true
+      },
       "Shuffleboard": {
         ".metadata": {
           "Competition Dashboard": {
@@ -91,6 +97,9 @@
         "TunableNumbers": {
           "open": true
         },
+        "open": true
+      },
+      "limelight": {
         "open": true
       },
       "nodeselector": {

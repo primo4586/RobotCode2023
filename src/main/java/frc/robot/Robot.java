@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.util.PrimoShuffleboard;
@@ -26,6 +25,7 @@ import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.TelescopicArm;
+import frc.robot.vision.LimeLight;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -47,6 +47,7 @@ public class Robot extends TimedRobot {
   private boolean hasReset = false;
   private Gripper gripper;
   private Swerve swerve;
+  private LimeLight limeLight;
   private PneumaticsControlModule pcm;
   public final Objective objective = new Objective();
 
@@ -68,6 +69,7 @@ public class Robot extends TimedRobot {
     lilArm = new LilArm();
     swerve = new Swerve();
     telescopicArm = new TelescopicArm();
+    limeLight = new LimeLight();
 
     m_robotContainer = new RobotContainer(swerve, gripper ,lilArm, bigArm, objective, telescopicArm);
 
@@ -165,7 +167,7 @@ public class Robot extends TimedRobot {
       objective.groundPublisher.set(false);
       if (objective.groundDoubleClickSubscriber.getAsBoolean()) {
         objective.groundDoubleClickPublisher.set(false);
-        CommandScheduler.getInstance().schedule(new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm));
+        CommandScheduler.getInstance().schedule(new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm,limeLight));
       }
       else {
       CommandScheduler.getInstance().schedule(new Ground(gripper, lilArm, bigArm, telescopicArm));

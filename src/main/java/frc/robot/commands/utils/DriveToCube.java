@@ -9,15 +9,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.Swerve;
+import frc.robot.vision.LimeLight;
 
 public class DriveToCube extends CommandBase {
   /** Creates a new DriveToCube. */
   Swerve swerve;
   Gripper gripper;
+  LimeLight limeLight;
 
-  public DriveToCube(Swerve swerve, Gripper gripper) {
+  public DriveToCube(Swerve swerve, Gripper gripper, LimeLight limeLight) {
     this.gripper = gripper;
     this.swerve = swerve;
+    this.limeLight = limeLight;
     addRequirements(swerve);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -25,19 +28,21 @@ public class DriveToCube extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    limeLight.cubeLimeLight();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    swerve.drive(new Translation2d(-swerve.getX() + -SwerveConstants.minAutoCollectSpeed, 0),
-        swerve.getY() + swerve.getY() < 0 ? SwerveConstants.minAutoCollectRotation: -SwerveConstants.minAutoCollectRotation,
+    swerve.drive(new Translation2d(-limeLight.getCubeX() + -SwerveConstants.minAutoCollectSpeed, 0),
+        limeLight.getCubeY() + limeLight.getCubeY() < 0 ? SwerveConstants.minAutoCollectRotation: -SwerveConstants.minAutoCollectRotation,
         false, false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    limeLight.camLimeLight();
     swerve.stopModules();
   }
 

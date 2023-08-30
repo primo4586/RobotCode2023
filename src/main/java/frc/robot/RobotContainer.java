@@ -14,14 +14,12 @@ import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.LilConstants;
@@ -34,6 +32,7 @@ import frc.robot.commands.actions.MiddleOfBot;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.subsystems.*;
+import frc.robot.vision.VisionPoseEstimator;
 
 public class RobotContainer {
 
@@ -71,9 +70,9 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings(swerve, gripper, lilArm, bigArm, objective, telescopicArm);
-    if (Robot.isReal()) {
+    //if (Robot.isReal()) {
       buildCameras();
-    }
+    //}
   }
 
   /**
@@ -96,7 +95,6 @@ public class RobotContainer {
 
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
-    //driverController.x().onTrue(gripper.toggleGripper());//TODO: think how to do toggle gripper(one button or two)
     driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilConstants.autoStartPoint));
     driverController.back().onTrue(lilArm.zeroLilArm());
     driverController.x().onTrue(gripper.getEjectCommand().asProxy());
@@ -140,7 +138,7 @@ public class RobotContainer {
   }
 
   public void buildCameras() {
-    driverCamera = CameraServer.startAutomaticCapture("Forward", 0);
+    driverCamera = CameraServer.startAutomaticCapture("ground", 0);
     driverCamera.setVideoMode(PixelFormat.kYUYV, 320, 240, 10);
 
   }

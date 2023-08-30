@@ -11,11 +11,12 @@ import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.TelescopicArm;
+import frc.robot.vision.LimeLight;
 
 public class AutoCollectCube extends SequentialCommandGroup {
-  public AutoCollectCube(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm, TelescopicArm telescopicArm) {
+  public AutoCollectCube(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm, TelescopicArm telescopicArm, LimeLight limeLight) {
     Ground ground = new Ground(gripper, lilArm, bigArm, telescopicArm);
-    DriveToCube driveToCube = new DriveToCube(swerve,gripper);
+    DriveToCube driveToCube = new DriveToCube(swerve,gripper,limeLight);
     addCommands(
       ground,
       driveToCube
