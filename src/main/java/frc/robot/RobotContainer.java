@@ -25,7 +25,9 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.LilConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.actions.CoolScore;
-import frc.robot.commands.actions.EmergencyStop;
+import frc.robot.commands.actions.CoolScoreDrive;
+import frc.robot.commands.actions.EmergencyStopArms;
+import frc.robot.commands.actions.FullEStop;
 import frc.robot.commands.actions.HighIntake;
 import frc.robot.commands.actions.Ground;
 import frc.robot.commands.actions.MiddleOfBot;
@@ -99,7 +101,17 @@ public class RobotContainer {
     driverController.back().onTrue(lilArm.zeroLilArm());
     driverController.x().onTrue(gripper.getEjectCommand().asProxy());
     driverController.a().onTrue(new ConditionalCommand(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy(), Commands.none(), () -> swerve.areWeCloseEnough()));
-    //driverController.b().onTrue();
+    driverController.pov(0).onTrue(new CoolScoreDrive(swerve, objective));
+   
+    operatorController.povCenter().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    operatorController.povDown().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    operatorController.povDownLeft().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    operatorController.povDownRight().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    operatorController.povLeft().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    operatorController.povRight().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    operatorController.povUp().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    operatorController.povUpLeft().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    operatorController.povUpRight().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
     
     /* Operator Buttons */
 
@@ -108,7 +120,7 @@ public class RobotContainer {
     operatorController.a().onTrue(putItemInTheMiddle);
     operatorController.b().onTrue(middleOfBot);
     operatorController.x().onTrue(highIntake);
-    operatorController.start().onTrue(new EmergencyStop(lilArm, bigArm, telescopicArm));
+    operatorController.start().onTrue(new EmergencyStopArms(lilArm, bigArm, telescopicArm));
     operatorController.back().onTrue(bigArm.Home());
 
     operatorController.povCenter().onTrue(groundIntake);
