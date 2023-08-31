@@ -52,7 +52,7 @@ public class CoolScoreDrive extends InstantCommand {
 
     List<PathPoint> pointsList = null;
 
-    if(!(Math.abs(swerve.getPose().getX() - endPointTranslatio2d.getX()) > SwerveConstants.trajAccuracy ||
+    if((Math.abs(swerve.getPose().getX() - endPointTranslatio2d.getX()) > SwerveConstants.trajAccuracy ||
         Math.abs(swerve.getPose().getY() - endPointTranslatio2d.getY()) > SwerveConstants.trajAccuracy)){
       if (alliance == Alliance.Blue) {
         if (pose.getY() > 3.35) {
@@ -96,18 +96,18 @@ public class CoolScoreDrive extends InstantCommand {
         }
       }
 
-      swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(pointsList), false);
+      swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(pointsList), false).asProxy();
       if (Math.abs(swerve.getPose().getX() - endPointTranslatio2d.getX()) > SwerveConstants.trajAccuracy ||
           Math.abs(swerve.getPose().getY() - endPointTranslatio2d.getY()) > SwerveConstants.trajAccuracy) {
-        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(endPointTranslatio2d), false);
+        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(endPointTranslatio2d), false).asProxy();
       }
       if (Math.abs(swerve.getPose().getX() - endPointTranslatio2d.getX()) > SwerveConstants.trajAccuracy ||
           Math.abs(swerve.getPose().getY() - endPointTranslatio2d.getY()) > SwerveConstants.trajAccuracy) {
-        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(endPointTranslatio2d), false);
+        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(endPointTranslatio2d), false).asProxy();
       }
       if (Math.abs(swerve.getPose().getX() - endPointTranslatio2d.getX()) > SwerveConstants.trajAccuracy ||
           Math.abs(swerve.getPose().getY() - endPointTranslatio2d.getY()) > SwerveConstants.trajAccuracy) {
-        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(endPointTranslatio2d), false);
+        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(endPointTranslatio2d), false).asProxy();
       }
     }
     
