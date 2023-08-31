@@ -34,9 +34,12 @@ public class DriveToCube extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    swerve.drive(new Translation2d(-limeLight.getCubeX() + -SwerveConstants.minAutoCollectSpeed, 0),
-        limeLight.getCubeY() + limeLight.getCubeY() < 0 ? SwerveConstants.minAutoCollectRotation: -SwerveConstants.minAutoCollectRotation,
-        false, false);
+    if (limeLight.cubeExist()) {
+      swerve.drive(new Translation2d(-limeLight.getCubeX() + -SwerveConstants.minAutoCollectSpeed, 0),
+          limeLight.getCubeY() + limeLight.getCubeY() < 0 ? SwerveConstants.minAutoCollectRotation
+              : -SwerveConstants.minAutoCollectRotation,
+          false, false);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -49,6 +52,6 @@ public class DriveToCube extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return gripper.isHolding();
+    return gripper.isHolding() || !limeLight.getTargetExist(); 
   }
 }

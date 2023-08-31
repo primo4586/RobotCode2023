@@ -20,7 +20,7 @@ public class LimeLight {
     private DoubleSubscriber x = table.getDoubleTopic("tx").subscribe(0.0);
     private DoubleSubscriber y = table.getDoubleTopic("ty").subscribe(0.0);
     private DoubleSubscriber targetExist = table.getDoubleTopic("tv").subscribe(0.0);
-    private StringSubscriber targetClass = table.getStringTopic("tclass").subscribe("nothing");
+    private DoubleSubscriber targetClass = table.getDoubleTopic("tclass").subscribe(0);
     private DoublePublisher camMode = table.getDoubleTopic("camMode").publish();
     UsbCamera limeLightCam;
 
@@ -30,11 +30,11 @@ public class LimeLight {
     }
     
     public double getCubeX() {
-        return x.getAsDouble();
+        return targetExist.getAsDouble()==1?x.getAsDouble():null;
     }
 
     public double getCubeY() {
-        return y.getAsDouble();
+        return targetExist.getAsDouble()==1?y.getAsDouble():null;
     }
 
     public void cubeLimeLight() {
@@ -49,8 +49,11 @@ public class LimeLight {
         return targetExist.getAsDouble() == 1;
     }
 
-    public String getTargetClass() {
-        return targetClass.get();
+    public double getTargetClass() {
+        return targetExist.getAsDouble() == 1 ? targetClass.getAsDouble() : null;
     }
-
+    
+    public boolean cubeExist() {
+        return targetExist.getAsDouble() == 1 && targetClass.getAsDouble() == 0;
+    }
 }
