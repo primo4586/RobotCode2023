@@ -45,11 +45,11 @@ public class Robot extends TimedRobot {
   private BigArm bigArm;
   private TelescopicArm telescopicArm;
   private boolean hasReset = false;
-  private Gripper gripper;
+  private Gripper gripper = new Gripper();
   private Swerve swerve;
   private LimeLight limeLight;
   private PneumaticsControlModule pcm;
-  public final Objective objective = new Objective();
+  public final Objective objective = new Objective(gripper);
 
   //private PowerDistribution PDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
 
@@ -65,7 +65,6 @@ public class Robot extends TimedRobot {
     //pcm.disableCompressor();
     ctreConfigs = new CTREConfigs();
     bigArm = new BigArm();
-    gripper = new Gripper();
     lilArm = new LilArm();
     swerve = new Swerve();
     telescopicArm = new TelescopicArm();
@@ -82,8 +81,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    objective.updateInputs();
-    checkNodeSelectorButtons();
   }
 
   @Override
@@ -136,6 +133,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    objective.updateInputs();
+    checkNodeSelectorButtons();
   }
 
   @Override

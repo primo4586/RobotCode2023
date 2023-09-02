@@ -18,13 +18,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.Gripper;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 
 public interface NodeSelectorIO {
   public static class NodeSelectorIOInputs{
     public long selectedNode = -1;
-    public long coneTipped = -1;
   }
 
   public static class Objective {
@@ -40,6 +40,7 @@ public interface NodeSelectorIO {
     public final BooleanSubscriber groundSubscriber;
     public final BooleanPublisher groundDoubleClickPublisher;
     public final BooleanSubscriber groundDoubleClickSubscriber;
+    private Gripper gripper;
 
 
     
@@ -50,7 +51,8 @@ public interface NodeSelectorIO {
     public Objective(
         int nodeRow,
         NodeLevel nodeLevel,
-        boolean lastIntakeFront) {
+        boolean lastIntakeFront,
+        Gripper gripper) {
 
       var table = NetworkTableInstance.getDefault().getTable("nodeselector");
       nodePublisher = table.getIntegerTopic("node_robot_to_dashboard").publish();
@@ -66,6 +68,7 @@ public interface NodeSelectorIO {
       groundSubscriber = table.getBooleanTopic("ground_dashboard_to_robot").subscribe(false);
       groundDoubleClickPublisher = table.getBooleanTopic("ground_double_click").publish();
       groundDoubleClickSubscriber = table.getBooleanTopic("ground_double_click").subscribe(false);
+      this.gripper = gripper;
 
       this.nodeRow = nodeRow;
       this.nodeLevel = nodeLevel;
@@ -82,8 +85,8 @@ public interface NodeSelectorIO {
       app.start(5800);
     }
 
-    public Objective() {
-      this(0, NodeLevel.HYBRID, false);
+    public Objective(Gripper gripper) {
+      this(0, NodeLevel.HYBRID, false, gripper);
     }
 
     public boolean isConeNode() {
@@ -142,6 +145,7 @@ public interface NodeSelectorIO {
           case HIGH -> selected += 18;
         }
         setSelected(selected);
+        gripper.setShouldGripCone(nodeLevel == NodeLevel.HYBRID ? false : isConeNode());
       }
       putObjectiveAsText();
     }
