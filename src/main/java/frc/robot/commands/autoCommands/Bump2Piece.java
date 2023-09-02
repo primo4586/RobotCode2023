@@ -18,10 +18,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.BigConstants;
-import frc.robot.Constants.LilConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.Constants.TelescopicArmConstants;
+import frc.robot.commands.actions.AutoCollectCube;
 import frc.robot.commands.actions.Ground;
 import frc.robot.commands.actions.GroundOnlyArms;
 import frc.robot.commands.actions.PutItemInTheMiddle;
@@ -31,10 +29,11 @@ import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.TelescopicArm;
+import frc.robot.vision.LimeLight;
 
 public class Bump2Piece extends SequentialCommandGroup {
   public Bump2Piece(boolean shouldStartWithCone, boolean areWeBlue, BigArm bigArm,
-      LilArm lilArm, Gripper gripper, Swerve swerve, TelescopicArm telescopicArm) {
+      LilArm lilArm, Gripper gripper, Swerve swerve, TelescopicArm telescopicArm, LimeLight limeLight) {
 
     ConditionalCommand driveBack = new ConditionalCommand(//TODO: make sure all the paths end with vel overide
         swerve.followTrajectory(PathPlanner.loadPath(shouldStartWithCone ? "blueLowerCone" : "blueLowerCube",
@@ -47,6 +46,11 @@ public class Bump2Piece extends SequentialCommandGroup {
     ConditionalCommand returnTraj = new ConditionalCommand(
         swerve.followTrajectory(PathPlanner.loadPath("blueLowerReturn", AutoConstants.pathConstraints), false),
         swerve.followTrajectory(PathPlanner.loadPath("redLowerReturn", AutoConstants.pathConstraints), false),
+            () -> areWeBlue);
+
+    ConditionalCommand secondDriveBack = new ConditionalCommand(
+            swerve.followTrajectory(PathPlanner.loadPath("blueLowerCubeTwo", AutoConstants.pathConstraints), false),
+            swerve.followTrajectory(PathPlanner.loadPath("redLowerCubeTwo", AutoConstants.pathConstraints), false),
             () -> areWeBlue);
 
     BooleanSupplier collectClosenesCheck = () -> Math
@@ -92,8 +96,7 @@ public class Bump2Piece extends SequentialCommandGroup {
         putSecondPiece,
         gripper.getEjectCommand(),
         Commands.waitSeconds(0.2),
-        telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
-        bigArm.TurnBigArmToSetpoint(BigConstants.middleOfRobotSetPoint),
-        lilArm.TurnLilArmToSetpoint(LilConstants.middleOfRobotSetPoint));
+        secondDriveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
+        new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm, limeLight));
   }
 }
