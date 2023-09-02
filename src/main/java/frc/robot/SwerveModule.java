@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.math.Conversions;
 import frc.lib.util.CTREModuleState;
 import frc.lib.util.SwerveModuleConstants;
@@ -27,6 +28,8 @@ public class SwerveModule {
     private TalonFX mDriveMotor;
     private CANCoder angleEncoder;
     private double lastAngle;
+    private double maxVelocityTest = 0;// TODO: delete after test
+    private double currentSpeedTest = 0;//TODO: delete after test
 
     private final SparkMaxPIDController angleController;
     private RelativeEncoder integratedAngleEncoder;
@@ -96,7 +99,13 @@ public class SwerveModule {
                     feedforward.calculate(desiredState.speedMetersPerSecond));
 
         }
-        // SmartDashboard.putNumber("Mod " + moduleNumber + " Desired Velocity", desiredState.speedMetersPerSecond);
+
+        //max speed test TODO: delete after test
+        currentSpeedTest = Conversions.falconToMPS(mDriveMotor.getSelectedSensorVelocity(),
+                SwerveConstants.wheelCircumference, SwerveConstants.driveGearRatio);
+        if(currentSpeedTest>maxVelocityTest )
+            maxVelocityTest = currentSpeedTest;
+        SmartDashboard.putNumber("Mod " + moduleNumber + "max velocity", maxVelocityTest);
 
         double angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.SwerveConstants.maxSpeed * 0.01))
                 ? lastAngle

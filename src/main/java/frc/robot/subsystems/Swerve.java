@@ -535,11 +535,11 @@ public class Swerve extends SubsystemBase {
     }
     
     public Command lockWheelsChargeStation() {
-        return runOnce(()->{
+        return runOnce(() -> {
             for (SwerveModule module : mSwerveMods) {
-            module.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), true);
-        }
+                module.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), true);
+            }
         });
 
-    }       
+    }
 }
