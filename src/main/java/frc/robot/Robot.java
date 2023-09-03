@@ -75,6 +75,7 @@ public class Robot extends TimedRobot {
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm, telescopicArm);
     PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
     //PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
+    objective.updateInputs();
   }
 
 

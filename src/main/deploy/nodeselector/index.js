@@ -217,6 +217,20 @@ window.addEventListener("load", () => {
   
   // Add ground listeners
   const groundClickedDiv = document.getElementsByClassName("ground")[0];
+  let lastTouchTime = 0;
+  const doubleClickDelay = 300; // Adjust this value as needed
+
+  groundClickedDiv.addEventListener('touchstart', function(event) {
+    const currentTime = new Date().getTime();
+    const timeSinceLastTouch = currentTime - lastTouchTime;
+
+    if (timeSinceLastTouch < doubleClickDelay) {
+      sendGroundDoubleClick();
+    }
+
+    lastTouchTime = currentTime;
+  });
+
 
   groundClickedDiv.addEventListener("click", () => {
     sendGround();
