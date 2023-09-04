@@ -103,15 +103,15 @@ public class RobotContainer {
     driverController.a().onTrue(new ConditionalCommand(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy(), Commands.none(), () -> swerve.areWeCloseEnough()));
     driverController.pov(0).onTrue(new CoolScoreDrive(swerve, objective));
    
-    operatorController.povCenter().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
-    operatorController.povDown().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
-    operatorController.povDownLeft().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
-    operatorController.povDownRight().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
-    operatorController.povLeft().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
-    operatorController.povRight().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
-    operatorController.povUp().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
-    operatorController.povUpLeft().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
-    operatorController.povUpRight().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    driverController.povCenter().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    driverController.povDown().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    driverController.povDownLeft().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    driverController.povDownRight().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    driverController.povLeft().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    driverController.povRight().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    driverController.povUp().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    driverController.povUpLeft().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
+    driverController.povUpRight().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
     
     /* Operator Buttons */
 

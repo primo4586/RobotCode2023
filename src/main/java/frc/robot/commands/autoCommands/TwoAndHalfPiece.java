@@ -28,15 +28,15 @@ import frc.robot.subsystems.TelescopicArm;
 import frc.robot.vision.LimeLight;
 
 public class TwoAndHalfPiece extends SequentialCommandGroup {
-  public TwoAndHalfPiece(boolean shouldStartWithCone, boolean shouldFinishWithCone, boolean areWeBlue, BigArm bigArm,
+  public TwoAndHalfPiece(boolean shouldStartWithCone, boolean areWeBlue, BigArm bigArm,
       LilArm lilArm, Gripper gripper, Swerve swerve, TelescopicArm telescopicArm, LimeLight limeLight) {
 
     ConditionalCommand putSecondPiece = new ConditionalCommand(new PutItemInTheMiddle(lilArm, bigArm, gripper, telescopicArm),
-        new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm), () -> shouldStartWithCone == shouldFinishWithCone);
+        new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm), () -> shouldStartWithCone );
 
     ConditionalCommand returnTraj = new ConditionalCommand(
-        swerve.followTrajectory(PathPlanner.loadPath(shouldFinishWithCone ? "blueUpperConeReturn" : "blueUpperCubeReturn",AutoConstants.pathConstraints), false),
-        swerve.followTrajectory(PathPlanner.loadPath(shouldFinishWithCone ? "redUpperConeReturn" : "redUpperCubeReturn",AutoConstants.pathConstraints), false),
+        swerve.followTrajectory(PathPlanner.loadPath("blueUpperCubeReturn",AutoConstants.pathConstraints), false),
+        swerve.followTrajectory(PathPlanner.loadPath("redUpperCubeReturn",AutoConstants.pathConstraints), false),
         () -> areWeBlue);
 
       ConditionalCommand secondDriveBack = new ConditionalCommand(
@@ -77,7 +77,7 @@ public class TwoAndHalfPiece extends SequentialCommandGroup {
         driveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
         collectCheck,
         Commands.runOnce(() -> {
-          gripper.setShouldGripCone(shouldFinishWithCone);
+          gripper.setShouldGripCone(false);
         }, gripper),
         returnTraj.alongWith(putSecondPiece),
         communityCheck,

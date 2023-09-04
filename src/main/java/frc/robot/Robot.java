@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer = new RobotContainer(swerve, gripper ,lilArm, bigArm, objective, telescopicArm);
 
-    autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm, telescopicArm);
+    autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm, telescopicArm,limeLight);
     PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
     //PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
     objective.updateInputs();
