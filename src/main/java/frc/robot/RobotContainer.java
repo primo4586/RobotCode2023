@@ -102,7 +102,7 @@ public class RobotContainer {
     driverController.x().onTrue(gripper.getEjectCommand().asProxy());
     driverController.a().onTrue(new ConditionalCommand(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy(), Commands.none(), () -> swerve.areWeCloseEnough()));
     driverController.pov(0).onTrue(new CoolScoreDrive(swerve, objective));
-   
+    
     driverController.povCenter().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
     driverController.povDown().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
     driverController.povDownLeft().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
