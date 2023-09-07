@@ -249,12 +249,11 @@ public class Swerve extends SubsystemBase {
         // SmartDashboard.putNumber("Roll", getRoll());
         // SmartDashboard.putNumber("Pitch", getPitch());
         // SmartDashboard.putNumber("Teleop Gyro", getTeleopYaw().getDegrees());
-
-        // for (SwerveModule mod : mSwerveMods) {
-        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getState().angle.getDegrees());
+         for (SwerveModule mod : mSwerveMods) {
+             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
+             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getState().angle.getDegrees());
         //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-        // }
+         }
     }
 
     public void updateOdometry() {
@@ -541,5 +540,14 @@ public class Swerve extends SubsystemBase {
             }
         });
 
+    }
+
+    public void checkWheelsAlignment(){
+        SmartDashboard.putBoolean("wheels aligned", true);
+        for(SwerveModule module:mSwerveMods){
+            if(module.areWheelsAligned()){
+                SmartDashboard.putBoolean("wheels aligned", false);
+            }
+        }
     }
 }

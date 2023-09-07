@@ -24,7 +24,7 @@ public class LilArm extends SubsystemBase {
 
     lilArmEncoder = new WPI_TalonSRX(LilConstants.lilArmEncoderID);
 
-    lilArmMotor = new WPI_TalonFX(00);
+    lilArmMotor = new WPI_TalonFX(LilConstants.lilArmMotorID);
 
     lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
 

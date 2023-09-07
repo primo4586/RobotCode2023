@@ -57,12 +57,14 @@ public class TelescopicArm extends SubsystemBase {
     telesMotor.configMotionAcceleration(6000, TelescopicArmConstants.kTimeoutMs);
 
     telesMotor.setSelectedSensorPosition(0, TelescopicArmConstants.kPIDLoopIdx, TelescopicArmConstants.kTimeoutMs);
+    telesMotor.setNeutralMode(NeutralMode.Coast);
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Big Arm Position", telesMotor.getSelectedSensorPosition());
-    SmartDashboard.putBoolean("Home Switch value", homeSwitch.get());
+    SmartDashboard.putBoolean("Teles Switch value", homeSwitch.get());
+
   }
 
   public Command putTelesInSetpoint(double setPoint) {
@@ -71,7 +73,7 @@ public class TelescopicArm extends SubsystemBase {
 
   public void zeroTeles() {
     telesMotor.setNeutralMode(NeutralMode.Coast);
-    while (!homeSwitch.get()) {}
+    while (homeSwitch.get()) {}
     telesMotor.setSelectedSensorPosition(0);
     telesMotor.setNeutralMode(NeutralMode.Brake);
   }

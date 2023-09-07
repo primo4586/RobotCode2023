@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 public class GripperConstants {
-    private static final int MOTOR_ID = 13;
+    private static final int MOTOR_ID = 8;
     private static final boolean INVERTED = false;
 
     private static final double
