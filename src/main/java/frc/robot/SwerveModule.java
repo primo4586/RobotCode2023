@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.math.Conversions;
 import frc.lib.util.CTREModuleState;
@@ -31,7 +32,7 @@ public class SwerveModule {
     private double maxVelocityTest = 0;// TODO: delete after test
     private double currentSpeedTest = 0;//TODO: delete after test
 
-    private final SparkMaxPIDController angleController;
+    private SparkMaxPIDController angleController;
     private RelativeEncoder integratedAngleEncoder;
 
     private SwerveModuleConstants constants;
@@ -50,9 +51,8 @@ public class SwerveModule {
         configAngleEncoder();
 
         /* Angle Motor Config */
+        Timer.delay(1.0);
         mAngleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
-        integratedAngleEncoder = mAngleMotor.getEncoder();
-        angleController = mAngleMotor.getPIDController();
         configAngleMotor();
         configAngleMotor();
         configAngleMotor();
@@ -109,11 +109,11 @@ public class SwerveModule {
 
         double angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.SwerveConstants.maxSpeed * 0.01))
                 ? lastAngle
-                : desiredState.angle.getDegrees(); // Prevent rotating module if speed is less then 1%. Prevents
+                :(desiredState.angle.getDegrees() ); // Prevent rotating module if speed is less then 1%. Prevents
                                                    // Jittering.
-        angleController.setReference(angle, ControlType.kPosition);
+        angleController.setReference(angle,  ControlType.kPosition) ;
         lastAngle = angle;
-    }
+        }
 
     private void resetToAbsolute() {
         double absolutePosition = getCanCoder().getDegrees() - angleOffset;
@@ -129,17 +129,22 @@ public class SwerveModule {
     }
 
     private void configAngleMotor() {
+        integratedAngleEncoder = mAngleMotor.getEncoder();
+        angleController = mAngleMotor.getPIDController();
         mAngleMotor.restoreFactoryDefaults();
         mAngleMotor.setSmartCurrentLimit(Constants.SwerveConstants.angleContinuousCurrentLimit);
         mAngleMotor.setInverted(Constants.SwerveConstants.angleMotorInvert);
         mAngleMotor.setIdleMode(Constants.SwerveConstants.angleNeutralMode);
-        integratedAngleEncoder.setPositionConversionFactor(Constants.SwerveConstants.angleGearRatio);
+        integratedAngleEncoder.setPositionConversionFactor(360/SwerveConstants.angleGearRatio);
         angleController.setP(Constants.SwerveConstants.angleKP);
         angleController.setI(Constants.SwerveConstants.angleKI);
         angleController.setD(Constants.SwerveConstants.angleKD);
         angleController.setFF(Constants.SwerveConstants.angleKF);
         mAngleMotor.enableVoltageCompensation(Constants.SwerveConstants.voltageComp);
         mAngleMotor.burnFlash();
+        Timer.delay(1.0);
+        resetToAbsolute();
+        resetToAbsolute();
         resetToAbsolute();
     }
 
@@ -183,5 +188,9 @@ public class SwerveModule {
 
     public SwerveModulePosition getPostion() {
         return new SwerveModulePosition(getMeterDistance(), getState().angle);
+    }
+
+    public boolean areWheelsAligned(){
+        return Math.abs(getCanCoder().getDegrees()-angleOffset)>2;
     }
 }

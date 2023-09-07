@@ -9,6 +9,7 @@ import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.
 
 import com.pathplanner.lib.server.PathPlannerServer;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -94,6 +95,8 @@ public class Robot extends TimedRobot {
       telescopicArm.zeroTeles();
     }
 
+    swerve.checkWheelsAlignment();
+
   }
   
   @Override
@@ -144,6 +147,7 @@ public class Robot extends TimedRobot {
     LiveWindow.disableAllTelemetry();
     lilArm.zeroEncoderForAuto();
     bigArm.zeroEncoderForMiddleOfBot();
+    swerve.drive(new Translation2d(0,0), 0, false, false);
     // Cancels all running commands at the start of test mode.
     // CommandScheduler.getInstance().cancelAll();.
 

@@ -22,17 +22,13 @@ public final class Constants {
     public static final int ARM_STALL_CURRENT_LIMIT = 30;
     public static final int ARM_FREE_CURRENT_LIMIT = 35;
 
-    public static final class GripperConstants{
-        public static final int gripperMotorPort = 11;
-
-        public static final int solenoidOpenID = 6;
-        public static final int solenoidCloseID = 3;
-        public static final int PCMID = 44;
-
-        public static final int isGripperOpenID = 2;
-    }
-
     public static final class BigConstants{
+        public static final int bigArmMotorID = 5;
+
+        public static final int homeSwitchID = 1;
+        public static final double homeSpeed = 0.1;
+        public static final double homeSetPoint = 0.0;
+
         //bigArm PID values
         public static final double bigArmKF = 0.0;
         public static final double bigArmKP = 0.002;
@@ -45,9 +41,6 @@ public final class Constants {
 
 
         public static final double bigArmGearRatio = 125 / 1;
-
-        public static final int bigArmMotorID = 16;
-        public static final int bigArmEncoderID = 5;
 
         public static final double ticksTolerance = 500;
 
@@ -72,10 +65,6 @@ public final class Constants {
         public static final double groundSetPoint = 9083;//-84986;
         public static final double groundSetPoint2 = 10000;
 
-        public static final double homeSpeed = 0.1;
-        public static final double homeSetPoint = 0.0;
-        public static final int homeSwitchID = 1;
-
         public static int kTimeoutMs = 30;
         public static int kSlotIdx = 0;
         public static int kPIDLoopIdx = 0;
@@ -83,7 +72,7 @@ public final class Constants {
 
     public static final class SwerveConstants {
         /* Gyro ID (Changes Per Robot) */
-        public static final int pigeonID = 18;
+        public static final int pigeonID = 10;
 
         /* Invert gyro if necessary (Changes Per Robot) */
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
@@ -165,43 +154,44 @@ public final class Constants {
         /* Angle Encoder Invert - Ensure that CANCoders are CCW+!! (Changes Per Module) */
         public static final boolean canCoderInvert = false;
 
-        /* Module Specific Constants (Changes Per Robot) */
-        /* Front Left Module - Module 0 */
-        public static final class FrontLeftModule {
-            public static final int driveMotorID = 20;
-            public static final int angleMotorID = 15;
-            public static final int canCoderID = 14;
-            public static final double angleOffset = 315.43;
-            public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
-        }
+        /* Module Specific Constants (Changes Per Robot) */        
         /* Front Right Module - Module 1  */
         public static final class FrontRightModule {
             public static final int driveMotorID = 1;
-            public static final int angleMotorID = 10;
-            public static final int canCoderID = 13;
-            public static final double angleOffset = 325.8;
+            public static final int angleMotorID = 17;
+            public static final int canCoderID = 1;
+            public static final double angleOffset = 126.3;
             public static final SwerveModuleConstants constants = 
 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
         }
+        /* Front Left Module - Module 0 */
+        public static final class FrontLeftModule {
+            public static final int driveMotorID = 2;
+            public static final int angleMotorID = 18;
+            public static final int canCoderID = 2;
+            public static final double angleOffset = 237.3;
+            public static final SwerveModuleConstants constants = 
+                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
+        }
+
         
         /* Back Left Module - Module 2 */
         public static final class BackLeftModule {
-            public static final int driveMotorID = 8;
-            public static final int angleMotorID = 7;
-            public static final int canCoderID = 11;
-            public static final double angleOffset = 306.562;
+            public static final int driveMotorID = 3;
+            public static final int angleMotorID = 19;
+            public static final int canCoderID = 3;
+            public static final double angleOffset = 227.3;
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
         }
 
         /* Back Right Module - Module 3 */
         public static final class BackRightModule {
-            public static final int driveMotorID = 2;
-            public static final int angleMotorID = 9;
-            public static final int canCoderID = 0;
-            public static final double angleOffset = 257.7;
+            public static final int driveMotorID = 4;
+            public static final int angleMotorID =20;
+            public static final int canCoderID = 4;
+            public static final double angleOffset = 257.3;
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
         }
@@ -250,16 +240,12 @@ public final class Constants {
         public static final double lilArmMotorsKD = 0.0002;
 
         /* LilArm Motors ID */
-        public static final int lilArmMotorID = 18;
+        public static final int lilArmMotorID = 6;
 
-        public static final int lilArmEncoderID = 3;
+        public static final int lilArmEncoderID = 11;
 
         /* LilArm Motors Gear Ratio */
         public static final double lilMotorGearRatio = 50 / 1;
-
-        /* LilArm Solenoid Ports */
-        public static final int PCMID = 44;
-        public static final int lilArmSolenoidID = 4;
 
         public static final double ticksTolerance = 20;
 
@@ -285,7 +271,7 @@ public final class Constants {
     }
 
     public static final class TelescopicArmConstants {
-        public static final int teleMotorID = 0;
+        public static final int teleMotorID = 7;
 
         // TelescopicArm PID values
         public static final double TelesKF = 0.0;
@@ -303,7 +289,7 @@ public final class Constants {
 
         public static final double ticksTolerance = 500;
 
-        public static final int homeSwitchID = 2;
+        public static final int homeSwitchID = 0;
 
         public static int kTimeoutMs = 30;
         public static int kSlotIdx = 0;
