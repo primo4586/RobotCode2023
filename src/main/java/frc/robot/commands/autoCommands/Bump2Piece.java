@@ -70,7 +70,7 @@ public class Bump2Piece extends SequentialCommandGroup {
             swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(areWeBlue ? new Translation2d(1.90, 1.07) : new Translation2d(14.65, 1.07)),false).asProxy(),
             communityClosenesCheck);
         
-    Command driveToCollect = swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(
+    Command driveToCollect = swerve.followTrajectory(swerve.generateTrajectoryToPoseList(
             List.of(new PathPoint(swerve.getPose().getTranslation(), swerve.getPose().getRotation(),swerve.getStates()[0].speedMetersPerSecond),
             new PathPoint(new Translation2d(areWeBlue ? 6.8:9.75, 0.92), new Rotation2d(0)))),false);
 

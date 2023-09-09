@@ -46,7 +46,7 @@ public class DriveToCube extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     limeLight.camLimeLight();
-    swerve.stopModules();
+    swerve.drive(new Translation2d(0,0), 0, true, true);
   }
 
   // Returns true when the command should end.

@@ -9,6 +9,7 @@ import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.
 
 import com.pathplanner.lib.server.PathPlannerServer;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.RobotController;
@@ -36,11 +37,9 @@ import frc.robot.vision.LimeLight;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static CTREConfigs ctreConfigs;
 
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
   private AutoContainer autoContainer;
 
   private LilArm lilArm;
@@ -64,18 +63,16 @@ public class Robot extends TimedRobot {
     PathPlannerServer.startServer(5813);
     pcm = new PneumaticsControlModule(44);
     pcm.enableCompressorDigital();
-    //pcm.disableCompressor();
-    ctreConfigs = new CTREConfigs();
     bigArm = new BigArm();
     lilArm = new LilArm();
     swerve = new Swerve();
     telescopicArm = new TelescopicArm();
     limeLight = new LimeLight();
 
-    m_robotContainer = new RobotContainer(swerve, gripper ,lilArm, bigArm, objective, telescopicArm);
+    new RobotContainer(swerve, gripper ,lilArm, bigArm, objective, telescopicArm);
 
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm, telescopicArm,limeLight);
-    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
+    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, CameraServer.startAutomaticCapture("ground",0));
     //PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
     objective.updateInputs();
     SmartDashboard.putBoolean("wheels aligned", true);
@@ -103,7 +100,7 @@ public class Robot extends TimedRobot {
   
   @Override
   public void autonomousInit() {
-    swerve.zeroGyro();   
+    swerve.setGyro(0);   
     lilArm.zeroEncoderForAuto();
     bigArm.zeroEncoderForMiddleOfBot();
     m_autonomousCommand = autoContainer.getAutonomousCommand();//swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 3.6);
@@ -120,7 +117,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, m_robotContainer.getDriverCamera());
+    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, CameraServer.startAutomaticCapture("ground",0));
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

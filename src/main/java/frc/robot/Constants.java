@@ -110,6 +110,11 @@ public final class Constants {
         public static final int drivePeakCurrentLimit = 50;
         public static final double drivePeakCurrentDuration = 0.1;
         public static final boolean driveEnableCurrentLimit = true;
+        public static final SupplyCurrentLimitConfiguration driveSupplyLimit = new SupplyCurrentLimitConfiguration(
+                driveEnableCurrentLimit,
+                driveContinuousCurrentLimit,
+                drivePeakCurrentLimit,
+                drivePeakCurrentDuration);
 
         /* Angle Motor PID Values (Changes Per Module) */
         public static final double angleKP = 0.1;

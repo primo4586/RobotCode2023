@@ -33,7 +33,7 @@ public class PIDBalance extends CommandBase {
           true,
           false);
     } else {
-      swerve.lockWheelsChargeStation();
+      swerve.wheelsInX();
       timer.start();
     }
   }

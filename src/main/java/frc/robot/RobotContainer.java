@@ -11,9 +11,6 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -47,8 +44,6 @@ public class RobotContainer {
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
-  private UsbCamera driverCamera;
-
   /* Subsystems */
   private Swerve swerve;
   /**
@@ -73,7 +68,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings(swerve, gripper, lilArm, bigArm, objective, telescopicArm);
     //if (Robot.isReal()) {
-    buildCameras();
+    //buildCameras();
     //}
   }
 
@@ -148,16 +143,6 @@ public class RobotContainer {
     PathConstraints constraints = new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
         AutoConstants.kMaxAccelerationMetersPerSecondSquared);
     return swerve.followTrajectory(PathPlanner.loadPath("One Meter Forward", constraints), true);
-  }
-
-  public void buildCameras() {
-    driverCamera = CameraServer.startAutomaticCapture("ground", 0);
-    driverCamera.setVideoMode(PixelFormat.kYUYV, 320, 240, 10);
-
-  }
-
-  public UsbCamera getDriverCamera() {
-    return driverCamera;
   }
 
   public double getOperatorLeftStick(){

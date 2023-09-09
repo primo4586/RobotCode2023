@@ -4,7 +4,6 @@
 
 package frc.robot.vision;
 
-import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
@@ -21,7 +20,6 @@ public class LimeLight {
     private DoubleSubscriber targetExist = table.getDoubleTopic("tv").subscribe(0.0);
     private DoubleSubscriber targetClass = table.getDoubleTopic("tclass").subscribe(0);
     private DoublePublisher camMode = table.getDoubleTopic("camMode").publish();
-    UsbCamera limeLightCam;
 
     public LimeLight() {
         table.getEntry("ledMode").setNumber(1);
