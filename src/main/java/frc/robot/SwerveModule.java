@@ -191,6 +191,6 @@ public class SwerveModule {
     }
 
     public boolean areWheelsAligned(){
-        return Math.abs(getCanCoder().getDegrees()-angleOffset)>2;
+        return Math.abs(getCanCoder().getDegrees()-angleOffset)<2;
     }
 }

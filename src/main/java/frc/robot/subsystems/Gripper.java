@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -8,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.GripperConstants;
 
 public class Gripper extends SubsystemBase {
@@ -17,9 +21,9 @@ public class Gripper extends SubsystemBase {
     private GripperConstants.GripperState state = GripperConstants.GripperState.STOP;
 
     private boolean shouldGripCone;
+    private final XboxController driverRumbleController = new XboxController(0);
 
     public Gripper() {
-        setPowerDistributionPortRequirements();
         setDefaultCommand(
                 new StartEndCommand(
                         () -> setState(GripperConstants.GripperState.HOLD),
@@ -35,8 +39,12 @@ public class Gripper extends SubsystemBase {
     public CommandBase getCollectCommand() {
         return new ProxyCommand(new StartEndCommand(
                 () -> setState(GripperConstants.GripperState.COLLECT),
-                () -> setState(GripperConstants.GripperState.HOLD),
-                this));
+                () ->{
+                    setState(GripperConstants.GripperState.HOLD);
+                    driverRumbleController.setRumble(RumbleType.kBothRumble, 1);
+                    new WaitCommand(0.2);
+                    driverRumbleController.setRumble(RumbleType.kBothRumble, 0);},
+                this).until(() -> motor.getSupplyCurrent() > GripperConstants.currentLimit));
     }
 
     /**
@@ -47,7 +55,7 @@ public class Gripper extends SubsystemBase {
         return new ProxyCommand(new StartEndCommand(
                 () -> setState(GripperConstants.GripperState.SLOW_COLLECT),
                 () -> setState(GripperConstants.GripperState.HOLD),
-                this));
+                this).until(() -> motor.getSupplyCurrent() > GripperConstants.currentLimit));
     }
 
     /**
@@ -101,14 +109,6 @@ public class Gripper extends SubsystemBase {
 
     public boolean isHolding() {
         return state == GripperConstants.GripperState.HOLD;
-    }
-
-    private void setPowerDistributionPortRequirements() {
-        GripperConstants.HOLD_TRIGGER_CONFIG.setup(
-                () -> {
-                    if (state.power < 0)
-                        setState(GripperConstants.GripperState.HOLD);
-                });
     }
 
     private void setState(GripperConstants.GripperState state) {

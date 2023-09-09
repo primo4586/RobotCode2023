@@ -542,12 +542,15 @@ public class Swerve extends SubsystemBase {
 
     }
 
-    public void checkWheelsAlignment(){
-        SmartDashboard.putBoolean("wheels aligned", true);
-        for(SwerveModule module:mSwerveMods){
-            if(module.areWheelsAligned()){
-                SmartDashboard.putBoolean("wheels aligned", false);
+    public void checkWheelsAlignment() {
+        boolean alignCheck = true;
+        
+        for (SwerveModule module : mSwerveMods) {
+            SmartDashboard.putBoolean("wheel" + module.moduleNumber + "alligned", module.areWheelsAligned());
+            if (!module.areWheelsAligned()) {
+                alignCheck = false;
             }
         }
+        SmartDashboard.putBoolean("wheels aligned", alignCheck);
     }
 }

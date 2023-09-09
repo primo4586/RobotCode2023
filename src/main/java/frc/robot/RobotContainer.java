@@ -54,16 +54,16 @@ public class RobotContainer {
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm, Objective objective, TelescopicArm telescopicArm) {
+  public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm, Objective objective,
+      TelescopicArm telescopicArm) {
 
     this.swerve = swerve;
     boolean fieldRelative = true;
     boolean openLoop = true;
 
-
     VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(PoseStrategy.LOWEST_AMBIGUITY);
     swerve.setVisionPoseEstimator(visionPoseEstimator);
-    
+
     bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRightY() * 0.7));
     lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> operatorController.getLeftY() * 0.5));
 
@@ -73,7 +73,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings(swerve, gripper, lilArm, bigArm, objective, telescopicArm);
     //if (Robot.isReal()) {
-      buildCameras();
+    buildCameras();
     //}
   }
 
@@ -116,6 +116,7 @@ public class RobotContainer {
     /* Operator Buttons */
 
     operatorController.rightBumper().onTrue(gripper.changeWhatWeGrip());
+    operatorController.leftBumper().onTrue(gripper.getCollectCommand());
     operatorController.y().onTrue(putItemInTheUpper);
     operatorController.a().onTrue(putItemInTheMiddle);
     operatorController.b().onTrue(middleOfBot);

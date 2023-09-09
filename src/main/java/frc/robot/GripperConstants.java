@@ -1,5 +1,4 @@
 package frc.robot;
-import frc.robot.util.CurrentWatcher;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
@@ -9,18 +8,9 @@ public class GripperConstants {
     private static final int MOTOR_ID = 8;
     private static final boolean INVERTED = false;
 
-    private static final double
-            HOLD_TRIGGER_DURATION = 0.05,
-            HOLD_TRIGGER_CURRENT = 40,
-            CURRENT_LIMIT = 32;
+    public static final double currentLimit = 32;
 
     public static final WPI_TalonFX MOTOR = new WPI_TalonFX(MOTOR_ID);
-
-    public static final CurrentWatcher.CurrentWatcherConfig HOLD_TRIGGER_CONFIG = new CurrentWatcher.CurrentWatcherConfig(
-            MOTOR::getStatorCurrent,
-            HOLD_TRIGGER_CURRENT,
-            HOLD_TRIGGER_DURATION
-    );
 
     static {
         MOTOR.configFactoryDefault();
@@ -28,7 +18,7 @@ public class GripperConstants {
         MOTOR.setInverted(INVERTED);
         MOTOR.setNeutralMode(NeutralMode.Brake);
         MOTOR.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
-                true, CURRENT_LIMIT, CURRENT_LIMIT, 0.001
+                true, currentLimit, currentLimit, 0.001
         ));
     }
     public enum GripperState {
