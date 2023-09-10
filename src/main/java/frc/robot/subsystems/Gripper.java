@@ -125,6 +125,12 @@ public class Gripper extends SubsystemBase {
         return shouldGripCone;
     }
 
+    public InstantCommand setShouldGripConeCommand(boolean shouldGripCone){
+        return new InstantCommand(()->{
+            this.shouldGripCone = shouldGripCone;
+        });
+    }
+
     public void setShouldGripCone(boolean shouldGripCone) {
         this.shouldGripCone = shouldGripCone;
     }
