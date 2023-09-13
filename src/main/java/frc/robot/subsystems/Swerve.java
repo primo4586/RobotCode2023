@@ -63,6 +63,9 @@ public class Swerve extends SubsystemBase {
   
   private double[] swerveState = new double[8];
 
+  double maxSpeed = 0,
+  currentVelocity = 0;
+
 
   public Swerve() {
     gyro = new PigeonIMU(new TalonSRX(SwerveConstants.pigeonID));
@@ -89,8 +92,16 @@ public class Swerve extends SubsystemBase {
 
   @Override
   public void periodic() {
-
     putStates();
+
+    currentVelocity = mSwerveMods[0].getVelocity();
+
+    for (SwerveModule module : mSwerveMods) {
+      if(module.getVelocity()>maxSpeed)
+        maxSpeed = module.getVelocity();
+    }
+    SmartDashboard.putNumber("swerve max speed", maxSpeed);
+    SmartDashboard.putNumber("swerve current speed", currentVelocity);
   }
 
   // functions and commands

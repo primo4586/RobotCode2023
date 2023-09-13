@@ -12,7 +12,7 @@ public class Collect extends CommandBase {
 
   public Collect(Gripper gripper) {
     this.gripper = gripper;
-    addRequirements(gripper);
+    addRequirements();
   }
 
   // Called when the command is initially scheduled.

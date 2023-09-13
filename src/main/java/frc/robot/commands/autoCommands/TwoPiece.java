@@ -77,7 +77,7 @@ public class TwoPiece extends SequentialCommandGroup {
           gripper.setShouldGripCone(shouldStartWithCone);
         }),
         new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm),
-        eject,
+        new Eject(gripper),
         Commands.waitSeconds(0.3),
         driveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
         collectCheck,

@@ -87,7 +87,7 @@ public class TwoAndHalfPiece extends SequentialCommandGroup {
         }, gripper),
         returnTraj.alongWith(putSecondPiece),
         communityCheck,
-        eject,
+        new Eject(gripper),
         Commands.waitSeconds(0.2),
         secondDriveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
         new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm, limeLight),

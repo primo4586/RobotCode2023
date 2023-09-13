@@ -130,24 +130,26 @@ public final class Constants {
         public static final double angleKF = 0.0;
 
         /* Drive Motor PID Values (Changes Per Robot) */
-        public static final double driveKP = 0.3;
+        public static final double driveKP = 2.3259E-23;
         public static final double driveKI = 0.0;
         public static final double driveKD = 0.0;
         public static final double driveKF = 0.0;
 
         /* Drive Motor Characterization Values (Changes Per Robot) */
-        public static final double driveKS = (0.22754/ 12); // divided by 12 to convert from volts to percent output for CTRE
-        public static final double driveKV = (2.6777 / 12);
-        public static final double driveKA = (0.45944 / 12);
+        public static final double driveKS = (0.13319/ 12); // divided by 12 to convert from volts to percent output for CTRE
+        public static final double driveKV = (0.87606 / 12);
+        public static final double driveKA = (0.17924 / 12);
 
 
         /* Swerve Profiling Values (Changes Per Robot) - usually set by preference */
         /** meters / second */
-        public static final double maxSpeed = 5;
+        public static final double maxSpeed = 4.095243257154712;
         /** Percent output to motors. */
         public static final double maxPercentVelocity = 1; 
         /** radians / second */
-        public static final double maxAngularVelocity = 5;
+        public static final double maxAngularVelocity = 2.1;
+
+        public static final double maxAcceleration = 7.6923076924;
 
         public static double voltageComp = 12;
 

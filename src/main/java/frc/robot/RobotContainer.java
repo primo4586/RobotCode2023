@@ -102,6 +102,7 @@ public class RobotContainer {
     driverController.back().onTrue(lilArm.zeroLilArm());
     driverController.x().whileTrue(eject);
     driverController.a().onTrue(new ConditionalCommand(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy(), Commands.none(), () -> swerve.areWeCloseEnough()));
+    //driverController.b().onTrue(swerve.maxSpeed());
     driverController.pov(0).onTrue(new CoolScoreDrive(swerve, objective));
     
     driverController.povCenter().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));

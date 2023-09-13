@@ -61,8 +61,8 @@ public class SwerveModule {
         //Timer.delay(1.0);
         mAngleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
         configAngleMotor();
-        configAngleMotor();
-        configAngleMotor();
+        //configAngleMotor();
+        //configAngleMotor();
 
         /* Drive Motor Config */
         mDriveMotor = new TalonFX(moduleConstants.driveMotorID);

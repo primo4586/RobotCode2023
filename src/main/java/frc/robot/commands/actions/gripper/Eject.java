@@ -10,7 +10,7 @@ import frc.robot.subsystems.Gripper;
 public class Eject extends CommandBase {
   Gripper gripper;
   public Eject(Gripper gripper) {
-    addRequirements(gripper);
+    addRequirements();
     this.gripper = gripper;
   }
 
