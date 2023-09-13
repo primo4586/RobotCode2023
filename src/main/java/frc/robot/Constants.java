@@ -26,14 +26,14 @@ public final class Constants {
         public static final int bigArmMotorID = 5;
 
         public static final int homeSwitchID = 1;
-        public static final double homeSpeed = 0.1;
+        public static final double homeSpeed = -0.1;
         public static final double homeSetPoint = 0.0;
 
         //bigArm PID values
-        public static final double bigArmKF = 0.0;
-        public static final double bigArmKP = 0.002;
+        public static final double bigArmKF = (58.3333*1023)/(2.29*25*2048);
+        public static final double bigArmKP = 0.8002;
         public static final double bigArmKI = 0.0;
-        public static final double bigArmKD = 0.0002;
+        public static final double bigArmKD = 0.29;
         public static final PIDController bigArmPID = new PIDController(bigArmKP, bigArmKI, bigArmKD);
 
         //bigArm feedforward values
@@ -46,13 +46,13 @@ public final class Constants {
 
         public static final String bigArmPreferencesKey = "bigArmEncoder" ;
 
-        public static final double coneUpperSetPoint = -78853;//-88152;
+        public static final double coneUpperSetPoint = 41419;
         public static final double coneMiddleSetPoint = -47773;
         public static final double coneLowerSetPoint = -56326;
 
 
-        public static final double cubeUpperSetPoint = -72463;
-        public static final double cubeMiddleSetPoint = -56326;
+        public static final double cubeUpperSetPoint = 39297;
+        public static final double cubeMiddleSetPoint = 27871;
         public static final double cubeLowerSetPoint = -56326;
 
         public static final double intakeSetPoint = 2838;//-1711;
@@ -62,12 +62,19 @@ public final class Constants {
         public static final double highIntakeSetpoint = -28557;
 
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = 9083;//-84986;
-        public static final double groundSetPoint2 = 10000;
+        public static final double groundSetPoint =-2848;
 
         public static int kTimeoutMs = 30;
         public static int kSlotIdx = 0;
         public static int kPIDLoopIdx = 0;
+
+
+        public static final double ks =0.61094;
+        public static final double kv =2.4998;
+        public static final double ka =0.13149;
+        
+        public static final double maxSpeed = 3.42*25*2048/10;
+        public static final double maxAcceleration = (((12) / ka)*25*2048)/10;
     }
 
     public static final class SwerveConstants {
@@ -78,8 +85,8 @@ public final class Constants {
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
         /* Drivetrain Constants (Changes Per Robot) */
-        public static final double trackWidth = 0.61;
-        public static final double wheelBase = 0.61;
+        public static final double trackWidth = 0.615;
+        public static final double wheelBase = 0.615;
     
 
                                                                                   
@@ -117,7 +124,7 @@ public final class Constants {
                 drivePeakCurrentDuration);
 
         /* Angle Motor PID Values (Changes Per Module) */
-        public static final double angleKP = 0.1;
+        public static final double angleKP = 0.11;
         public static final double angleKI = 0.0;
         public static final double angleKD = 0.0;
         public static final double angleKF = 0.0;
@@ -239,10 +246,10 @@ public final class Constants {
 
     public static final class LilConstants {
         /* LilArm PID Values */
-        public static final double lilArmMotorsKF = 0.01;
-        public static final double lilArmMotorsKP = 0.01;
+        public static final double lilArmMotorsKF = (58.3333*1023)/(0.251*250*2048);
+        public static final double lilArmMotorsKP = 0.96756;
         public static final double lilArmMotorsKI = 0.0;
-        public static final double lilArmMotorsKD = 0.0002;
+        public static final double lilArmMotorsKD = 0.078266;//0.01278;
 
         /* LilArm Motors ID */
         public static final int lilArmMotorID = 6;
@@ -250,21 +257,21 @@ public final class Constants {
         public static final int lilArmEncoderID = 11;
 
         /* LilArm Motors Gear Ratio */
-        public static final double lilMotorGearRatio = 50 / 1;
+        public static final double lilMotorGearRatio = 250 / 1;
 
         public static final double ticksTolerance = 20;
 
-        public static final double coneUpperSetPoint = -1738;
-        public static final double coneMiddleSetPoint = -1187;
+        public static final double coneUpperSetPoint = 4263;
+        public static final double coneMiddleSetPoint = 4701;
         public static final double coneLowerSetPoint = -56326;
 
-        public static final double cubeUpperSetPoint = -1420;
-        public static final double cubeMiddleSetPoint = -940;
+        public static final double cubeUpperSetPoint = 620;
+        public static final double cubeMiddleSetPoint = 1063;
         public static final double cubeLowerSetPoint = -56326;
 
         public static final double middleOfRobotSetPoint = -184;
         public static final double highIntakeSetpoint = -1010;
-        public static final double groundSetPoint = -3302;
+        public static final double groundSetPoint =  -1646;
         public static final double autoStartPoint = -136;
 
         public static final double resetPoint = -30;
@@ -273,22 +280,29 @@ public final class Constants {
         public static int kSlotIdx = 0;
         public static int kPIDLoopIdx = 0;
 
+        public static final double ks =0.18105;
+        public static final double kv =5.3859;
+        public static final double ka =0.086304;
+        
+        public static final double maxSpeed =(1.23*250*2048*2)/10;
+        public static final double maxAcceleration = (80*50*2048)/10;
+
+
     }
 
     public static final class TelescopicArmConstants {
         public static final int teleMotorID = 7;
 
         // TelescopicArm PID values
-        public static final double TelesKF = 0.0;
-        public static final double TelesKP = 0.002;
+        public static final double TelesKF = 0;//(41.58333*1023)/(4.37*10*2048);
+        public static final double TelesKP = 0.23562;
         public static final double TelesKI = 0.0;
-        public static final double TelesKD = 0.0002;
-        public static final PIDController TelesPID = new PIDController(TelesKP, TelesKI, TelesKD);
+        public static final double TelesKD = 0.049226;
 
         // TelescopicArm feedforward values
         public static final double feedForwardVelocity = 0.0;
 
-        public static final double TelesGearRatio = 125 / 1;
+        public static final double TelesGearRatio = 10 / 1;
 
         public static final int TelesEncoderID = 5;
 
@@ -301,16 +315,24 @@ public final class Constants {
         public static int kPIDLoopIdx = 0;
 
         public static final double coneUpperSetPoint = -78853;
-        public static final double coneMiddleSetPoint = -47773;
+        public static final double coneMiddleSetPoint = 4077;
         public static final double coneLowerSetPoint = -56326;
 
-        public static final double cubeUpperSetPoint = -72463;
-        public static final double cubeMiddleSetPoint = -56326;
+        public static final double cubeUpperSetPoint = 35505;
+        public static final double cubeMiddleSetPoint = 2476;
         public static final double cubeLowerSetPoint = -56326;
 
         public static final double highIntakeSetpoint = -28557;
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = 9083;
+        public static final double groundSetPoint = 45784;
+
+
+        public static final double ks =0.064344;
+        public static final double kv =1.0843;
+        public static final double ka =0.012619;
+        
+        public static final double maxSpeed =(4.37*10*2048)/10;
+        public static final double maxAcceleration = (388*10*2048)/10;
     }
    
     public static final class VisionConstants {

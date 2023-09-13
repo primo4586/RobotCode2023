@@ -9,6 +9,8 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,6 +34,7 @@ public class LilArm extends SubsystemBase {
   }
 
   public void setupLilArmMotor() {
+    
     lilArmMotor.setInverted(false);
     lilArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
 
@@ -39,6 +42,9 @@ public class LilArm extends SubsystemBase {
 
     lilArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, LilConstants.kPIDLoopIdx,
         LilConstants.kTimeoutMs);
+
+    lilArmMotor.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero);
+    
     lilArmMotor.configNeutralDeadband(0.001, LilConstants.kTimeoutMs);
 
     lilArmMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, LilConstants.kTimeoutMs);
@@ -57,12 +63,15 @@ public class LilArm extends SubsystemBase {
     lilArmMotor.config_kI(LilConstants.kSlotIdx, LilConstants.lilArmMotorsKI, LilConstants.kTimeoutMs);
     lilArmMotor.config_kD(LilConstants.kSlotIdx, LilConstants.lilArmMotorsKD, LilConstants.kTimeoutMs);
 
-    lilArmMotor.configMotionCruiseVelocity(15000, LilConstants.kTimeoutMs);
-    lilArmMotor.configMotionAcceleration(6000, LilConstants.kTimeoutMs);
+    lilArmMotor.configMotionCruiseVelocity(LilConstants.maxSpeed/1.5, LilConstants.kTimeoutMs);
+    lilArmMotor.configMotionAcceleration(LilConstants.maxAcceleration, LilConstants.kTimeoutMs);
 
+    
     lilArmMotor.setSelectedSensorPosition(
-        lilArmEncoder.getSensorCollection().getPulseWidthPosition() / 2 * LilConstants.lilMotorGearRatio,
-        LilConstants.kPIDLoopIdx, LilConstants.kTimeoutMs);
+      lilArmEncoder.getSensorCollection().getPulseWidthPosition()/2  * LilConstants.lilMotorGearRatio,
+      LilConstants.kPIDLoopIdx, LilConstants.kTimeoutMs);
+
+    
   }
 
   public void zeroEncoderForIntake() {
@@ -86,9 +95,9 @@ public class LilArm extends SubsystemBase {
 
   public Command TurnLilArmToSetpoint(double setpoint) {
     SmartDashboard.putNumber("LilArm Setpoint", setpoint);
-    return runOnce(() -> {
+    return run(() -> {
       putArmInPlace(setpoint);
-    });
+    }).until(()->Math.abs(getCurrentArmPosition()-setpoint)<1500);
   }
 
   public double getCurrentArmPosition() {
@@ -97,12 +106,15 @@ public class LilArm extends SubsystemBase {
 
   public Command zeroLilArm() {
     return runOnce(() -> {
-      lilArmMotor.setSelectedSensorPosition(lilArmEncoder.getSelectedSensorPosition()/ 2 * LilConstants.lilMotorGearRatio);
+      lilArmMotor.setSelectedSensorPosition(
+        lilArmEncoder.getSensorCollection().getPulseWidthPosition()/2  * LilConstants.lilMotorGearRatio,
+        LilConstants.kPIDLoopIdx, LilConstants.kTimeoutMs);
     });
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("LilArm Position", lilArmEncoder.getSelectedSensorPosition());
+    SmartDashboard.putNumber("LilArm Position", lilArmMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("LilArm Encoder", lilArmEncoder.getSensorCollection().getPulseWidthPosition());
   }
 }

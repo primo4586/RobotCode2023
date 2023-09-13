@@ -1,12 +1,13 @@
 package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,22 +22,31 @@ public class BigArm extends SubsystemBase {
   public BigArm() {
     bigArmMotor = new WPI_TalonFX(BigConstants.bigArmMotorID);
     homeSwitch = new DigitalInput(BigConstants.homeSwitchID);
+    setupBigArmMotor();
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Big Arm Position", bigArmMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Big Arm error", bigArmMotor.getClosedLoopError());
     SmartDashboard.putBoolean("Home Switch value", homeSwitch.get());
+
+
+
   }
 
   public void setupBigArmMotor() {
-    bigArmMotor.setInverted(true);
+    bigArmMotor.setInverted(false);
     bigArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
 
     bigArmMotor.setNeutralMode(NeutralMode.Brake);
+    
 
     bigArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, BigConstants.kPIDLoopIdx,
-        BigConstants.kTimeoutMs);
+      BigConstants.kTimeoutMs);
+
+    bigArmMotor.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero);
+
     bigArmMotor.configNeutralDeadband(0.001, BigConstants.kTimeoutMs);
 
     bigArmMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, BigConstants.kTimeoutMs);
@@ -53,25 +63,27 @@ public class BigArm extends SubsystemBase {
     bigArmMotor.config_kI(BigConstants.kSlotIdx, BigConstants.bigArmKI, BigConstants.kTimeoutMs);
     bigArmMotor.config_kD(BigConstants.kSlotIdx, BigConstants.bigArmKD, BigConstants.kTimeoutMs);
 
-    bigArmMotor.configMotionCruiseVelocity(15000, BigConstants.kTimeoutMs);
-    bigArmMotor.configMotionAcceleration(6000, BigConstants.kTimeoutMs);
-
-    bigArmMotor.setSelectedSensorPosition(0, BigConstants.kPIDLoopIdx, BigConstants.kTimeoutMs);
+    bigArmMotor.configMotionCruiseVelocity(BigConstants.maxSpeed/3.5, BigConstants.kTimeoutMs);
+    bigArmMotor.configMotionAcceleration(BigConstants.maxAcceleration, BigConstants.kTimeoutMs);
   }
 
   public void zeroEncoderForMiddleOfBot() {
     bigArmMotor.setSelectedSensorPosition(BigConstants.intakeSetPoint);
   }
 
-  public Command TurnBigArmToSetpoint(double setPoint) {
-    SmartDashboard.putNumber("Big Arm Setpoint", setPoint);
-    return runOnce(() -> {
-      bigArmMotor.set(TalonFXControlMode.MotionMagic, setPoint);
-    });
+  public void putArmInPlace(double setpoint) {
+    bigArmMotor.set(TalonFXControlMode.MotionMagic, setpoint);
+  }
+
+  public Command TurnBigArmToSetpoint(double setpoint) {
+    SmartDashboard.putNumber("bigArm Setpoint", setpoint);
+    return run(() -> {
+      putArmInPlace(setpoint);
+    }).until(()->Math.abs(getCurrentArmPosition()-setpoint)<1500&&bigArmMotor.getSelectedSensorVelocity()<200);
   }
 
   public double getCurrentArmPosition() {
-    return bigArmMotor.getSelectedSensorPosition();
+    return bigArmMotor.getSensorCollection().getIntegratedSensorPosition();
   }
 
   public Command setMotorSpeed(DoubleSupplier speed) {
@@ -84,10 +96,10 @@ public class BigArm extends SubsystemBase {
     return run(() -> {
       bigArmMotor.set(BigConstants.homeSpeed);
     })
-        .until(() -> homeSwitch.get())
+        .until(() -> !homeSwitch.get())
         .andThen(() -> {
           bigArmMotor.set(0.0);
-          bigArmMotor.setSelectedSensorPosition(BigConstants.homeSetPoint);
+          bigArmMotor.getSensorCollection().setIntegratedSensorPosition(BigConstants.homeSetPoint,30);
         });
   }
 

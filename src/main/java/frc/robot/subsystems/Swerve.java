@@ -60,6 +60,8 @@ public class Swerve extends SubsystemBase {
   // Uses the odometry & vision pose estimator, to fuse their data together in
   // order to better estimate the robot's position on the field.
   private final SwerveDrivePoseEstimator poseEstimation;
+  
+  private double[] swerveState = new double[8];
 
 
   public Swerve() {
@@ -87,6 +89,8 @@ public class Swerve extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    putStates();
   }
 
   // functions and commands
@@ -311,6 +315,16 @@ public class Swerve extends SubsystemBase {
   public Pose2d getPose() {
     return poseEstimation.getEstimatedPosition();
   }
+
+  public void putStates() {
+    int i = 0;
+    for (SwerveModule module : mSwerveMods) {
+        swerveState[i] = module.getAngle().getDegrees();
+        swerveState[i + 1] = module.getVelocity();
+        i += 2;
+    }
+    SmartDashboard.putNumberArray("swerveState", swerveState);
+}
 
   /**
    * Resets the current odometry/pose estimator's position to the given pose.

@@ -54,11 +54,11 @@ public class SwerveModule {
         /* Angle Encoder Config */
         angleEncoder = new CANCoder(moduleConstants.cancoderID);
         configAngleEncoder();
-        configAngleEncoder();
-        configAngleEncoder();
+        //configAngleEncoder();
+        //configAngleEncoder();
 
         /* Angle Motor Config */
-        Timer.delay(1.0);
+        //Timer.delay(1.0);
         mAngleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
         configAngleMotor();
         configAngleMotor();
@@ -67,8 +67,8 @@ public class SwerveModule {
         /* Drive Motor Config */
         mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
         configDriveMotor();
-        configDriveMotor();
-        configDriveMotor();
+        //configDriveMotor();
+        //configDriveMotor();
 
         lastAngle = getState().angle.getDegrees();
     }
@@ -139,10 +139,20 @@ public class SwerveModule {
         return Math.abs(getCanCoder().getDegrees() - angleOffset) < 2;
     }
 
+    public Rotation2d getAngle() {
+        return Rotation2d.fromDegrees(Conversions.falconToDegrees(mAngleMotor.getEncoder().getPosition(),
+                Constants.SwerveConstants.angleGearRatio));
+    }
+
+    public double getVelocity() {
+        return Conversions.falconToMPS(mDriveMotor.getSelectedSensorVelocity(),
+                Constants.SwerveConstants.wheelCircumference, Constants.SwerveConstants.driveGearRatio);
+    }
+
     // module config don't put anything after
     private void resetToAbsolute() {
         double absolutePosition = getCanCoder().getDegrees() - angleOffset;
-        integratedAngleEncoder.setPosition(absolutePosition);
+        System.out.println(integratedAngleEncoder.setPosition(absolutePosition).toString());
     }
 
     private void configAngleEncoder() {
@@ -162,17 +172,17 @@ public class SwerveModule {
     private void configAngleMotor() {
         integratedAngleEncoder = mAngleMotor.getEncoder();
         angleController = mAngleMotor.getPIDController();
-        mAngleMotor.restoreFactoryDefaults();
-        mAngleMotor.setSmartCurrentLimit(SwerveConstants.angleContinuousCurrentLimit);
+        System.out.println(mAngleMotor.restoreFactoryDefaults().toString()+"reset");
+        System.out.println(mAngleMotor.setSmartCurrentLimit(SwerveConstants.angleContinuousCurrentLimit).toString()+"current");
         mAngleMotor.setInverted(SwerveConstants.angleMotorInvert);
-        mAngleMotor.setIdleMode(SwerveConstants.angleNeutralMode);
-        integratedAngleEncoder.setPositionConversionFactor(360/SwerveConstants.angleGearRatio);
-        angleController.setP(SwerveConstants.angleKP);
-        angleController.setI(SwerveConstants.angleKI);
-        angleController.setD(SwerveConstants.angleKD);
-        angleController.setFF(SwerveConstants.angleKF);
-        mAngleMotor.enableVoltageCompensation(SwerveConstants.voltageComp);
-        mAngleMotor.burnFlash();
+        System.out.println(mAngleMotor.setIdleMode(SwerveConstants.angleNeutralMode)+"neutral");
+        System.out.println(angleController.setP(SwerveConstants.angleKP).toString()+"p");
+        System.out.println(angleController.setI(SwerveConstants.angleKI).toString()+"i");
+        System.out.println(angleController.setD(SwerveConstants.angleKD).toString()+"d");
+        System.out.println(angleController.setFF(SwerveConstants.angleKF).toString()+"f");
+        System.out.println(mAngleMotor.enableVoltageCompensation(SwerveConstants.voltageComp).toString()+"v comp");
+        System.out.println(integratedAngleEncoder.setPositionConversionFactor(360/SwerveConstants.angleGearRatio).toString()+"pose");
+        System.out.println(mAngleMotor.burnFlash().toString()+"burn");
         Timer.delay(1.0);
         resetToAbsolute();
         resetToAbsolute();

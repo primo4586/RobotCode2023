@@ -59,9 +59,11 @@ public class RobotContainer {
     VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(PoseStrategy.LOWEST_AMBIGUITY);
     swerve.setVisionPoseEstimator(visionPoseEstimator);
 
-    bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRightY() * 0.7));
+    bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRightY() * -0.4));
     lilArm.setDefaultCommand(lilArm.setMotorSpeed(() -> operatorController.getLeftY() * 0.5));
 
+    telescopicArm.setDefaultCommand(telescopicArm.stop());
+    
     swerve.setDefaultCommand(new TeleopSwerve(swerve, driverController, translationAxis, strafeAxis, rotationAxis,
         fieldRelative, openLoop, () -> driverController.getRightTriggerAxis() > 0.5));
 
@@ -94,8 +96,9 @@ public class RobotContainer {
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
     driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilConstants.autoStartPoint));
     driverController.back().onTrue(lilArm.zeroLilArm());
-    driverController.x().onTrue(gripper.getEjectCommand().asProxy());
+    driverController.x().whileTrue(gripper.getEjectCommand().asProxy());
     driverController.a().onTrue(new ConditionalCommand(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy(), Commands.none(), () -> swerve.areWeCloseEnough()));
+    //driverController.b().onTrue();
     driverController.pov(0).onTrue(new CoolScoreDrive(swerve, objective));
     
     driverController.povCenter().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));

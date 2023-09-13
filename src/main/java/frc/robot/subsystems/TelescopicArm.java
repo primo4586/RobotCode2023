@@ -46,6 +46,7 @@ public class TelescopicArm extends SubsystemBase {
     telesMotor.configNominalOutputReverse(0, TelescopicArmConstants.kTimeoutMs);
     telesMotor.configPeakOutputForward(1, TelescopicArmConstants.kTimeoutMs);
     telesMotor.configPeakOutputReverse(-1, TelescopicArmConstants.kTimeoutMs);
+    telesMotor.configClosedLoopPeakOutput(0, 0.64, 30);
 
     telesMotor.selectProfileSlot(TelescopicArmConstants.kSlotIdx, TelescopicArmConstants.kPIDLoopIdx);
     telesMotor.config_kF(TelescopicArmConstants.kSlotIdx, TelescopicArmConstants.TelesKF, TelescopicArmConstants.kTimeoutMs);
@@ -53,22 +54,29 @@ public class TelescopicArm extends SubsystemBase {
     telesMotor.config_kI(TelescopicArmConstants.kSlotIdx, TelescopicArmConstants.TelesKI, TelescopicArmConstants.kTimeoutMs);
     telesMotor.config_kD(TelescopicArmConstants.kSlotIdx, TelescopicArmConstants.TelesKD, TelescopicArmConstants.kTimeoutMs);
 
-    telesMotor.configMotionCruiseVelocity(15000, TelescopicArmConstants.kTimeoutMs);
+    telesMotor.configMotionCruiseVelocity(2000, TelescopicArmConstants.kTimeoutMs);
     telesMotor.configMotionAcceleration(6000, TelescopicArmConstants.kTimeoutMs);
 
     telesMotor.setSelectedSensorPosition(0, TelescopicArmConstants.kPIDLoopIdx, TelescopicArmConstants.kTimeoutMs);
-    telesMotor.setNeutralMode(NeutralMode.Coast);
+    telesMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Big Arm Position", telesMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Teles Position", telesMotor.getSelectedSensorPosition());
     SmartDashboard.putBoolean("Teles Switch value", homeSwitch.get());
+    SmartDashboard.putNumber("teles error", telesMotor.getClosedLoopError());
 
+    if(telesMotor.getSelectedSensorPosition()>32795){
+      stop();
+      telesMotor.set(0);
+    }
   }
 
   public Command putTelesInSetpoint(double setPoint) {
-    return runOnce(() -> telesMotor.set(TalonFXControlMode.MotionMagic, setPoint));
+    return run(() -> 
+      telesMotor.set(TalonFXControlMode.Position, setPoint)
+    ).until(()->telesMotor.getSelectedSensorPosition()>49000||Math.abs(telesMotor.getSelectedSensorPosition()-setPoint)<50).andThen(stop());
   }
 
   public void zeroTeles() {
@@ -77,11 +85,19 @@ public class TelescopicArm extends SubsystemBase {
     telesMotor.setSelectedSensorPosition(0);
     telesMotor.setNeutralMode(NeutralMode.Brake);
   }
+
+  public Command stop(){
+    return this.runOnce(()->{
+      telesMotor.set(0);
+    });
+  }
   
   public Command setMotorSpeed(Double speed) {
     return this.run(() -> {
-
-      telesMotor.set(speed);
+      if(speed>0||homeSwitch.get())
+        telesMotor.set(speed);
+      else
+        telesMotor.set(0);
     });
   }
 }
