@@ -96,7 +96,7 @@ public class RobotContainer {
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
     driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilConstants.autoStartPoint));
     driverController.back().onTrue(lilArm.zeroLilArm());
-    driverController.x().whileTrue(gripper.getEjectCommand().asProxy());
+    driverController.x().whileTrue(gripper.ejectCommand().asProxy());
     driverController.a().onTrue(new ConditionalCommand(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy(), Commands.none(), () -> swerve.areWeCloseEnough()));
     //driverController.b().onTrue();
     driverController.pov(0).onTrue(new CoolScoreDrive(swerve, objective));
@@ -114,7 +114,7 @@ public class RobotContainer {
     /* Operator Buttons */
 
     operatorController.rightBumper().onTrue(gripper.changeWhatWeGrip());
-    operatorController.leftBumper().onTrue(gripper.getCollectCommand());
+    operatorController.leftBumper().onTrue(gripper.collectCommand());
     operatorController.y().onTrue(putItemInTheUpper);
     operatorController.a().onTrue(putItemInTheMiddle);
     operatorController.b().onTrue(middleOfBot);

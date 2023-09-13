@@ -34,7 +34,7 @@ public class PutItemInTheUpper extends SequentialCommandGroup {
         gripper::getShouldGripCone);
 
     addCommands(
-        gripper.getHoldCommand(),
+        gripper.holdCommand(),
         putArmsInUpperSetPoint);
   }
 }

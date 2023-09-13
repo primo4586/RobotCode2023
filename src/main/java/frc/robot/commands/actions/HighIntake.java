@@ -20,7 +20,7 @@ public class HighIntake extends ParallelCommandGroup {
     addCommands(
       telescopicArm.putTelesInSetpoint(TelescopicArmConstants.highIntakeSetpoint),
       bigArm.TurnBigArmToSetpoint(BigConstants.highIntakeSetpoint),
-      lilArm.TurnLilArmToSetpoint(LilConstants.highIntakeSetpoint).andThen(gripper.getCollectCommand())
+      lilArm.TurnLilArmToSetpoint(LilConstants.highIntakeSetpoint).andThen(gripper.collectCommand())
     );
   }
 }

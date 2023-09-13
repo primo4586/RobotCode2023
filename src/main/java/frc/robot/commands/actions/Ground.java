@@ -20,7 +20,7 @@ public class Ground extends SequentialCommandGroup {
     addCommands(
       telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
       moveArms,
-      gripper.getCollectCommand(),
+      gripper.collectCommand(),
       telescopicArm.putTelesInSetpoint(TelescopicArmConstants.groundSetPoint)
     );
   }

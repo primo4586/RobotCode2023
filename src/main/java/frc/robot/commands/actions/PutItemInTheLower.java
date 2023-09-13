@@ -32,7 +32,7 @@ public class PutItemInTheLower extends SequentialCommandGroup {
     ConditionalCommand putArmsInLowerSetPoint = new ConditionalCommand(coneLowerSetPoint, cubeLowerSetPoint,gripper::getShouldGripCone);
 
     addCommands(
-      gripper.getHoldCommand(),
+      gripper.holdCommand(),
       putArmsInLowerSetPoint
     );
   }

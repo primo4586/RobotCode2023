@@ -80,7 +80,7 @@ public class Bump2Piece extends SequentialCommandGroup {
     addCommands(
         Commands.runOnce(()->gripper.setShouldGripCone(shouldStartWithCone),gripper),
         new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm),
-        gripper.getEjectCommand(),
+        gripper.ejectCommand(),
             Commands.waitSeconds(0.3),
             driveBack.alongWith(new GroundOnlyArms(lilArm, bigArm, telescopicArm)),
         new Ground(gripper, lilArm, bigArm, telescopicArm).alongWith(driveToCollect.asProxy()),//TODO: test otf traj and maybe change it
@@ -94,7 +94,7 @@ public class Bump2Piece extends SequentialCommandGroup {
             areWeBlue ? new Translation2d(1.90, 1.07) : new Translation2d(14.65, 1.07)), false),
         communityCheck.asProxy(),
         putSecondPiece,
-        gripper.getEjectCommand(),
+        gripper.ejectCommand(),
         Commands.waitSeconds(0.2),
         secondDriveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
         new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm, limeLight));

@@ -17,7 +17,7 @@ public class MiddleOfBot extends ParallelCommandGroup {
   /** Creates a new MiddleOfBot. */
   public MiddleOfBot(LilArm lilArm, BigArm bigArm, TelescopicArm telescopicArm, Gripper gripper) {
     addCommands(
-      gripper.getHoldCommand(),
+      gripper.holdCommand(),
       telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
       bigArm.TurnBigArmToSetpoint(BigConstants.intakeSetPoint),
       lilArm.TurnLilArmToSetpoint(LilConstants.middleOfRobotSetPoint)

@@ -72,7 +72,7 @@ public class TwoAndHalfPiece extends SequentialCommandGroup {
           gripper.setShouldGripCone(shouldStartWithCone);
         }),
         new PutItemInTheUpper(bigArm, lilArm, gripper,telescopicArm),
-        gripper.getEjectCommand(),
+        gripper.ejectCommand(),
         Commands.waitSeconds(0.3),
         driveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
         collectCheck,
@@ -81,7 +81,7 @@ public class TwoAndHalfPiece extends SequentialCommandGroup {
         }, gripper),
         returnTraj.alongWith(putSecondPiece),
         communityCheck,
-        gripper.getEjectCommand(),
+        gripper.ejectCommand(),
         Commands.waitSeconds(0.2),
         secondDriveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
         new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm, limeLight),

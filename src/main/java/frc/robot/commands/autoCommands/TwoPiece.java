@@ -68,7 +68,7 @@ public class TwoPiece extends SequentialCommandGroup {
           gripper.setShouldGripCone(shouldStartWithCone);
         }),
         new PutItemInTheUpper(bigArm, lilArm, gripper,telescopicArm),
-        gripper.getEjectCommand(),
+        gripper.ejectCommand(),
         Commands.waitSeconds(0.3),
         driveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
         collectCheck,
@@ -77,7 +77,7 @@ public class TwoPiece extends SequentialCommandGroup {
         }, gripper),
         returnTraj.alongWith(putSecondPiece),
         communityCheck,
-        gripper.getEjectCommand(),
+        gripper.ejectCommand(),
         Commands.waitSeconds(0.2),
         telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
         bigArm.TurnBigArmToSetpoint(BigConstants.middleOfRobotSetPoint),
