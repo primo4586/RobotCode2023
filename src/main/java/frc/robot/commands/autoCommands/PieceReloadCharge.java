@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.actions.Ground;
 import frc.robot.commands.actions.GroundOnlyArms;
 import frc.robot.commands.actions.PutItemInTheUpper;
+import frc.robot.commands.actions.gripper.Eject;
 import frc.robot.commands.utils.DriveUntilOtherSide;
 import frc.robot.commands.utils.FastCharge;
 import frc.robot.subsystems.BigArm;
@@ -29,16 +30,18 @@ public class PieceReloadCharge extends SequentialCommandGroup {
             false),//TODO: change red place
         () -> areWeBlue);
 
+        Eject eject = new Eject(gripper);
+
     addCommands(
         Commands.runOnce(() -> {
           gripper.setShouldGripCone(shouldStartWithCone);
         }, gripper),
         new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm),
-        gripper.ejectCommand(),
+        eject,
         new GroundOnlyArms(lilArm, bigArm, telescopicArm),//TODO: test if possible to do this while driving back
         new DriveUntilOtherSide(swerve, true),
         new Ground(gripper, lilArm, bigArm, telescopicArm),
-        driveToPiece.alongWith(gripper.collectCommand()),
+        driveToPiece,
         new FastCharge(false, swerve)
 
     );

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants.BigConstants;
 import frc.robot.Constants.LilConstants;
 import frc.robot.Constants.TelescopicArmConstants;
+import frc.robot.commands.actions.gripper.Hold;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -16,8 +17,10 @@ import frc.robot.subsystems.TelescopicArm;
 public class MiddleOfBot extends ParallelCommandGroup {
   /** Creates a new MiddleOfBot. */
   public MiddleOfBot(LilArm lilArm, BigArm bigArm, TelescopicArm telescopicArm, Gripper gripper) {
+    
+    Hold hold = new Hold(gripper);
     addCommands(
-      gripper.holdCommand(),
+      hold,
       telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
       bigArm.TurnBigArmToSetpoint(BigConstants.intakeSetPoint),
       lilArm.TurnLilArmToSetpoint(LilConstants.middleOfRobotSetPoint)

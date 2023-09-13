@@ -30,6 +30,8 @@ import frc.robot.commands.actions.Ground;
 import frc.robot.commands.actions.MiddleOfBot;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
+import frc.robot.commands.actions.gripper.Collect;
+import frc.robot.commands.actions.gripper.Eject;
 import frc.robot.subsystems.*;
 import frc.robot.vision.VisionPoseEstimator;
 
@@ -90,15 +92,16 @@ public class RobotContainer {
     HighIntake highIntake = new HighIntake(bigArm, lilArm, gripper, telescopicArm);
     Ground groundIntake = new Ground(gripper, lilArm, bigArm, telescopicArm);
     MiddleOfBot middleOfBot = new MiddleOfBot(lilArm, bigArm, telescopicArm, gripper);
+    Eject eject = new Eject(gripper);
+    Collect collect = new Collect(gripper);
 
 
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
     driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilConstants.autoStartPoint));
     driverController.back().onTrue(lilArm.zeroLilArm());
-    driverController.x().whileTrue(gripper.ejectCommand().asProxy());
+    driverController.x().whileTrue(eject);
     driverController.a().onTrue(new ConditionalCommand(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy(), Commands.none(), () -> swerve.areWeCloseEnough()));
-    //driverController.b().onTrue();
     driverController.pov(0).onTrue(new CoolScoreDrive(swerve, objective));
     
     driverController.povCenter().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
@@ -114,7 +117,7 @@ public class RobotContainer {
     /* Operator Buttons */
 
     operatorController.rightBumper().onTrue(gripper.changeWhatWeGrip());
-    operatorController.leftBumper().onTrue(gripper.collectCommand());
+    operatorController.leftBumper().onTrue(collect);
     operatorController.y().onTrue(putItemInTheUpper);
     operatorController.a().onTrue(putItemInTheMiddle);
     operatorController.b().onTrue(middleOfBot);

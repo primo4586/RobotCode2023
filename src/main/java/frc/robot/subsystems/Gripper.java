@@ -13,7 +13,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Gripper extends SubsystemBase {
   private WPI_TalonFX gripperMotor;
 
-  private boolean shouldGripCone,
+  public boolean shouldGripCone,
+      lastCollect,
       isHolding;
   
   int clicks = 0;
@@ -26,47 +27,21 @@ public class Gripper extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
-  
-  /**
-   * @return a command that makes the gripper collect, and stops the gripper at
-   *         the end of it
-   */
-  public Command collectCommand() {
-    isHolding = false;
-    return setSpeed(1).until(() -> gripperMotor.getStatorCurrent() > 30).andThen(holdCommand());
-  }
-
-  /**
-   * @return a command that makes the gripper eject, and stops the gripper at the
-   *         end of it
-   */
-  public Command ejectCommand() {
-    isHolding = false;
-    return setSpeed(-1);
-  }
-
-  /**
-   * @return a command that makes the gripper hold, and stops the gripper at the
-   *         end of it
-   */
-  public Command holdCommand() {
-    isHolding = true;
-    return setSpeed(0.1);
-  }
 
   /**
    * @return a command that stops the gripper
    */
   public Command stop() {
-    return setSpeed(0);
+    return run(()->setSpeed(0.1));
   }
 
-  public Command setSpeed(double speed) {
-    return run(() -> {
-      gripperMotor.set(shouldGripCone ? -speed : speed);
-    });
+  public void setSpeed(double speed) {
+      gripperMotor.set(speed);
   }
 
+  public double getCurrentRead(){
+    return gripperMotor.getStatorCurrent();
+  }
 
   public Command changeWhatWeGrip() {
     return new InstantCommand(() -> {

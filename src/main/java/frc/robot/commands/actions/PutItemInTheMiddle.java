@@ -14,6 +14,7 @@ import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.TelescopicArm;
 import frc.robot.Constants.TelescopicArmConstants;
+import frc.robot.commands.actions.gripper.Hold;
 
 public class PutItemInTheMiddle extends SequentialCommandGroup {
   public PutItemInTheMiddle(LilArm lilArm, BigArm bigArm, Gripper gripper, TelescopicArm telescopicArm) {
@@ -31,8 +32,10 @@ public class PutItemInTheMiddle extends SequentialCommandGroup {
     //check if we put cone or cube
     ConditionalCommand putArmsInMiddleSetPoint = new ConditionalCommand(coneMiddleSetPoint, cubeMiddleSetPoint,gripper::getShouldGripCone);
 
+    Hold hold = new Hold(gripper);
+
     addCommands(
-      gripper.holdCommand(),
+      hold,
       putArmsInMiddleSetPoint
     );
   }

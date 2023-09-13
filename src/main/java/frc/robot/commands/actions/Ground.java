@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.BigConstants;
 import frc.robot.Constants.LilConstants;
 import frc.robot.Constants.TelescopicArmConstants;
+import frc.robot.commands.actions.gripper.Collect;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -16,11 +17,13 @@ public class Ground extends SequentialCommandGroup {
 
     ParallelCommandGroup moveArms = new ParallelCommandGroup(bigArm.TurnBigArmToSetpoint(BigConstants.groundSetPoint),
         lilArm.TurnLilArmToSetpoint(LilConstants.groundSetPoint));
+    
+    Collect collect = new Collect(gripper);
 
     addCommands(
       telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
       moveArms,
-      gripper.collectCommand(),
+      collect,
       telescopicArm.putTelesInSetpoint(TelescopicArmConstants.groundSetPoint)
     );
   }

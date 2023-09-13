@@ -14,6 +14,7 @@ import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.TelescopicArm;
 import frc.robot.Constants.TelescopicArmConstants;
+import frc.robot.commands.actions.gripper.Hold;
 
 public class PutItemInTheLower extends SequentialCommandGroup {
   public PutItemInTheLower(LilArm lilArm, BigArm bigArm, Gripper gripper, TelescopicArm telescopicArm) {
@@ -31,8 +32,10 @@ public class PutItemInTheLower extends SequentialCommandGroup {
     //check if we put cone or cube
     ConditionalCommand putArmsInLowerSetPoint = new ConditionalCommand(coneLowerSetPoint, cubeLowerSetPoint,gripper::getShouldGripCone);
 
+    Hold hold = new Hold(gripper);
+
     addCommands(
-      gripper.holdCommand(),
+      hold,
       putArmsInLowerSetPoint
     );
   }

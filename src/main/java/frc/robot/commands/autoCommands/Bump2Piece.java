@@ -24,6 +24,7 @@ import frc.robot.commands.actions.Ground;
 import frc.robot.commands.actions.GroundOnlyArms;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
+import frc.robot.commands.actions.gripper.Eject;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -77,10 +78,12 @@ public class Bump2Piece extends SequentialCommandGroup {
     ConditionalCommand putSecondPiece = new ConditionalCommand(new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm),
     new PutItemInTheMiddle(lilArm, bigArm, gripper, telescopicArm), ()->shouldStartWithCone);
 
+    Eject eject = new Eject(gripper);
+
     addCommands(
         Commands.runOnce(()->gripper.setShouldGripCone(shouldStartWithCone),gripper),
         new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm),
-        gripper.ejectCommand(),
+        eject,
             Commands.waitSeconds(0.3),
             driveBack.alongWith(new GroundOnlyArms(lilArm, bigArm, telescopicArm)),
         new Ground(gripper, lilArm, bigArm, telescopicArm).alongWith(driveToCollect.asProxy()),//TODO: test otf traj and maybe change it
@@ -94,7 +97,7 @@ public class Bump2Piece extends SequentialCommandGroup {
             areWeBlue ? new Translation2d(1.90, 1.07) : new Translation2d(14.65, 1.07)), false),
         communityCheck.asProxy(),
         putSecondPiece,
-        gripper.ejectCommand(),
+        eject,
         Commands.waitSeconds(0.2),
         secondDriveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
         new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm, limeLight));
