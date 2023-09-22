@@ -8,7 +8,9 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.util.CTREModuleState;
 import frc.lib.util.Conversions;
 import frc.lib.util.SwerveModuleConstants;
@@ -19,6 +21,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
@@ -37,7 +40,7 @@ public class SwerveModule {
     private double lastAngle;
     private SwerveModuleConstants moduleConstants;
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(SwerveConstants.driveKS,
-        SwerveConstants.driveKV, SwerveConstants.driveKA);
+        SwerveConstants.driveKV);
 
     private TalonFX mDriveMotor;
     private CANCoder angleEncoder;
@@ -65,12 +68,27 @@ public class SwerveModule {
         //configAngleMotor();
 
         /* Drive Motor Config */
-        mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
+        mDriveMotor = new WPI_TalonFX(moduleConstants.driveMotorID);
         configDriveMotor();
         //configDriveMotor();
         //configDriveMotor();
 
         lastAngle = getState().angle.getDegrees();
+
+    }
+
+    // public void runCharacterization(double volts) {
+
+    //     mDriveMotor.setVoltage(volts);
+    // }
+
+    public double getCharacterizationVelocity() {
+        return Conversions.falconToMPS(mDriveMotor.getSelectedSensorVelocity(),
+        Constants.SwerveConstants.wheelCircumference, Constants.SwerveConstants.driveGearRatio)/Units.inchesToMeters(4);
+    }
+
+    public void align(){
+        angleController.setReference(0, ControlType.kPosition);
     }
 
     /**
@@ -85,7 +103,8 @@ public class SwerveModule {
                                                                                  // default WPILib optimize assumes
                                                                                  // continuous controller which CTRE is
                                                                                  // not
-
+        
+        SmartDashboard.putNumber("desierdSpeed", Math.abs(desiredState.speedMetersPerSecond));
         if (isOpenLoop) {
             // If it's open loop, it means we don't use PID/FF, and we are not aiming for
             // accuracy
@@ -94,10 +113,9 @@ public class SwerveModule {
             mDriveMotor.set(ControlMode.PercentOutput, percentOutput);
         } else {
             // Conversion from meter per second to falcon tick speeds.
-            double velocity = Conversions.MPSToFalcon(desiredState.speedMetersPerSecond,
-                    Constants.SwerveConstants.wheelCircumference, Constants.SwerveConstants.driveGearRatio);
-            mDriveMotor.set(ControlMode.Velocity, velocity, DemandType.ArbitraryFeedForward,
-                    feedforward.calculate(desiredState.speedMetersPerSecond));
+            double velocity = (desiredState.speedMetersPerSecond*Constants.SwerveConstants.driveGearRatio)/Constants.SwerveConstants.wheelCircumference;
+            mDriveMotor.set(ControlMode.Velocity, velocity*2048/10, DemandType.ArbitraryFeedForward,
+                    feedforward.calculate(desiredState.speedMetersPerSecond)/12);
 
         }
 
@@ -172,7 +190,7 @@ public class SwerveModule {
     private void configAngleMotor() {
         integratedAngleEncoder = mAngleMotor.getEncoder();
         angleController = mAngleMotor.getPIDController();
-        System.out.println(mAngleMotor.restoreFactoryDefaults().toString()+"reset");
+        //System.out.println(mAngleMotor.restoreFactoryDefaults().toString()+"reset");
         System.out.println(mAngleMotor.setSmartCurrentLimit(SwerveConstants.angleContinuousCurrentLimit).toString()+"current");
         mAngleMotor.setInverted(SwerveConstants.angleMotorInvert);
         System.out.println(mAngleMotor.setIdleMode(SwerveConstants.angleNeutralMode)+"neutral");
@@ -180,6 +198,7 @@ public class SwerveModule {
         System.out.println(angleController.setI(SwerveConstants.angleKI).toString()+"i");
         System.out.println(angleController.setD(SwerveConstants.angleKD).toString()+"d");
         System.out.println(angleController.setFF(SwerveConstants.angleKF).toString()+"f");
+        angleController.setOutputRange(-1, 1);
         System.out.println(mAngleMotor.enableVoltageCompensation(SwerveConstants.voltageComp).toString()+"v comp");
         System.out.println(integratedAngleEncoder.setPositionConversionFactor(360/SwerveConstants.angleGearRatio).toString()+"pose");
         System.out.println(mAngleMotor.burnFlash().toString()+"burn");
@@ -201,6 +220,7 @@ public class SwerveModule {
         swerveDriveFXConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
         swerveDriveFXConfig.openloopRamp = SwerveConstants.openLoopRamp;
         swerveDriveFXConfig.closedloopRamp = SwerveConstants.closedLoopRamp;
+        swerveDriveFXConfig.voltageCompSaturation = 12;
 
         ErrorCode code;
         code = mDriveMotor.configFactoryDefault();

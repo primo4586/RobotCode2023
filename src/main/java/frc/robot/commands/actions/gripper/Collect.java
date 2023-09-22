@@ -5,6 +5,7 @@
 package frc.robot.commands.actions.gripper;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.subsystems.Gripper;
 
 public class Collect extends CommandBase {
@@ -12,7 +13,7 @@ public class Collect extends CommandBase {
 
   public Collect(Gripper gripper) {
     this.gripper = gripper;
-    addRequirements();
+    addRequirements(gripper);
   }
 
   // Called when the command is initially scheduled.
@@ -22,7 +23,12 @@ public class Collect extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    gripper.setSpeed(gripper.getShouldGripCone()?1:-1);
+    if(gripper.shouldGripCone){
+      gripper.setSpeed(0.5);
+    }
+    else{
+      gripper.setSpeed(-0.5);
+    }
   }
 
   // Called once the command ends or is interrupted.

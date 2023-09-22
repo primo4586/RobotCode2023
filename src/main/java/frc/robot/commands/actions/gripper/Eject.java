@@ -21,13 +21,19 @@ public class Eject extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    gripper.setSpeed(gripper.getShouldGripCone()?-0.1:0.1);
+    if(gripper.shouldGripCone){
+      gripper.setSpeed(-1);
+    }
+    else{
+      gripper.setSpeed(1);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     gripper.stop();
+    gripper.setSpeed(0);
   }
 
   // Returns true when the command should end.

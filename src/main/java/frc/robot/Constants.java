@@ -46,23 +46,26 @@ public final class Constants {
 
         public static final String bigArmPreferencesKey = "bigArmEncoder" ;
 
-        public static final double coneUpperSetPoint = 41419;
-        public static final double coneMiddleSetPoint = -47773;
+        public static final double coneUpperSetPoint = 41969;
+        public static final double coneMiddleSetPoint = 20006;
         public static final double coneLowerSetPoint = -56326;
 
 
-        public static final double cubeUpperSetPoint = 39297;
-        public static final double cubeMiddleSetPoint = 27871;
+        public static final double cubeUpperSetPoint = 36823;
+        public static final double cubeMiddleSetPoint = 23077;
         public static final double cubeLowerSetPoint = -56326;
 
-        public static final double intakeSetPoint = 2838;//-1711;
+        public static final double intakeSetPoint = 2325;
         public static final double intakeReturnSetPoint = 37000;
         public static final double intakeReturnDeadZone = 48839;
 
         public static final double highIntakeSetpoint = -28557;
 
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint =-2848;
+        public static final double groundSetPoint = -15227;
+        
+        public static final double softLimitForward = 58982;
+        public static final double softLimitReverse = -17166;
 
         public static int kTimeoutMs = 30;
         public static int kSlotIdx = 0;
@@ -124,21 +127,22 @@ public final class Constants {
                 drivePeakCurrentDuration);
 
         /* Angle Motor PID Values (Changes Per Module) */
-        public static final double angleKP = 0.11;
+        public static final double angleKP = 0.1;
         public static final double angleKI = 0.0;
         public static final double angleKD = 0.0;
         public static final double angleKF = 0.0;
 
         /* Drive Motor PID Values (Changes Per Robot) */
-        public static final double driveKP = 2.3259E-23;
+        public static final double driveKP =  0.034811;
         public static final double driveKI = 0.0;
         public static final double driveKD = 0.0;
+
         public static final double driveKF = 0.0;
 
         /* Drive Motor Characterization Values (Changes Per Robot) */
-        public static final double driveKS = (0.13319/ 12); // divided by 12 to convert from volts to percent output for CTRE
-        public static final double driveKV = (0.87606 / 12);
-        public static final double driveKA = (0.17924 / 12);
+        public static final double driveKS = (0.12716);/// 12); // divided by 12 to convert from volts to percent output for CTRE
+        public static final double driveKV = (3);// / 12);
+        public static final double driveKA = (1.7636);// / 12);
 
 
         /* Swerve Profiling Values (Changes Per Robot) - usually set by preference */
@@ -263,20 +267,23 @@ public final class Constants {
 
         public static final double ticksTolerance = 20;
 
-        public static final double coneUpperSetPoint = 4263;
-        public static final double coneMiddleSetPoint = 4701;
+        public static final double coneUpperSetPoint = 19560;
+        public static final double coneMiddleSetPoint = 82021;
         public static final double coneLowerSetPoint = -56326;
 
-        public static final double cubeUpperSetPoint = 620;
-        public static final double cubeMiddleSetPoint = 1063;
+        public static final double cubeUpperSetPoint = 66076;
+        public static final double cubeMiddleSetPoint = 128809;
         public static final double cubeLowerSetPoint = -56326;
 
-        public static final double middleOfRobotSetPoint = -184;
+        public static final double middleOfRobotSetPoint = 175000;
         public static final double highIntakeSetpoint = -1010;
-        public static final double groundSetPoint =  -1646;
+        public static final double groundSetPoint =  -186466;
         public static final double autoStartPoint = -136;
 
         public static final double resetPoint = -30;
+        
+        public static final double softLimitForward = 213000;
+        public static final double softLimitReverse = -242499;
 
         public static int kTimeoutMs = 30;
         public static int kSlotIdx = 0;
@@ -286,8 +293,8 @@ public final class Constants {
         public static final double kv =5.3859;
         public static final double ka =0.086304;
         
-        public static final double maxSpeed =(1.23*250*2048*2)/10;
-        public static final double maxAcceleration = (80*50*2048)/10;
+        public static final double maxSpeed =(1.23*250*2048*2)/10;//(1.23*250*2048*2)/10;
+        public static final double maxAcceleration = (80*50*2048)/10;//(80*50*2048)/10;
 
 
     }
@@ -316,18 +323,20 @@ public final class Constants {
         public static int kSlotIdx = 0;
         public static int kPIDLoopIdx = 0;
 
-        public static final double coneUpperSetPoint = -78853;
-        public static final double coneMiddleSetPoint = 4077;
+        public static final double coneUpperSetPoint = 41280;
+        public static final double coneMiddleSetPoint = 32531;
         public static final double coneLowerSetPoint = -56326;
 
         public static final double cubeUpperSetPoint = 35505;
-        public static final double cubeMiddleSetPoint = 2476;
+        public static final double cubeMiddleSetPoint = 24239;
         public static final double cubeLowerSetPoint = -56326;
 
         public static final double highIntakeSetpoint = -28557;
-        public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = 45784;
+        public static final double middleOfRobotSetPoint = 1100;
+        public static final double groundSetPoint = 28165;
 
+        public static final double softLimitForward = 48000;
+        public static final double softLimitReverse = 1000;
 
         public static final double ks =0.064344;
         public static final double kv =1.0843;
@@ -341,6 +350,7 @@ public final class Constants {
         // Camera's name in Photon's NetworkTable (Set in the PhotonVision UI)
         public static final String rightCameraName = "Arducam_OV9281_USB_Camera";
         public static final String leftCameraName = "Arducam_OV9281_USB_Camera";
+        public static final String limeLightCameraName = "OV5647";
 
         /**
          * Camera's relative location to the center of the robot.
@@ -356,6 +366,14 @@ public final class Constants {
                                 Units.degreesToRadians(2)));
                                 
         public static final Transform3d leftRobotToCam =
+        new Transform3d(
+                new Translation3d( 0.31,-0.205, 0.23),
+                new Rotation3d(
+                        0, 0,
+                        Units.degreesToRadians(2)));
+
+
+        public static final Transform3d limeLightRobotToCam =
         new Transform3d(
                 new Translation3d( 0.31,-0.205, 0.23),
                 new Rotation3d(

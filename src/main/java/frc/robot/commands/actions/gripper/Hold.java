@@ -22,7 +22,12 @@ public class Hold extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    gripper.setSpeed(gripper.lastCollect?0.1:-0.1);
+    if(gripper.shouldGripCone){
+      gripper.setSpeed(0.1);
+    }
+    else{
+      gripper.setSpeed(-0.1);
+    }
   }
 
   // Called once the command ends or is interrupted.

@@ -14,6 +14,7 @@ import frc.robot.SwerveModule;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.vision.VisionPoseEstimator;
+import frc.robot.vision.VisionPoseEstimatorLimeLight;
 import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -50,7 +51,7 @@ public class Swerve extends SubsystemBase {
   private Field2d field2d = new Field2d();
 
   // Uses vision data to estimate the robot's position on the field.
-  private VisionPoseEstimator visionPoseEstimator;
+  private VisionPoseEstimatorLimeLight visionPoseEstimator;
 
   // Uses the swerve's encoders to estimate it's position on the field, given a
   // starting position. (Like a Odometer on cars, but instead of counting kms,
@@ -65,6 +66,7 @@ public class Swerve extends SubsystemBase {
 
   double maxSpeed = 0,
   currentVelocity = 0;
+  private double characterizationVolts;
 
 
   public Swerve() {
@@ -101,8 +103,26 @@ public class Swerve extends SubsystemBase {
         maxSpeed = module.getVelocity();
     }
     SmartDashboard.putNumber("swerve max speed", maxSpeed);
-    SmartDashboard.putNumber("swerve current speed", currentVelocity);
+    SmartDashboard.putNumber("swerve current speed", Math.abs(currentVelocity));
+
+        //  for (SwerveModule mod : mSwerveMods) {
+        //      mod.align();
+        //      mod.runCharacterization(characterizationVolts);
+        //  }
+    updateOdometry();
   }
+
+  public Command stopModulescCommand(){
+    return runOnce(()->{
+        stopModules();
+    });
+}
+
+public void stopModules() {
+  for (SwerveModule module : mSwerveMods) {
+      module.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)), true);
+  }
+}
 
   // functions and commands
 
@@ -146,7 +166,7 @@ public class Swerve extends SubsystemBase {
 
   public Command driveUntilMeters(double driveSpeed, double metersSetpoint, boolean forward) {
     return run(() -> {
-      drive(new Translation2d(forward ? driveSpeed : -driveSpeed, 0), metersSetpoint, true, false);
+      drive(new Translation2d(forward ? driveSpeed : -driveSpeed, 0), 0, false, false);
 
     }).until(() -> swerveOdometry.getPoseMeters().getTranslation().getX() == metersSetpoint);
   }
@@ -176,9 +196,12 @@ public class Swerve extends SubsystemBase {
         trajectory,
         this::getPose,
         SwerveConstants.swerveKinematics,
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
-        new PIDController(AutoConstants.kPThetaController, 0, 0),
+        new PIDController(0, 0, 0),
+        new PIDController(0, 0, 0),
+        new PIDController(0, 0, 0),
+        // new PIDController(AutoConstants.kPXController, 0, 0),
+        // new PIDController(AutoConstants.kPYController, 0, 0),
+        // new PIDController(AutoConstants.kPThetaController, 0, 0),
         this::setModuleStatesClosedLoop,
         useAllianceColor,
         this);
@@ -205,7 +228,7 @@ public class Swerve extends SubsystemBase {
         .generatePath(new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
             AutoConstants.kMaxAccelerationMetersPerSecondSquared), robotPose, endPoint);
 
-    field2d.getObject("traj").setTrajectory(trajectory);
+    //field2d.getObject("traj").setTrajectory(trajectory);
 
     return trajectory;
   }
@@ -218,7 +241,7 @@ public class Swerve extends SubsystemBase {
         .generatePath(new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
             AutoConstants.kMaxAccelerationMetersPerSecondSquared), trajectoryPoints);
 
-    field2d.getObject("traj").setTrajectory(trajectory);
+    //field2d.getObject("traj").setTrajectory(trajectory);
 
     return trajectory;
 
@@ -297,7 +320,7 @@ public class Swerve extends SubsystemBase {
    * 
    * @param visionPoseEstimator vision pose estimator to go off of.
    */
-  public void setVisionPoseEstimator(VisionPoseEstimator visionPoseEstimator) {
+  public void setVisionPoseEstimator(VisionPoseEstimatorLimeLight visionPoseEstimator) {
     this.visionPoseEstimator = visionPoseEstimator;
   }
 
@@ -307,13 +330,28 @@ public class Swerve extends SubsystemBase {
    * @param desiredStates Desired states for each module as a SwerveModuleState
    *                      array.
    */
-  public void setModuleStatesClosedLoop(SwerveModuleState[] desiredStates) {
+  public void   setModuleStatesClosedLoop(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.maxSpeed);
 
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(desiredStates[mod.moduleNumber], false);
     }
   }
+
+      
+      /** Runs forwards at the commanded voltage. */
+      public void runCharacterizationVolts(double volts) {
+        characterizationVolts = volts;
+      }
+    
+      /** Returns the average drive velocity in radians/sec. */
+      public double getCharacterizationVelocity() {
+        double driveVelocityAverage = 0.0;
+        for (SwerveModule mod : mSwerveMods) {
+          driveVelocityAverage += mod.getCharacterizationVelocity();
+        }
+        return driveVelocityAverage / 4.0;
+      }
 
   /**
    * Gets the current robot's estimated position on the field.

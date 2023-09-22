@@ -34,7 +34,7 @@ public class LilArm extends SubsystemBase {
   }
 
   public void setupLilArmMotor() {
-    
+
     lilArmMotor.setInverted(false);
     lilArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
 
@@ -44,7 +44,7 @@ public class LilArm extends SubsystemBase {
         LilConstants.kTimeoutMs);
 
     lilArmMotor.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero);
-    
+
     lilArmMotor.configNeutralDeadband(0.001, LilConstants.kTimeoutMs);
 
     lilArmMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, LilConstants.kTimeoutMs);
@@ -63,15 +63,18 @@ public class LilArm extends SubsystemBase {
     lilArmMotor.config_kI(LilConstants.kSlotIdx, LilConstants.lilArmMotorsKI, LilConstants.kTimeoutMs);
     lilArmMotor.config_kD(LilConstants.kSlotIdx, LilConstants.lilArmMotorsKD, LilConstants.kTimeoutMs);
 
-    lilArmMotor.configMotionCruiseVelocity(LilConstants.maxSpeed/1.5, LilConstants.kTimeoutMs);
+    lilArmMotor.configMotionCruiseVelocity(LilConstants.maxSpeed / 1.5, LilConstants.kTimeoutMs);
     lilArmMotor.configMotionAcceleration(LilConstants.maxAcceleration, LilConstants.kTimeoutMs);
 
-    
     lilArmMotor.setSelectedSensorPosition(
-      lilArmEncoder.getSensorCollection().getPulseWidthPosition()/2  * LilConstants.lilMotorGearRatio,
-      LilConstants.kPIDLoopIdx, LilConstants.kTimeoutMs);
+        lilArmEncoder.getSensorCollection().getPulseWidthPosition() / 2 * LilConstants.lilMotorGearRatio,
+        LilConstants.kPIDLoopIdx, LilConstants.kTimeoutMs);
 
-    
+    lilArmMotor.configForwardSoftLimitThreshold(LilConstants.softLimitForward);
+    lilArmMotor.configReverseSoftLimitThreshold(LilConstants.softLimitReverse);
+    lilArmMotor.configForwardSoftLimitEnable(true);
+    lilArmMotor.configReverseSoftLimitEnable(true);
+
   }
 
   public void zeroEncoderForIntake() {
@@ -97,7 +100,7 @@ public class LilArm extends SubsystemBase {
     SmartDashboard.putNumber("LilArm Setpoint", setpoint);
     return run(() -> {
       putArmInPlace(setpoint);
-    }).until(()->Math.abs(getCurrentArmPosition()-setpoint)<1500);
+    }).until(() -> Math.abs(getCurrentArmPosition() - setpoint) < 3000&&lilArmMotor.getSelectedSensorVelocity()<200);
   }
 
   public double getCurrentArmPosition() {
@@ -107,8 +110,8 @@ public class LilArm extends SubsystemBase {
   public Command zeroLilArm() {
     return runOnce(() -> {
       lilArmMotor.setSelectedSensorPosition(
-        lilArmEncoder.getSensorCollection().getPulseWidthPosition()/2  * LilConstants.lilMotorGearRatio,
-        LilConstants.kPIDLoopIdx, LilConstants.kTimeoutMs);
+          lilArmEncoder.getSensorCollection().getPulseWidthPosition() / 2 * LilConstants.lilMotorGearRatio,
+          LilConstants.kPIDLoopIdx, LilConstants.kTimeoutMs);
     });
   }
 

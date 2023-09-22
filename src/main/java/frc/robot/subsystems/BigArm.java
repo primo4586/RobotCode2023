@@ -65,6 +65,11 @@ public class BigArm extends SubsystemBase {
 
     bigArmMotor.configMotionCruiseVelocity(BigConstants.maxSpeed/3.5, BigConstants.kTimeoutMs);
     bigArmMotor.configMotionAcceleration(BigConstants.maxAcceleration, BigConstants.kTimeoutMs);
+    
+    bigArmMotor.configForwardSoftLimitThreshold(BigConstants.softLimitForward);
+    bigArmMotor.configReverseSoftLimitThreshold(BigConstants.softLimitReverse);
+    bigArmMotor.configForwardSoftLimitEnable(true);
+    bigArmMotor.configReverseSoftLimitEnable(true);
   }
 
   public void zeroEncoderForMiddleOfBot() {
@@ -93,6 +98,8 @@ public class BigArm extends SubsystemBase {
   }
 
   public Command Home() {
+    bigArmMotor.configForwardSoftLimitEnable(false);
+    bigArmMotor.configReverseSoftLimitEnable(false);
     return run(() -> {
       bigArmMotor.set(BigConstants.homeSpeed);
     })
@@ -100,6 +107,8 @@ public class BigArm extends SubsystemBase {
         .andThen(() -> {
           bigArmMotor.set(0.0);
           bigArmMotor.getSensorCollection().setIntegratedSensorPosition(BigConstants.homeSetPoint,30);
+          bigArmMotor.configForwardSoftLimitEnable(true);
+          bigArmMotor.configReverseSoftLimitEnable(true);
         });
   }
 

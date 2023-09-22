@@ -59,6 +59,11 @@ public class TelescopicArm extends SubsystemBase {
 
     telesMotor.setSelectedSensorPosition(0, TelescopicArmConstants.kPIDLoopIdx, TelescopicArmConstants.kTimeoutMs);
     telesMotor.setNeutralMode(NeutralMode.Brake);
+
+    telesMotor.configForwardSoftLimitThreshold(TelescopicArmConstants.softLimitForward);
+    telesMotor.configReverseSoftLimitThreshold(TelescopicArmConstants.softLimitReverse);
+    telesMotor.configForwardSoftLimitEnable(true);
+    telesMotor.configReverseSoftLimitEnable(true);
   }
 
   @Override
@@ -76,7 +81,7 @@ public class TelescopicArm extends SubsystemBase {
   public Command putTelesInSetpoint(double setPoint) {
     return run(() -> 
       telesMotor.set(TalonFXControlMode.Position, setPoint)
-    ).until(()->telesMotor.getSelectedSensorPosition()>49000||Math.abs(telesMotor.getSelectedSensorPosition()-setPoint)<50).andThen(stop());
+    ).until(()->Math.abs(telesMotor.getSelectedSensorPosition()-setPoint)<100).andThen(stop());
   }
 
   public void zeroTeles() {
@@ -94,10 +99,20 @@ public class TelescopicArm extends SubsystemBase {
   
   public Command setMotorSpeed(Double speed) {
     return this.run(() -> {
-      if(speed>0||homeSwitch.get())
-        telesMotor.set(speed);
-      else
-        telesMotor.set(0);
+      telesMotor.set(speed);
     });
+  }
+
+  public Command Home() {
+    telesMotor.configForwardSoftLimitEnable(false);
+    telesMotor.configReverseSoftLimitEnable(false);
+    return run(() -> {
+      telesMotor.set(-0.1);
+    })
+        .until(() -> !homeSwitch.get())
+        .andThen(() -> {
+          telesMotor.set(0.0);
+          telesMotor.getSensorCollection().setIntegratedSensorPosition(0,30);
+        });
   }
 }

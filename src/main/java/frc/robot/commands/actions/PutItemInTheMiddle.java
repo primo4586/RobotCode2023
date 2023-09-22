@@ -21,22 +21,25 @@ public class PutItemInTheMiddle extends SequentialCommandGroup {
     //cone and cube setPoints
     ParallelCommandGroup coneMiddleSetPoint = new ParallelCommandGroup(
         bigArm.TurnBigArmToSetpoint(BigConstants.coneMiddleSetPoint),
-        lilArm.TurnLilArmToSetpoint(LilConstants.coneMiddleSetPoint),
-        telescopicArm.putTelesInSetpoint(TelescopicArmConstants.coneMiddleSetPoint));
+        lilArm.TurnLilArmToSetpoint(LilConstants.coneMiddleSetPoint));
 
     ParallelCommandGroup cubeMiddleSetPoint = new ParallelCommandGroup(
         bigArm.TurnBigArmToSetpoint(BigConstants.cubeMiddleSetPoint),
-        lilArm.TurnLilArmToSetpoint(LilConstants.cubeMiddleSetPoint),
-        telescopicArm.putTelesInSetpoint(TelescopicArmConstants.coneMiddleSetPoint));
+        lilArm.TurnLilArmToSetpoint(LilConstants.cubeMiddleSetPoint));
 
     //check if we put cone or cube
     ConditionalCommand putArmsInMiddleSetPoint = new ConditionalCommand(coneMiddleSetPoint, cubeMiddleSetPoint,gripper::getShouldGripCone);
+    ConditionalCommand putTelesInsetPoint = new ConditionalCommand(
+      telescopicArm.putTelesInSetpoint(TelescopicArmConstants.coneMiddleSetPoint), 
+      telescopicArm.putTelesInSetpoint(TelescopicArmConstants.cubeMiddleSetPoint), gripper::getShouldGripCone);
 
     Hold hold = new Hold(gripper);
 
     addCommands(
-      hold,
-      putArmsInMiddleSetPoint
+      //hold,
+      telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
+      putArmsInMiddleSetPoint,
+      putTelesInsetPoint
     );
   }
 }

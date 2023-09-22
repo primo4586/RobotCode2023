@@ -14,15 +14,11 @@ import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.LilConstants;
 import frc.robot.commands.*;
-import frc.robot.commands.actions.CoolScore;
-import frc.robot.commands.actions.CoolScoreDrive;
 import frc.robot.commands.actions.EmergencyStopArms;
 import frc.robot.commands.actions.FullEStop;
 import frc.robot.commands.actions.HighIntake;
@@ -32,8 +28,9 @@ import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.commands.actions.gripper.Collect;
 import frc.robot.commands.actions.gripper.Eject;
+import frc.robot.commands.actions.gripper.Hold;
 import frc.robot.subsystems.*;
-import frc.robot.vision.VisionPoseEstimator;
+import frc.robot.vision.VisionPoseEstimatorLimeLight;
 
 public class RobotContainer {
 
@@ -58,7 +55,7 @@ public class RobotContainer {
     boolean fieldRelative = true;
     boolean openLoop = true;
 
-    VisionPoseEstimator visionPoseEstimator = new VisionPoseEstimator(PoseStrategy.LOWEST_AMBIGUITY);
+    VisionPoseEstimatorLimeLight visionPoseEstimator = new VisionPoseEstimatorLimeLight(PoseStrategy.LOWEST_AMBIGUITY);
     swerve.setVisionPoseEstimator(visionPoseEstimator);
 
     bigArm.setDefaultCommand(bigArm.setMotorSpeed(() -> operatorController.getRightY() * -0.4));
@@ -91,19 +88,14 @@ public class RobotContainer {
     PutItemInTheMiddle putItemInTheMiddle =  new PutItemInTheMiddle(lilArm, bigArm, gripper, telescopicArm);
     HighIntake highIntake = new HighIntake(bigArm, lilArm, gripper, telescopicArm);
     Ground groundIntake = new Ground(gripper, lilArm, bigArm, telescopicArm);
-    MiddleOfBot middleOfBot = new MiddleOfBot(lilArm, bigArm, telescopicArm, gripper);
-    Eject eject = new Eject(gripper);
-    Collect collect = new Collect(gripper);
-
 
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
     driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilConstants.autoStartPoint));
     driverController.back().onTrue(lilArm.zeroLilArm());
-    driverController.x().whileTrue(eject);
-    driverController.a().onTrue(new ConditionalCommand(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy(), Commands.none(), () -> swerve.areWeCloseEnough()));
-    //driverController.b().onTrue(swerve.maxSpeed());
-    driverController.pov(0).onTrue(new CoolScoreDrive(swerve, objective));
+    driverController.x().whileTrue(new Eject(gripper));
+    //driverController.a().onTrue(new ConditionalCommand(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy(), Commands.none(), () -> swerve.areWeCloseEnough()));
+    driverController.b().onTrue(new Hold(gripper));
     
     driverController.povCenter().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
     driverController.povDown().onTrue(new FullEStop(lilArm, bigArm, telescopicArm, swerve));
@@ -118,15 +110,15 @@ public class RobotContainer {
     /* Operator Buttons */
 
     operatorController.rightBumper().onTrue(gripper.changeWhatWeGrip());
-    operatorController.leftBumper().onTrue(collect);
+    operatorController.leftBumper().onTrue(new Collect(gripper));
     operatorController.y().onTrue(putItemInTheUpper);
     operatorController.a().onTrue(putItemInTheMiddle);
-    operatorController.b().onTrue(middleOfBot);
+    operatorController.b().onTrue(new MiddleOfBot(lilArm, bigArm, telescopicArm, gripper));
     operatorController.x().onTrue(highIntake);
-    operatorController.start().onTrue(new EmergencyStopArms(lilArm, bigArm, telescopicArm));
-    operatorController.back().onTrue(bigArm.Home());
+    operatorController.start().onTrue(new EmergencyStopArms(lilArm, bigArm, telescopicArm, gripper));
+    operatorController.back().onTrue(telescopicArm.Home().andThen(bigArm.Home()));//(bigArm.Home());
 
-    operatorController.povCenter().onTrue(groundIntake);
+    operatorController.povCenter().onTrue(new Ground(gripper, lilArm, bigArm, telescopicArm));
     operatorController.povDown().onTrue(groundIntake);
     operatorController.povDownLeft().onTrue(groundIntake);
     operatorController.povDownRight().onTrue(groundIntake);
@@ -136,8 +128,8 @@ public class RobotContainer {
     operatorController.povUpLeft().onTrue(groundIntake);
     operatorController.povUpRight().onTrue(groundIntake);
 
-    operatorController.leftTrigger().onTrue(telescopicArm.setMotorSpeed(-0.1));
-    operatorController.rightTrigger().onTrue(telescopicArm.setMotorSpeed(0.1));
+    operatorController.leftTrigger().whileTrue(telescopicArm.setMotorSpeed(-0.1));
+    operatorController.rightTrigger().whileTrue(telescopicArm.setMotorSpeed(0.1));
   }
 
   /**

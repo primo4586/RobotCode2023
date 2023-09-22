@@ -23,8 +23,9 @@ public class Ground extends SequentialCommandGroup {
     addCommands(
       telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
       moveArms,
-      collect,
-      telescopicArm.putTelesInSetpoint(TelescopicArmConstants.groundSetPoint)
-    );
+
+      new ParallelCommandGroup(collect,
+      telescopicArm.putTelesInSetpoint(TelescopicArmConstants.groundSetPoint)));
+
   }
 }

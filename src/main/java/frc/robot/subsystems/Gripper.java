@@ -21,6 +21,7 @@ public class Gripper extends SubsystemBase {
 
   public Gripper() {
     gripperMotor = new WPI_TalonFX(8);
+    gripperMotor.setInverted(true);
   }
 
   @Override
@@ -32,7 +33,7 @@ public class Gripper extends SubsystemBase {
    * @return a command that stops the gripper
    */
   public Command stop() {
-    return run(()->setSpeed(0.1));
+    return run(()->setSpeed(0.0));
   }
 
   public void setSpeed(double speed) {

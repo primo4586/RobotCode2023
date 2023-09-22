@@ -22,22 +22,25 @@ public class PutItemInTheUpper extends SequentialCommandGroup {
     //cone and cube setPoints
     ParallelCommandGroup coneUpperSetPoint = new ParallelCommandGroup(
         bigArm.TurnBigArmToSetpoint(BigConstants.coneUpperSetPoint),
-        lilArm.TurnLilArmToSetpoint(LilConstants.coneUpperSetPoint),
-        telescopicArm.putTelesInSetpoint(TelescopicArmConstants.coneUpperSetPoint));
+        lilArm.TurnLilArmToSetpoint(LilConstants.coneUpperSetPoint));
 
     ParallelCommandGroup cubeUpperSetPoint = new ParallelCommandGroup(
         bigArm.TurnBigArmToSetpoint(BigConstants.cubeUpperSetPoint),
-        lilArm.TurnLilArmToSetpoint(LilConstants.cubeUpperSetPoint),
-        telescopicArm.putTelesInSetpoint(TelescopicArmConstants.coneUpperSetPoint));
+        lilArm.TurnLilArmToSetpoint(LilConstants.cubeUpperSetPoint));
 
     // check if we put cone or cube
     ConditionalCommand putArmsInUpperSetPoint = new ConditionalCommand(coneUpperSetPoint, cubeUpperSetPoint,
         gripper::getShouldGripCone);
+    ConditionalCommand putTelesInSetPoint = new ConditionalCommand(
+    telescopicArm.putTelesInSetpoint(TelescopicArmConstants.coneUpperSetPoint), 
+    telescopicArm.putTelesInSetpoint(TelescopicArmConstants.cubeUpperSetPoint), gripper::getShouldGripCone);
 
     Hold hold = new Hold(gripper);
 
     addCommands(
-        hold,
-        putArmsInUpperSetPoint);
+        //hold,
+        telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
+        putArmsInUpperSetPoint,
+        putTelesInSetPoint);
   }
 }

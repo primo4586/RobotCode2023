@@ -22,6 +22,8 @@ import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.TelescopicArm;
 import frc.robot.util.CommandSelector;
+import frc.robot.util.FeedForwardCharacterization;
+import frc.robot.util.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc.robot.vision.LimeLight;
 
 /** Add your docs here. */
@@ -31,6 +33,11 @@ public class AutoContainer {
 
     public AutoContainer(Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm, TelescopicArm telescopicArm, LimeLight limeLight){
         this.autoPaths = new HashMap<String, Command>(); 
+
+        this.autoPaths.put("FF", swerve.stopModulescCommand().andThen(new FeedForwardCharacterization(
+            swerve, true,
+            new FeedForwardCharacterizationData("swerve"),
+            swerve::runCharacterizationVolts, swerve::getCharacterizationVelocity)));
 
         this.autoPaths.put("blueUpperConeCubeCube", new TwoAndHalfPiece(true, true, bigArm, lilArm, gripper, swerve, telescopicArm, limeLight));
         this.autoPaths.put("redUpperConeCubeCube", new TwoAndHalfPiece(true, false, bigArm, lilArm, gripper, swerve, telescopicArm, limeLight));

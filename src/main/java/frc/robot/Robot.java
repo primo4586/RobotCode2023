@@ -137,7 +137,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     objective.updateInputs();
-    checkNodeSelectorButtons();
+    //checkNodeSelectorButtons();
   }
 
   @Override
