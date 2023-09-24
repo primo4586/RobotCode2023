@@ -53,22 +53,13 @@ public class Bump2Piece extends SequentialCommandGroup {
             swerve.followTrajectory(PathPlanner.loadPath("blueLowerCubeTwo", AutoConstants.pathConstraints), false),
             swerve.followTrajectory(PathPlanner.loadPath("redLowerCubeTwo", AutoConstants.pathConstraints), false),
             () -> areWeBlue);
-
-    BooleanSupplier collectClosenesCheck = () -> Math
-            .abs(swerve.getPose().getX() - (areWeBlue ? 6.8 : 9.75)) < SwerveConstants.trajAccuracy &&
-            Math.abs(swerve.getPose().getY() - 0.92) < SwerveConstants.trajAccuracy;
-            
-    ConditionalCommand collectCheck = new ConditionalCommand(Commands.none(),
-            swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(
-                new Translation2d(areWeBlue?6.8:9.75,0.92)),false).asProxy(),
-            collectClosenesCheck);
         
     BooleanSupplier communityClosenesCheck = () -> Math
-            .abs(swerve.getPose().getX() - (areWeBlue ? 1.90 : 14.65)) < SwerveConstants.trajAccuracy &&
+            .abs(swerve.getPose().getX() - (areWeBlue ? SwerveConstants.blueAligningX : SwerveConstants.redAligningX)) < SwerveConstants.trajAccuracy &&
             Math.abs(swerve.getPose().getY() - 1.07) < SwerveConstants.trajAccuracy;
 
     ConditionalCommand communityCheck = new ConditionalCommand(Commands.none(),
-            swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(areWeBlue ? new Translation2d(1.90, 1.07) : new Translation2d(14.65, 1.07)),false).asProxy(),
+            swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(areWeBlue ? new Translation2d(SwerveConstants.blueAligningX, 1.07) : new Translation2d(SwerveConstants.redAligningX, 1.07)),false).asProxy(),
             communityClosenesCheck);
         
     Command driveToCollect = swerve.followTrajectory(swerve.generateTrajectoryToPoseList(
@@ -86,14 +77,13 @@ public class Bump2Piece extends SequentialCommandGroup {
         new Eject(gripper),
             driveBack.alongWith(new GroundOnlyArms(lilArm, bigArm, telescopicArm)),
         new Ground(gripper, lilArm, bigArm, telescopicArm).alongWith(driveToCollect.asProxy()),//TODO: test otf traj and maybe change it
-        collectCheck.asProxy(),
                 Commands.runOnce(() -> {
           gripper.setShouldGripCone(false);
         }, gripper),
         returnTraj
             .alongWith(new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm)),
         swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(
-            areWeBlue ? new Translation2d(1.90, 1.07) : new Translation2d(14.65, 1.07)), false),
+            areWeBlue ? new Translation2d(SwerveConstants.blueAligningX, 1.07) : new Translation2d(SwerveConstants.redAligningX, 1.07)), false),
         communityCheck.asProxy(),
         putSecondPiece,
         eject,

@@ -58,25 +58,14 @@ public class TwoAndHalfPiece extends SequentialCommandGroup {
             AutoConstants.pathConstraints, false), true),
         () -> areWeBlue);
 
-    BooleanSupplier collectClosenesCheck = () -> Math
-        .abs(swerve.getPose().getX() - (areWeBlue ? 6.8 : 9.75)) < SwerveConstants.trajAccuracy &&
-        Math.abs(swerve.getPose().getY() - 4.58) < SwerveConstants.trajAccuracy;
-
-    ConditionalCommand collectCheck = new ConditionalCommand(Commands.none(),
-        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(
-            new Translation2d(areWeBlue ? 6.8 : 9.75, 4.58)), false).asProxy(),
-        collectClosenesCheck);
-
     BooleanSupplier communityClosenesCheck = () -> Math
-        .abs(swerve.getPose().getX() - (areWeBlue ? 1.90 : 14.65)) < SwerveConstants.trajAccuracy &&
+        .abs(swerve.getPose().getX() - (areWeBlue ? SwerveConstants.blueAligningX : SwerveConstants.redAligningX)) < SwerveConstants.trajAccuracy &&
         Math.abs(swerve.getPose().getY() - 4.42) < SwerveConstants.trajAccuracy;
 
     ConditionalCommand communityCheck = new ConditionalCommand(Commands.none(),
         swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(
-            new Translation2d(areWeBlue ? 1.9 : 14.65, 4.42)), false).asProxy(),
+            new Translation2d(areWeBlue ? 1.9 : SwerveConstants.redAligningX, 4.42)), false).asProxy(),
         communityClosenesCheck);
-
-    Eject eject = new Eject(gripper);
 
     addCommands(
         Commands.runOnce(() -> {
@@ -88,9 +77,8 @@ public class TwoAndHalfPiece extends SequentialCommandGroup {
             gripper.setShouldGripCone(false);
           }, gripper),
         driveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
-        //collectCheck,
         returnTraj.alongWith(new AutoUpper(bigArm, lilArm, gripper, telescopicArm)),
-        //communityCheck,
+        communityCheck,
         putSecondPiece,
         new Eject(gripper),
         secondDriveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),

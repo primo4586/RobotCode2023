@@ -66,12 +66,12 @@ public class TwoPiece extends SequentialCommandGroup {
         collectClosenesCheck);
 
     BooleanSupplier communityClosenesCheck = () -> Math
-        .abs(swerve.getPose().getX() - (areWeBlue ? 1.90 : 14.65)) < SwerveConstants.trajAccuracy &&
+        .abs(swerve.getPose().getX() - (areWeBlue ? SwerveConstants.blueAligningX : SwerveConstants.redAligningX)) < SwerveConstants.trajAccuracy &&
         Math.abs(swerve.getPose().getY() - 4.42) < SwerveConstants.trajAccuracy;
 
     ConditionalCommand communityCheck = new ConditionalCommand(Commands.none(),
         swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(
-            new Translation2d(areWeBlue ? 1.9 : 14.65, 4.42)), false).asProxy(),
+            new Translation2d(areWeBlue ? 1.9 : SwerveConstants.redAligningX, 4.42)), false).asProxy(),
         communityClosenesCheck);
 
     Eject eject = new Eject(gripper);

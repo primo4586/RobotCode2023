@@ -260,7 +260,7 @@ public void stopModules() {
           + SwerveConstants.howCloseWeNeedToBe);
     }
 
-    return (poseEstimation.getEstimatedPosition().getX() > Units.inchesToMeters(SwerveConstants.blueAligningX)
+    return (poseEstimation.getEstimatedPosition().getX() > Units.inchesToMeters(SwerveConstants.redAligningX)
         - SwerveConstants.howCloseWeNeedToBe);
   }
 

@@ -41,6 +41,7 @@ public class CoolScoreDrive extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    alliance = DriverStation.getAlliance();
     double aligningX = (alliance == Alliance.Blue) ? SwerveConstants.blueAligningX : SwerveConstants.redAligningX;
     double aligningY = Units.inchesToMeters(SwerveConstants.redAligningYAxis[objective.getNodeRow()]);
     Translation2d endPointTranslatio2d = new Translation2d(aligningX, aligningY);

@@ -73,7 +73,7 @@ public class VisionPoseEstimatorLimeLight {
 
         // Rejects the result only if the result doesn't exist or if the ambguity is
         // over 20% and therefore the data is unreliable.
-        if (rightResult.isPresent() && rightLastResult.hasTargets() && rightLastResult.getBestTarget().getPoseAmbiguity() < 0.2&&(rightResult.get().estimatedPose.getX()<3.5||rightResult.get().estimatedPose.getX()>11.15)) {
+        if (rightResult.isPresent() && rightLastResult.hasTargets() && rightLastResult.getBestTarget().getPoseAmbiguity() < 0.2&&(rightResult.get().estimatedPose.getX()<4.5||rightResult.get().estimatedPose.getX()> 12.04)) {
     
             // Returns the data with the Pose3d, and the timestamp relative to the robot's time of when the pose was estimated at. (EstimatedRobotPose)
             return rightResult.get();
