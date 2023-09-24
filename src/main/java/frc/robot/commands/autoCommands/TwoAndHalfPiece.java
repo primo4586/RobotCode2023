@@ -11,11 +11,16 @@ import java.util.function.BooleanSupplier;
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.BigConstants;
+import frc.robot.Constants.LilConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.TelescopicArmConstants;
 import frc.robot.commands.actions.AutoCollectCube;
+import frc.robot.commands.actions.AutoUpper;
 import frc.robot.commands.actions.Ground;
 import frc.robot.commands.actions.MiddleOfBot;
 import frc.robot.commands.actions.PutItemInTheMiddle;
@@ -78,19 +83,21 @@ public class TwoAndHalfPiece extends SequentialCommandGroup {
           gripper.setShouldGripCone(shouldStartWithCone);
         }),
         new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm),
-        eject,
-        Commands.waitSeconds(0.3),
-        driveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
-        collectCheck,
-        Commands.runOnce(() -> {
-          gripper.setShouldGripCone(false);
-        }, gripper),
-        returnTraj.alongWith(putSecondPiece),
-        communityCheck,
         new Eject(gripper),
-        Commands.waitSeconds(0.2),
+        Commands.runOnce(() -> {
+            gripper.setShouldGripCone(false);
+          }, gripper),
+        driveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
+        //collectCheck,
+        returnTraj.alongWith(new AutoUpper(bigArm, lilArm, gripper, telescopicArm)),
+        //communityCheck,
+        putSecondPiece,
+        new Eject(gripper),
         secondDriveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
-        new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm, limeLight),
+        //new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm, limeLight),
+        telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
+        bigArm.TurnBigArmToSetpoint(BigConstants.middleOfRobotSetPoint),
+        lilArm.TurnLilArmToSetpoint(LilConstants.middleOfRobotSetPoint),
         new MiddleOfBot(lilArm, bigArm, telescopicArm, gripper));
   }
 }

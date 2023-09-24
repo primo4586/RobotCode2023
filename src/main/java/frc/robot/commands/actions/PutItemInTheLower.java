@@ -35,8 +35,7 @@ public class PutItemInTheLower extends SequentialCommandGroup {
     Hold hold = new Hold(gripper);
 
     addCommands(
-      hold,
-      putArmsInLowerSetPoint
+      hold.raceWith(putArmsInLowerSetPoint)
     );
   }
 }

@@ -18,10 +18,14 @@ import frc.robot.Constants.BigConstants;
 import frc.robot.Constants.LilConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TelescopicArmConstants;
+import frc.robot.commands.actions.AutoUpper;
 import frc.robot.commands.actions.Ground;
+import frc.robot.commands.actions.GroundOnlyArms;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
+import frc.robot.commands.actions.gripper.Collect;
 import frc.robot.commands.actions.gripper.Eject;
+import frc.robot.commands.actions.gripper.Hold;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -78,16 +82,15 @@ public class TwoPiece extends SequentialCommandGroup {
         }),
         new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm),
         new Eject(gripper),
-        Commands.waitSeconds(0.3),
-        driveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
-        collectCheck,
         Commands.runOnce(() -> {
-          gripper.setShouldGripCone(shouldFinishWithCone);
-        }, gripper),
-        returnTraj.alongWith(putSecondPiece),
-        communityCheck,
+            gripper.setShouldGripCone(false);
+          }, gripper),
+        driveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
+        //collectCheck,
+        returnTraj.alongWith(new AutoUpper(bigArm, lilArm, gripper, telescopicArm)),
+        //communityCheck,
+        putSecondPiece,
         eject,
-        Commands.waitSeconds(0.2),
         telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
         bigArm.TurnBigArmToSetpoint(BigConstants.middleOfRobotSetPoint),
         lilArm.TurnLilArmToSetpoint(LilConstants.middleOfRobotSetPoint));

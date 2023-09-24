@@ -66,7 +66,6 @@ public class Swerve extends SubsystemBase {
 
   double maxSpeed = 0,
   currentVelocity = 0;
-  private double characterizationVolts;
 
 
   public Swerve() {
@@ -110,6 +109,7 @@ public class Swerve extends SubsystemBase {
         //      mod.runCharacterization(characterizationVolts);
         //  }
     updateOdometry();
+    SmartDashboard.putNumber("roll", gyro.getRoll());
   }
 
   public Command stopModulescCommand(){
@@ -136,7 +136,7 @@ public void stopModules() {
    * @param rotation      Movement in rotation. (radians / second)
    * @param fieldRelative If the robot should move relative to the field or the
    *                      robot.
-   * @param isOpenLoop    If the robot should use PID & FF to correct itself and
+   * @param isOpenLoop    False if the robot should use PID & FF to correct itself and
    *                      be more accurate
    */
   public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -163,6 +163,11 @@ public void stopModules() {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
     }
   }
+
+  public Command driveAtSpeed(double speed){
+    return run(()->drive(new Translation2d(speed,0), 0, true, true)); 
+  }
+
 
   public Command driveUntilMeters(double driveSpeed, double metersSetpoint, boolean forward) {
     return run(() -> {
@@ -196,9 +201,9 @@ public void stopModules() {
         trajectory,
         this::getPose,
         SwerveConstants.swerveKinematics,
-        new PIDController(0, 0, 0),
-        new PIDController(0, 0, 0),
-        new PIDController(0, 0, 0),
+        new PIDController(1.3, 0, 0),
+        new PIDController(1.3, 0, 0),
+        new PIDController(5, 0, 0),
         // new PIDController(AutoConstants.kPXController, 0, 0),
         // new PIDController(AutoConstants.kPYController, 0, 0),
         // new PIDController(AutoConstants.kPThetaController, 0, 0),
@@ -241,7 +246,7 @@ public void stopModules() {
         .generatePath(new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
             AutoConstants.kMaxAccelerationMetersPerSecondSquared), trajectoryPoints);
 
-    //field2d.getObject("traj").setTrajectory(trajectory);
+    field2d.getObject("traj").setTrajectory(trajectory);
 
     return trajectory;
 
@@ -339,19 +344,19 @@ public void stopModules() {
   }
 
       
-      /** Runs forwards at the commanded voltage. */
-      public void runCharacterizationVolts(double volts) {
-        characterizationVolts = volts;
-      }
+      // /** Runs forwards at the commanded voltage. */
+      // public void runCharacterizationVolts(double volts) {
+      //   characterizationVolts = volts;
+      // }
     
-      /** Returns the average drive velocity in radians/sec. */
-      public double getCharacterizationVelocity() {
-        double driveVelocityAverage = 0.0;
-        for (SwerveModule mod : mSwerveMods) {
-          driveVelocityAverage += mod.getCharacterizationVelocity();
-        }
-        return driveVelocityAverage / 4.0;
-      }
+      // /** Returns the average drive velocity in radians/sec. */
+      // public double getCharacterizationVelocity() {
+      //   double driveVelocityAverage = 0.0;
+      //   for (SwerveModule mod : mSwerveMods) {
+      //     driveVelocityAverage += mod.getCharacterizationVelocity();
+      //   }
+      //   return driveVelocityAverage / 4.0;
+      // }
 
   /**
    * Gets the current robot's estimated position on the field.
@@ -390,6 +395,10 @@ public void stopModules() {
       states[mod.moduleNumber] = mod.getState();
     }
     return states;
+  }
+
+  public Command setGyroCommand(double gyroVal){
+    return runOnce(()->setGyro(gyroVal));
   }
 
   public void setGyro(double gyroVal) {

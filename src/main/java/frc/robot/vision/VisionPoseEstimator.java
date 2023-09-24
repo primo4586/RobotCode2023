@@ -69,7 +69,7 @@ public class VisionPoseEstimator {
         // Returns a pair of the estimated position, and the latency it took to generate
         // it.
         Optional<EstimatedRobotPose> rightResult = frontRightPoseEstimator.update();
-        Optional<EstimatedRobotPose> leftResult = frontRightPoseEstimator.update();
+        Optional<EstimatedRobotPose> leftResult = frontLeftPoseEstimator.update();
 
         // Additional of the latest result, so we can have the pose ambguity data
         PhotonPipelineResult rightLastResult = frontRightCam.getLatestResult();
@@ -77,10 +77,16 @@ public class VisionPoseEstimator {
 
         // Rejects the result only if the result doesn't exist or if the ambguity is
         // over 20% and therefore the data is unreliable.
-        if (rightResult.isPresent() && rightLastResult.hasTargets() && rightLastResult.getBestTarget().getPoseAmbiguity() < 0.2) {
+        if (rightResult.isPresent() 
+        && rightLastResult.hasTargets() 
+        && rightLastResult.getBestTarget().getPoseAmbiguity() < 0.2
+        &&(rightResult.get().estimatedPose.getX()<3.5||rightResult.get().estimatedPose.getX()>11.15)) {
 
             //SmartDashboard.putNumber("Best target ambguitiy", frontRightCam.getLatestResult().getBestTarget().getPoseAmbiguity());
-            if(leftResult.isPresent() && leftLastResult.hasTargets() && leftLastResult.getBestTarget().getPoseAmbiguity() < rightLastResult.getBestTarget().getPoseAmbiguity()){
+            if(leftResult.isPresent() && leftLastResult.hasTargets() 
+            && leftLastResult.getBestTarget().getPoseAmbiguity() < rightLastResult.getBestTarget().getPoseAmbiguity()
+            &&(leftResult.get().estimatedPose.getX()<3.5||leftResult.get().estimatedPose.getX()>11.15)){
+                
                 return leftResult.get();
             }
     
@@ -88,10 +94,14 @@ public class VisionPoseEstimator {
             return rightResult.get();
         } 
         
-        if(leftResult.isPresent() && leftLastResult.hasTargets() && leftLastResult.getBestTarget().getPoseAmbiguity() < 0.2){
+        if(leftResult.isPresent() 
+        && leftLastResult.hasTargets() 
+        && leftLastResult.getBestTarget().getPoseAmbiguity() < 0.2
+        &&(leftResult.get().estimatedPose.getX()<3.5||leftResult.get().estimatedPose.getX()>11.15)){
+            
             return leftResult.get();
         }
-        
+        DriverStation.reportError("no pose Result", false);
         return null;
     }
 

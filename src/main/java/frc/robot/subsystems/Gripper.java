@@ -4,8 +4,12 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,10 +18,12 @@ public class Gripper extends SubsystemBase {
   private WPI_TalonFX gripperMotor;
 
   public boolean shouldGripCone,
-      lastCollect,
-      isHolding;
+      isHolding,
+      stallCheck;
   
-  int clicks = 0;
+  Timer timer = new Timer();
+
+  public BooleanSupplier isStalled = ()-> timer.hasElapsed(0.2);
 
   public Gripper() {
     gripperMotor = new WPI_TalonFX(8);
@@ -27,6 +33,20 @@ public class Gripper extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber( "gripper Speed" , gripperMotor.getSelectedSensorVelocity());
+
+    if(Math.abs(gripperMotor.getSelectedSensorVelocity())>60){
+      stallCheck = true;
+      timer.stop();
+    }
+    else if(stallCheck){
+      stallCheck = false;
+      timer.restart();
+    }
+  }
+
+  public double getSpeed(){
+    return gripperMotor.getSelectedSensorVelocity();
   }
 
   /**
@@ -34,6 +54,10 @@ public class Gripper extends SubsystemBase {
    */
   public Command stop() {
     return run(()->setSpeed(0.0));
+  }
+
+  public Command setSpeedCommand(double speed) {
+    return runOnce(()->setSpeed(speed));
   }
 
   public void setSpeed(double speed) {

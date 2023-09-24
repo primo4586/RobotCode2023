@@ -96,18 +96,18 @@ public class CoolScoreDrive extends InstantCommand {
         }
       }
 
-      swerve.followTrajectory(swerve.generateTrajectoryToPoseList(pointsList), false).asProxy();
+      swerve.followTrajectory(swerve.generateTrajectoryToPoseList(pointsList), false).schedule();
       if (Math.abs(swerve.getPose().getX() - endPointTranslatio2d.getX()) > SwerveConstants.trajAccuracy ||
           Math.abs(swerve.getPose().getY() - endPointTranslatio2d.getY()) > SwerveConstants.trajAccuracy) {
-        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(endPointTranslatio2d), false).asProxy();
+        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(endPointTranslatio2d), false).schedule();
       }
       if (Math.abs(swerve.getPose().getX() - endPointTranslatio2d.getX()) > SwerveConstants.trajAccuracy ||
           Math.abs(swerve.getPose().getY() - endPointTranslatio2d.getY()) > SwerveConstants.trajAccuracy) {
-        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(endPointTranslatio2d), false).asProxy();
+        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(endPointTranslatio2d), false).schedule();
       }
       if (Math.abs(swerve.getPose().getX() - endPointTranslatio2d.getX()) > SwerveConstants.trajAccuracy ||
           Math.abs(swerve.getPose().getY() - endPointTranslatio2d.getY()) > SwerveConstants.trajAccuracy) {
-        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(endPointTranslatio2d), false).asProxy();
+        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(endPointTranslatio2d), false).schedule();
       }
     }
     

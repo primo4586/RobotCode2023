@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
     new RobotContainer(swerve, gripper ,lilArm, bigArm, objective, telescopicArm);
 
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm, telescopicArm,limeLight);
-    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, CameraServer.startAutomaticCapture("ground",0));
+    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper);//, CameraServer.startAutomaticCapture("ground",0));
     //PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
     objective.updateInputs();
     SmartDashboard.putBoolean("wheels aligned", true);
@@ -101,8 +101,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     swerve.setGyro(0);   
-    lilArm.zeroEncoderForAuto();
     bigArm.zeroEncoderForMiddleOfBot();
+    telescopicArm.Home();
     m_autonomousCommand = autoContainer.getAutonomousCommand();//swerve.driveForTimeAtSpeed(new Translation2d(-1.25, 0), 3.6);
 
     // schedule the autonomous command (example)
@@ -117,7 +117,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper, CameraServer.startAutomaticCapture("ground",0));
+    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper);//, CameraServer.startAutomaticCapture("ground",0));
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -137,7 +137,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     objective.updateInputs();
-    //checkNodeSelectorButtons();
+    checkNodeSelectorButtons();
   }
 
   @Override

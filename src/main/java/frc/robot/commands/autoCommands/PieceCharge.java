@@ -20,15 +20,8 @@ import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.TelescopicArm;
 
-public class PieceReloadCharge extends SequentialCommandGroup {
-  public PieceReloadCharge(boolean shouldStartWithCone, boolean UpperPiece, boolean areWeBlue, Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm, TelescopicArm telescopicArm) {
-
-    ConditionalCommand driveToPiece = new ConditionalCommand(
-        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(new Translation2d(6.8, 3.357626)),
-            false),
-        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(UpperPiece ? new Translation2d(6.8, 2.138426) : new Translation2d(6.65, 3.357626)),
-            false),//TODO: change red place
-        () -> areWeBlue);
+public class PieceCharge extends SequentialCommandGroup {
+  public PieceCharge(boolean shouldStartWithCone, Swerve swerve, Gripper gripper, BigArm bigArm, LilArm lilArm, TelescopicArm telescopicArm) {
 
         Eject eject = new Eject(gripper);
 
@@ -41,7 +34,6 @@ public class PieceReloadCharge extends SequentialCommandGroup {
         new GroundOnlyArms(lilArm, bigArm, telescopicArm),//TODO: test if possible to do this while driving back
         new DriveUntilOtherSide(swerve, true),
         new Ground(gripper, lilArm, bigArm, telescopicArm),
-        driveToPiece,
         new FastCharge(false, swerve)
 
     );

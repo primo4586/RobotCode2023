@@ -86,7 +86,7 @@ public interface NodeSelectorIO {
     }
 
     public Objective(Gripper gripper) {
-      this(0, NodeLevel.HYBRID, false, gripper);
+      this(0, NodeLevel.HYBRID, gripper.shouldGripCone, gripper);
     }
 
     public boolean isConeNode() {

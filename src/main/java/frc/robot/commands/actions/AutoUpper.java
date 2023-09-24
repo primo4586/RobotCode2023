@@ -4,9 +4,9 @@
 
 package frc.robot.commands.actions;
 
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.BigConstants;
 import frc.robot.Constants.LilConstants;
 import frc.robot.Constants.TelescopicArmConstants;
@@ -16,9 +16,12 @@ import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.TelescopicArm;
 
-public class PutItemInTheUpper extends SequentialCommandGroup {
-  /** Creates a new putItemInPlace.  */
-  public PutItemInTheUpper(BigArm bigArm, LilArm lilArm, Gripper gripper,TelescopicArm telescopicArm) {
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class AutoUpper extends SequentialCommandGroup {
+  /** Creates a new AutoUpper. */
+  public AutoUpper(BigArm bigArm, LilArm lilArm, Gripper gripper,TelescopicArm telescopicArm) {
     //cone and cube setPoints
     ParallelCommandGroup coneUpperSetPoint = new ParallelCommandGroup(
         bigArm.TurnBigArmToSetpoint(BigConstants.coneUpperSetPoint),
@@ -35,12 +38,9 @@ public class PutItemInTheUpper extends SequentialCommandGroup {
     telescopicArm.putTelesInSetpoint(TelescopicArmConstants.coneUpperSetPoint), 
     telescopicArm.putTelesInSetpoint(TelescopicArmConstants.cubeUpperSetPoint), gripper::getShouldGripCone);
 
-    Hold hold = new Hold(gripper);
-
     addCommands(
-        //zhold,
-        gripper.setSpeedCommand(gripper.shouldGripCone?0.1:-0.1).raceWith(telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint)),
-        hold.raceWith(putArmsInUpperSetPoint),
-        putTelesInSetPoint);
+        //hold,
+        gripper.setSpeedCommand(gripper.shouldGripCone?0.1:-0.1).alongWith(telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint)),
+        new Hold(gripper).raceWith(putArmsInUpperSetPoint));
   }
 }

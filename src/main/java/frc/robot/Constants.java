@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.SwerveModuleConstants;
+import kotlin.Unit;
 
 public final class Constants {
 
@@ -59,10 +60,10 @@ public final class Constants {
         public static final double intakeReturnSetPoint = 37000;
         public static final double intakeReturnDeadZone = 48839;
 
-        public static final double highIntakeSetpoint = -28557;
+        public static final double highIntakeSetpoint = 13626;
 
         public static final double middleOfRobotSetPoint = 0.0;
-        public static final double groundSetPoint = -15227;
+        public static final double groundSetPoint = -12082;
         
         public static final double softLimitForward = 58982;
         public static final double softLimitReverse = -17166;
@@ -133,7 +134,7 @@ public final class Constants {
         public static final double angleKF = 0.0;
 
         /* Drive Motor PID Values (Changes Per Robot) */
-        public static final double driveKP =  0.034811;
+        public static final double driveKP =  0.032;
         public static final double driveKI = 0.0;
         public static final double driveKD = 0.0;
 
@@ -141,17 +142,17 @@ public final class Constants {
 
         /* Drive Motor Characterization Values (Changes Per Robot) */
         public static final double driveKS = (0.12716);/// 12); // divided by 12 to convert from volts to percent output for CTRE
-        public static final double driveKV = (3);// / 12);
+        public static final double driveKV = (3.1);// / 12);
         public static final double driveKA = (1.7636);// / 12);
 
 
         /* Swerve Profiling Values (Changes Per Robot) - usually set by preference */
         /** meters / second */
-        public static final double maxSpeed = 4.095243257154712;
+        public static final double maxSpeed = 4.117261723402446;
         /** Percent output to motors. */
         public static final double maxPercentVelocity = 1; 
         /** radians / second */
-        public static final double maxAngularVelocity = 2.1;
+        public static final double maxAngularVelocity = Units.rotationsPerMinuteToRadiansPerSecond(3.80249338852179/2.732373*60);
 
         public static final double maxAcceleration = 7.6923076924;
 
@@ -228,7 +229,7 @@ public final class Constants {
         public static final double[] blueAligningYAxis = {20, 42.19, 64, 86, 108.19, 130, 152, 174.19, 196};
         public static final double[] redAligningYAxis = {196, 174.19, 152, 130, 108.19, 86, 64, 42.19, 20};
 
-        public static final double blueAligningX = 0;
+        public static final double blueAligningX = 1.9;
         public static final double redAligningX = 14.65;
 
         public static final double howCloseWeNeedToBe = 1.541526;
@@ -276,8 +277,8 @@ public final class Constants {
         public static final double cubeLowerSetPoint = -56326;
 
         public static final double middleOfRobotSetPoint = 175000;
-        public static final double highIntakeSetpoint = -1010;
-        public static final double groundSetPoint =  -186466;
+        public static final double highIntakeSetpoint = 65037;
+        public static final double groundSetPoint =  -185997;
         public static final double autoStartPoint = -136;
 
         public static final double resetPoint = -30;
@@ -331,9 +332,9 @@ public final class Constants {
         public static final double cubeMiddleSetPoint = 24239;
         public static final double cubeLowerSetPoint = -56326;
 
-        public static final double highIntakeSetpoint = -28557;
+        public static final double highIntakeSetpoint = 28099;
         public static final double middleOfRobotSetPoint = 1100;
-        public static final double groundSetPoint = 28165;
+        public static final double groundSetPoint = 22728;
 
         public static final double softLimitForward = 48000;
         public static final double softLimitReverse = 1000;
@@ -348,8 +349,8 @@ public final class Constants {
    
     public static final class VisionConstants {
         // Camera's name in Photon's NetworkTable (Set in the PhotonVision UI)
-        public static final String rightCameraName = "Arducam_OV9281_USB_Camera";
-        public static final String leftCameraName = "Arducam_OV9281_USB_Camera";
+        public static final String rightCameraName = "rightCam";
+        public static final String leftCameraName = "leftCam";
         public static final String limeLightCameraName = "OV5647";
 
         /**
@@ -360,17 +361,17 @@ public final class Constants {
          */
         public static final Transform3d rightRobotToCam =
                 new Transform3d(
-                        new Translation3d( 0.31,-0.205, 0.23),
+                        new Translation3d( 0.317,-217, 0.235),
                         new Rotation3d(
                                 0, 0,
-                                Units.degreesToRadians(2)));
+                                Units.degreesToRadians(4)));
                                 
         public static final Transform3d leftRobotToCam =
         new Transform3d(
-                new Translation3d( 0.31,-0.205, 0.23),
+                new Translation3d( 0.309,0.205, 0.235),
                 new Rotation3d(
                         0, 0,
-                        Units.degreesToRadians(2)));
+                        Units.degreesToRadians(7)));
 
 
         public static final Transform3d limeLightRobotToCam =

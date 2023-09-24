@@ -12,7 +12,7 @@ import frc.robot.subsystems.Swerve;
 
 public class PIDBalance extends CommandBase {
   private Swerve swerve;
-  private PIDController balancePID = new PIDController(0.02, 0.0001, 0.32);
+  private PIDController balancePID = new PIDController(0.06, 0.000, 0.0);
   private Timer timer = new Timer();
 
   public PIDBalance(Swerve swerve) {
@@ -40,7 +40,7 @@ public class PIDBalance extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    swerve.drive(new Translation2d(0,0), 45, true, false);
+    swerve.drive(new Translation2d(0,0), 0, true, false);
   }
 
   @Override

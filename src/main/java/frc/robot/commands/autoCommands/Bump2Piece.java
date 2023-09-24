@@ -84,7 +84,6 @@ public class Bump2Piece extends SequentialCommandGroup {
         Commands.runOnce(()->gripper.setShouldGripCone(shouldStartWithCone),gripper),
         new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm),
         new Eject(gripper),
-            Commands.waitSeconds(0.3),
             driveBack.alongWith(new GroundOnlyArms(lilArm, bigArm, telescopicArm)),
         new Ground(gripper, lilArm, bigArm, telescopicArm).alongWith(driveToCollect.asProxy()),//TODO: test otf traj and maybe change it
         collectCheck.asProxy(),
@@ -98,7 +97,6 @@ public class Bump2Piece extends SequentialCommandGroup {
         communityCheck.asProxy(),
         putSecondPiece,
         eject,
-        Commands.waitSeconds(0.2),
         secondDriveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
         new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm, limeLight));
   }

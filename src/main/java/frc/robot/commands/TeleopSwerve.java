@@ -64,6 +64,7 @@ public class TeleopSwerve extends CommandBase {
         rAxis = (Math.abs(rAxis) < Misc.stickDeadband) ? 0 : rAxis;
         
         
+        
         if(!slowMode.getAsBoolean()){
             translation = new Translation2d(xAxis, yAxis).times(SwerveConstants.maxSpeed);
             rotation = rAxis * SwerveConstants.maxAngularVelocity;
@@ -74,6 +75,16 @@ public class TeleopSwerve extends CommandBase {
             translation = new Translation2d(xAxis, yAxis).times(SwerveConstants.slowModeSpeed);
             rotation = rAxis * SwerveConstants.slowModeAngularVelocity;
             swerve.drive(translation, rotation, fieldRelative, openLoop);
-        }
+        } 
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        swerve.drive(new Translation2d(0, 0),0,true,true);
     }
 }
