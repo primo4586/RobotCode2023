@@ -5,8 +5,6 @@
 
 package frc.robot;
 
-import java.util.List;
-
 import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.Objective;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
@@ -15,26 +13,17 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.LilConstants;
-import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.actions.CoolScore;
 import frc.robot.commands.actions.EmergencyStopArms;
-import frc.robot.commands.actions.FullEStop;
 import frc.robot.commands.actions.HighIntake;
 import frc.robot.commands.actions.Ground;
 import frc.robot.commands.actions.MiddleOfBot;
@@ -42,17 +31,10 @@ import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.commands.actions.gripper.Collect;
 import frc.robot.commands.actions.gripper.Eject;
-import frc.robot.commands.actions.gripper.Hold;
 import frc.robot.subsystems.*;
-import frc.robot.vision.VisionPoseEstimator;
 import frc.robot.vision.VisionPoseEstimatorLimeLight;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class RobotContainer {
-
-  private Objective objective;
-  private Alliance alliance = DriverStation.getAlliance();
 
   Translation2d endPointTranslatio2d;
 

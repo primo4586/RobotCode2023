@@ -11,7 +11,6 @@ import frc.robot.commands.actions.GroundOnlyArms;
 import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.commands.actions.gripper.Eject;
 import frc.robot.commands.utils.DriveUntilOtherSide;
-import frc.robot.commands.utils.PieceCharge;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -32,7 +31,7 @@ public class PieceCharge extends SequentialCommandGroup {
         new GroundOnlyArms(gripper, lilArm, bigArm, telescopicArm),//TODO: test if possible to do this while driving back
         new DriveUntilOtherSide(swerve, true),
         new Ground(gripper, lilArm, bigArm, telescopicArm),
-        new PieceCharge(false, swerve)
+        new PieceCharge(false, swerve, gripper, bigArm, lilArm, telescopicArm)
 
     );
   }

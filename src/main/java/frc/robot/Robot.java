@@ -9,7 +9,6 @@ import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.
 
 import com.pathplanner.lib.server.PathPlannerServer;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.RobotController;

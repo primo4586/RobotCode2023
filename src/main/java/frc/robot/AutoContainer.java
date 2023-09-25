@@ -13,7 +13,6 @@ import frc.robot.commands.autoCommands.Bump2Piece;
 import frc.robot.commands.autoCommands.PieceCharge;
 import frc.robot.commands.autoCommands.TwoAndHalfPiece;
 import frc.robot.commands.autoCommands.TwoPiece;
-import frc.robot.commands.utils.PIDBalance;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
