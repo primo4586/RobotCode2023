@@ -13,7 +13,6 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.vision.VisionPoseEstimator;
 import frc.robot.vision.VisionPoseEstimatorLimeLight;
 import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;

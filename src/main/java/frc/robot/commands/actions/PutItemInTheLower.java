@@ -22,12 +22,12 @@ public class PutItemInTheLower extends SequentialCommandGroup {
     ParallelCommandGroup coneLowerSetPoint = new ParallelCommandGroup(
         bigArm.TurnBigArmToSetpoint(BigConstants.coneLowerSetPoint),
         lilArm.TurnLilArmToSetpoint(LilConstants.coneLowerSetPoint),
-        telescopicArm.putTelesInSetpoint(TelescopicArmConstants.coneLowerSetPoint));
+        telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint));
 
     ParallelCommandGroup cubeLowerSetPoint = new ParallelCommandGroup(
         bigArm.TurnBigArmToSetpoint(BigConstants.cubeLowerSetPoint),
         lilArm.TurnLilArmToSetpoint(LilConstants.cubeLowerSetPoint),
-        telescopicArm.putTelesInSetpoint(TelescopicArmConstants.coneLowerSetPoint));
+        telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint));
 
     //check if we put cone or cube
     ConditionalCommand putArmsInLowerSetPoint = new ConditionalCommand(coneLowerSetPoint, cubeLowerSetPoint,gripper::getShouldGripCone);

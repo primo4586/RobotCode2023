@@ -11,7 +11,6 @@ import java.util.function.BooleanSupplier;
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.Constants.AutoConstants;
@@ -19,7 +18,6 @@ import frc.robot.Constants.BigConstants;
 import frc.robot.Constants.LilConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TelescopicArmConstants;
-import frc.robot.commands.actions.AutoCollectCube;
 import frc.robot.commands.actions.AutoUpper;
 import frc.robot.commands.actions.Ground;
 import frc.robot.commands.actions.MiddleOfBot;

@@ -6,11 +6,8 @@ package frc.robot.commands.actions.gripper;
 
 import java.util.function.BooleanSupplier;
 
-import com.fasterxml.jackson.databind.ser.std.BooleanSerializer;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.subsystems.Gripper;
 
 public class Collect extends CommandBase {

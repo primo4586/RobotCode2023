@@ -7,17 +7,12 @@ package frc.robot;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.util.PrimoShuffleboard;
-import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.commands.autoCommands.Bump2Piece;
 import frc.robot.commands.autoCommands.PieceCharge;
 import frc.robot.commands.autoCommands.TwoAndHalfPiece;
 import frc.robot.commands.autoCommands.TwoPiece;
-import frc.robot.commands.utils.DriveUntilOtherSide;
-import frc.robot.commands.utils.FastCharge;
-import frc.robot.commands.utils.MaybeBetterCharge;
 import frc.robot.commands.utils.PIDBalance;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
@@ -25,8 +20,6 @@ import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.TelescopicArm;
 import frc.robot.util.CommandSelector;
-import frc.robot.util.FeedForwardCharacterization;
-import frc.robot.util.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc.robot.vision.LimeLight;
 
 /** Add your docs here. */
@@ -46,25 +39,20 @@ public class AutoContainer {
         this.autoPaths.put("redUpperConeCube", new TwoPiece(true, false, false, bigArm, lilArm, gripper, swerve, telescopicArm));
 
 
-        // this.autoPaths.put("blueUpperConeCubeCube", new TwoAndHalfPiece(true, true, bigArm, lilArm, gripper, swerve, telescopicArm, limeLight));
-         this.autoPaths.put("redUpperConeCubeCube", new TwoAndHalfPiece(true, false, bigArm, lilArm, gripper, swerve, telescopicArm, limeLight));
+        this.autoPaths.put("blueUpperConeCubeCube", new TwoAndHalfPiece(true, true, bigArm, lilArm, gripper, swerve, telescopicArm, limeLight));
+        this.autoPaths.put("redUpperConeCubeCube", new TwoAndHalfPiece(true, false, bigArm, lilArm, gripper, swerve, telescopicArm, limeLight));
         
 
-         
-        this.autoPaths.put("MaybeBetterCharge", swerve.driveAtSpeed(-2).until(()->swerve.getRoll()>9.5).andThen(new PIDBalance(swerve)));
-        this.autoPaths.put("charge",new PIDBalance(swerve));
+        this.autoPaths.put("cubeCharge",new PieceCharge(false, swerve, gripper, bigArm, lilArm, telescopicArm));
+        this.autoPaths.put("coneCharge", new PieceCharge(true, swerve, gripper, bigArm, lilArm, telescopicArm));
 
 
-        // this.autoPaths.put("blueBumpConeCube", new Bump2Piece(true, true, bigArm, lilArm, gripper, swerve, telescopicArm, limeLight));
-        // this.autoPaths.put("redBumpConeCube", new Bump2Piece(true, false, bigA%rm, lilArm, gripper, swerve, telescopicArm, limeLight));
-        
-
-        // this.autoPaths.put("coneCharge", new PieceCharge(true, swerve, gripper, bigArm, lilArm, telescopicArm));
-        // this.autoPaths.put("cubeCharge", new PieceCharge(false, swerve, gripper, bigArm, lilArm, telescopicArm));
+        this.autoPaths.put("blueBumpConeCube", new Bump2Piece(true, true, bigArm, lilArm, gripper, swerve, telescopicArm, limeLight));
+        this.autoPaths.put("redBumpConeCube", new Bump2Piece(true, false, bigArm, lilArm, gripper, swerve, telescopicArm, limeLight));
 
 
-        // this.autoPaths.put("cubeAndDrive", gripper.setShouldGripConeCommand(false).andThen( new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm)).andThen(swerve.driveUntilMeters(1.5, 5, false)));
-        // this.autoPaths.put("coneAndDrive", gripper.setShouldGripConeCommand(true).andThen( new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm)).andThen(swerve.driveUntilMeters(1.5, 5, false)));
+        //this.autoPaths.put("cubeAndDrive", gripper.setShouldGripConeCommand(false).andThen( new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm)).andThen(swerve.driveUntilMeters(1.5, 5, false)));
+        //this.autoPaths.put("coneAndDrive", gripper.setShouldGripConeCommand(true).andThen( new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm)).andThen(swerve.driveUntilMeters(1.5, 5, false)));
         // this.autoPaths.put("cubeCharge", gripper.setShouldGripConeCommand(false).andThen(new DriveUntilOtherSide(swerve, true)).andThen(new FastCharge(false, swerve)).andThen(new PIDBalance(swerve)));
         // this.autoPaths.put("coneCharge", gripper.setShouldGripConeCommand(true).andThen(new DriveUntilOtherSide(swerve, true)).andThen(new FastCharge(false, swerve)).andThen(new PIDBalance(swerve)));
             

@@ -23,11 +23,11 @@ public class MiddleOfBot extends SequentialCommandGroup {
       bigArm.TurnBigArmToSetpoint(BigConstants.intakeSetPoint),
       lilArm.TurnLilArmToSetpoint(LilConstants.middleOfRobotSetPoint));
     
-    Hold hold = new Hold(gripper);
     addCommands(
-      //hold,
-      telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
-      moveArms
+        //hold,
+      gripper.setSpeedCommand(gripper.shouldGripCone ? 0.1 : -0.1)
+        .raceWith(telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint)),
+      new Hold(gripper).raceWith(moveArms)
     );
   }
 }

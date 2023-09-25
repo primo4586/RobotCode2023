@@ -37,8 +37,9 @@ public class PutItemInTheMiddle extends SequentialCommandGroup {
 
     addCommands(
       //hold,
-      hold.raceWith(telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint)),
-      putArmsInMiddleSetPoint,
+      gripper.setSpeedCommand(gripper.shouldGripCone ? 0.1 : -0.1)
+        .raceWith(telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint)),
+      hold.raceWith(putArmsInMiddleSetPoint),
       putTelesInsetPoint
     );
   }

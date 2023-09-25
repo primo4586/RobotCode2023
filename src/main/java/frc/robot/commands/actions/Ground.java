@@ -18,7 +18,6 @@ public class Ground extends SequentialCommandGroup {
     ParallelCommandGroup moveArms = new ParallelCommandGroup(bigArm.TurnBigArmToSetpoint(BigConstants.groundSetPoint),
         lilArm.TurnLilArmToSetpoint(LilConstants.groundSetPoint));
     
-    Collect collect = new Collect(gripper);
 
     addCommands(
       telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),

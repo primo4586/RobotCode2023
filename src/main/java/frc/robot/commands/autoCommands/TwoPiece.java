@@ -20,12 +20,9 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TelescopicArmConstants;
 import frc.robot.commands.actions.AutoUpper;
 import frc.robot.commands.actions.Ground;
-import frc.robot.commands.actions.GroundOnlyArms;
 import frc.robot.commands.actions.PutItemInTheMiddle;
 import frc.robot.commands.actions.PutItemInTheUpper;
-import frc.robot.commands.actions.gripper.Collect;
 import frc.robot.commands.actions.gripper.Eject;
-import frc.robot.commands.actions.gripper.Hold;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.LilArm;
@@ -56,15 +53,6 @@ public class TwoPiece extends SequentialCommandGroup {
             AutoConstants.pathConstraints, false), true),
         () -> areWeBlue);
 
-    BooleanSupplier collectClosenesCheck = () -> Math
-        .abs(swerve.getPose().getX() - (areWeBlue ? 6.8 : 9.75)) < SwerveConstants.trajAccuracy &&
-        Math.abs(swerve.getPose().getY() - 4.58) < SwerveConstants.trajAccuracy;
-
-    ConditionalCommand collectCheck = new ConditionalCommand(Commands.none(),
-        swerve.followTrajectory(swerve.generateTrajectoryToAligmentPose(
-            new Translation2d(areWeBlue ? 6.8 : 9.75, 4.58)), false).asProxy(),
-        collectClosenesCheck);
-
     BooleanSupplier communityClosenesCheck = () -> Math
         .abs(swerve.getPose().getX() - (areWeBlue ? SwerveConstants.blueAligningX : SwerveConstants.redAligningX)) < SwerveConstants.trajAccuracy &&
         Math.abs(swerve.getPose().getY() - 4.42) < SwerveConstants.trajAccuracy;
@@ -88,7 +76,7 @@ public class TwoPiece extends SequentialCommandGroup {
         driveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
         //collectCheck,
         returnTraj.alongWith(new AutoUpper(bigArm, lilArm, gripper, telescopicArm)),
-        //communityCheck,
+        communityCheck,
         putSecondPiece,
         eject,
         telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),

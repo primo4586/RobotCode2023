@@ -75,7 +75,7 @@ public class Bump2Piece extends SequentialCommandGroup {
         Commands.runOnce(()->gripper.setShouldGripCone(shouldStartWithCone),gripper),
         new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm),
         new Eject(gripper),
-            driveBack.alongWith(new GroundOnlyArms(lilArm, bigArm, telescopicArm)),
+            driveBack.alongWith(new GroundOnlyArms(gripper, lilArm, bigArm, telescopicArm)),
         new Ground(gripper, lilArm, bigArm, telescopicArm).alongWith(driveToCollect.asProxy()),//TODO: test otf traj and maybe change it
                 Commands.runOnce(() -> {
           gripper.setShouldGripCone(false);

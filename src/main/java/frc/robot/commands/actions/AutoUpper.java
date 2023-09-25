@@ -34,9 +34,6 @@ public class AutoUpper extends SequentialCommandGroup {
     // check if we put cone or cube
     ConditionalCommand putArmsInUpperSetPoint = new ConditionalCommand(coneUpperSetPoint, cubeUpperSetPoint,
         gripper::getShouldGripCone);
-    ConditionalCommand putTelesInSetPoint = new ConditionalCommand(
-    telescopicArm.putTelesInSetpoint(TelescopicArmConstants.coneUpperSetPoint), 
-    telescopicArm.putTelesInSetpoint(TelescopicArmConstants.cubeUpperSetPoint), gripper::getShouldGripCone);
 
     addCommands(
         //hold,
