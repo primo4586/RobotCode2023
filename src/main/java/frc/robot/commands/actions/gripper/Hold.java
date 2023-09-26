@@ -12,7 +12,7 @@ public class Hold extends CommandBase {
 
   public Hold(Gripper gripper) {
     this.gripper = gripper;
-    addRequirements();
+    addRequirements(gripper);
   }
 
   // Called when the command is initially scheduled.
