@@ -19,6 +19,9 @@ public class Leds extends SubsystemBase {
     m_ledBuffer = new AddressableLEDBuffer(length);
 
     m_led.setLength(m_ledBuffer.getLength());
+    
+    m_led.setData(m_ledBuffer);
+    m_led.start();
   }
 
   public enum ColorsRGBLeds {
@@ -73,31 +76,29 @@ public class Leds extends SubsystemBase {
     return m_ledBuffer.getLength();
   }
 
-  //Just fun activities
-  public void rainbow() {
     int m_rainbowFirstPixelHue = 0;
-    while (true) {
-      // For every pixel
-      for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-        // Calculate the hue - hue is easier for rainbows because the color
-        // shape is a circle so only one value needs to precess
-        final var hue = (m_rainbowFirstPixelHue + (i * 180 / m_ledBuffer.getLength())) % 180;
-        // Set the value
-        m_ledBuffer.setHSV(i, hue, 255, 128);
-      }
-      // Increase by to make the rainbow "move"
-      m_rainbowFirstPixelHue += 3;
-      // Check bounds
-      m_rainbowFirstPixelHue %= 180;
+  //Just fun activities
+  private void rainbow() {
+    // For every pixel
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      // Calculate the hue - hue is easier for rainbows because the color
+      // shape is a circle so only one value needs to precess
+      final var hue = (m_rainbowFirstPixelHue + (i * 180 / m_ledBuffer.getLength())) % 180;
+      // Set the value
+      m_ledBuffer.setHSV(i, hue, 255, 128);
     }
+    // Increase by to make the rainbow "move"
+    m_rainbowFirstPixelHue += 3;
+    // Check bounds
+    m_rainbowFirstPixelHue %= 180;
   }
 
   public void primoBlinking() {
     while(true){
       setLedsColor(ColorsRGBLeds.PRIMO_BLUE);
-      new Timer().delay(0.5);
+      Timer.delay(0.5);
       setLedsColor(ColorsRGBLeds.PRIMO_ORANGE);
-      new Timer().delay(0.5);
+      Timer.delay(0.5);
     }
   }
 
@@ -107,12 +108,12 @@ public class Leds extends SubsystemBase {
         m_ledBuffer.setRGB(i, 23, 23, 23);
         m_ledBuffer.setRGB(i + 1, 23, 23, 23);
       }
-      new Timer().delay(0.5);
+      Timer.delay(0.5);
       for (int i = 0; i < m_ledBuffer.getLength(); i += 2) {
         m_ledBuffer.setRGB(i, 23, 23, 23);
         m_ledBuffer.setRGB(i + 1, 23, 23, 23);
       }
-      new Timer().delay(0.5);
+      Timer.delay(0.5);
     }
   }
   
