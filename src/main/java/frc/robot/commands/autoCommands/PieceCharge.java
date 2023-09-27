@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.actions.Ground;
 import frc.robot.commands.actions.GroundOnlyArms;
+import frc.robot.commands.actions.MiddleOfBot;
 import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.commands.actions.gripper.Eject;
 import frc.robot.commands.utils.DriveUntilOtherSide;
@@ -28,11 +29,9 @@ public class PieceCharge extends SequentialCommandGroup {
         }, gripper),
         new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm),
         eject,
-        new GroundOnlyArms(gripper, lilArm, bigArm, telescopicArm),//TODO: test if possible to do this while driving back
+        new MiddleOfBot(lilArm, bigArm, telescopicArm, gripper),
         new DriveUntilOtherSide(swerve, true),
-        new Ground(gripper, lilArm, bigArm, telescopicArm),
-        new PieceCharge(false, swerve, gripper, bigArm, lilArm, telescopicArm)
-
+        new Eject(gripper)
     );
   }
 }
