@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -34,6 +33,7 @@ public class TelescopicArm extends SubsystemBase {
     telesMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
 
     telesMotor.setNeutralMode(NeutralMode.Brake);
+    LilArm.CTREMotorLowerStatusFrames(telesMotor);
 
     telesMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, TelescopicArmConstants.kPIDLoopIdx,
         TelescopicArmConstants.kTimeoutMs);
@@ -68,9 +68,9 @@ public class TelescopicArm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Teles Position", telesMotor.getSelectedSensorPosition());
-    SmartDashboard.putBoolean("Teles Switch value", homeSwitch.get());
-    SmartDashboard.putNumber("teles error", telesMotor.getClosedLoopError());
+    // SmartDashboard.putNumber("Teles Position", telesMotor.getSelectedSensorPosition());
+    // SmartDashboard.putBoolean("Teles Switch value", homeSwitch.get());
+    // SmartDashboard.putNumber("teles error", telesMotor.getClosedLoopError());
 
     if(telesMotor.getSelectedSensorPosition()>32795){
       stop();

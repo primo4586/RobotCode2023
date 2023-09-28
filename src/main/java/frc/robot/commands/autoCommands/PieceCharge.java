@@ -6,8 +6,6 @@ package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.actions.Ground;
-import frc.robot.commands.actions.GroundOnlyArms;
 import frc.robot.commands.actions.MiddleOfBot;
 import frc.robot.commands.actions.PutItemInTheUpper;
 import frc.robot.commands.actions.gripper.Eject;

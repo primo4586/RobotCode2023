@@ -10,9 +10,9 @@ import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.
 import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -48,7 +48,6 @@ public class Robot extends TimedRobot {
   private Gripper gripper = new Gripper();
   private Swerve swerve;
   private LimeLight limeLight;
-  private PneumaticsControlModule pcm;
   public final Objective objective = new Objective(gripper);
 
   //private PowerDistribution PDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
@@ -59,22 +58,22 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    Timer.delay(1);
+    swerve = new Swerve();
+    Timer.delay(1);
     PathPlannerServer.startServer(5813);
-    pcm = new PneumaticsControlModule(44);
-    pcm.enableCompressorDigital();
     bigArm = new BigArm();
     lilArm = new LilArm();
-    swerve = new Swerve();
     telescopicArm = new TelescopicArm();
     limeLight = new LimeLight();
 
     new RobotContainer(swerve, gripper ,lilArm, bigArm, objective, telescopicArm);
 
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm, telescopicArm,limeLight);
-    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper);//, CameraServer.startAutomaticCapture("ground",0));
+    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper);
     //PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
-    objective.updateInputs();
     SmartDashboard.putBoolean("wheels aligned", true);
+    //Leds leds= new Leds(0, 81);
   }
 
 
@@ -93,7 +92,7 @@ public class Robot extends TimedRobot {
       telescopicArm.zeroTeles();
     }
 
-    swerve.checkWheelsAlignment();
+    //swerve.checkWheelsAlignment();
 
   }
   
@@ -116,7 +115,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper);//, CameraServer.startAutomaticCapture("ground",0));
+    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper);
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

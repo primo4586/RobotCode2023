@@ -29,7 +29,10 @@ public class CoolScore extends SequentialCommandGroup {
         );
 
         addCommands(
-            (new CoolScoreDrive(swerve, objective).alongWith(moveArms)).unless(()->!swerve.areWeCloseEnough())
+            new CoolScoreDriveSimple(swerve, objective).alongWith(moveArms).unless(()->!swerve.areWeCloseEnough()),
+            new CoolScoreDriveSimple(swerve, objective),
+            new CoolScoreDriveSimple(swerve, objective)
+            
         );
     }
 }

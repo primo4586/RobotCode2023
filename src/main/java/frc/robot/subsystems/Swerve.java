@@ -13,6 +13,7 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.commands.TeleopSwerve;
 import frc.robot.vision.VisionPoseEstimatorLimeLight;
 import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -67,6 +68,7 @@ public class Swerve extends SubsystemBase {
   currentVelocity = 0;
 
 
+
   public Swerve() {
     gyro = new PigeonIMU(new TalonSRX(SwerveConstants.pigeonID));
     gyro.configFactoryDefault();
@@ -92,14 +94,15 @@ public class Swerve extends SubsystemBase {
 
   @Override
   public void periodic() {
-    putStates();
+    //putStates();
 
-    currentVelocity = mSwerveMods[0].getVelocity();
+    //currentVelocity = mSwerveMods[0].getVelocity();
 
-    SmartDashboard.putNumber("swerve current speed", Math.abs(currentVelocity));
+    //SmartDashboard.putNumber("swerve current speed", Math.abs(currentVelocity));
 
     updateOdometry();
-    SmartDashboard.putNumber("roll", gyro.getRoll());
+    SmartDashboard.putNumber("roll", getPose().getRotation().getDegrees());
+
   }
 
   public Command stopModulescCommand(){

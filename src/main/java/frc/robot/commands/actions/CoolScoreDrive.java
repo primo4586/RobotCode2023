@@ -26,11 +26,11 @@ public class CoolScoreDrive extends InstantCommand {
   private Objective objective;
   private Alliance alliance = DriverStation.getAlliance();
 
-  PathPoint blueUpperAlignToEnterCommunity = new PathPoint(new Translation2d(5.42, 4.7), new Rotation2d(0));
-  PathPoint blueUpperEnterCommunity = new PathPoint(new Translation2d(2.3, 4.7), new Rotation2d(0));
+  PathPoint blueUpperAlignToEnterCommunity = new PathPoint(new Translation2d(5.42, 4.7), new Rotation2d(Units.degreesToRadians(180)));
+  PathPoint blueUpperEnterCommunity = new PathPoint(new Translation2d(2.3, 4.7), new Rotation2d(Units.degreesToRadians(180)));
   
-  PathPoint blueLowerAlignToEnterCommunity = new PathPoint(new Translation2d(5.42, 0.9), new Rotation2d(0));
-  PathPoint blueLowerEnterCommunity = new PathPoint(new Translation2d(2.3, 0.9), new Rotation2d(0));
+  PathPoint blueLowerAlignToEnterCommunity = new PathPoint(new Translation2d(5.42, 0.9), new Rotation2d(Units.degreesToRadians(180)));
+  PathPoint blueLowerEnterCommunity = new PathPoint(new Translation2d(2.3, 0.9), new Rotation2d(Units.degreesToRadians(180)));
 
   public CoolScoreDrive(Swerve swerve, Objective objective) {
     this.swerve = swerve;
@@ -45,7 +45,7 @@ public class CoolScoreDrive extends InstantCommand {
     double aligningX = (alliance == Alliance.Blue) ? SwerveConstants.blueAligningX : SwerveConstants.redAligningX;
     double aligningY = Units.inchesToMeters(SwerveConstants.redAligningYAxis[objective.getNodeRow()]);
     Translation2d endPointTranslatio2d = new Translation2d(aligningX, aligningY);
-    PathPoint endPoint = new PathPoint(endPointTranslatio2d, new Rotation2d(0));
+    PathPoint endPoint = new PathPoint(endPointTranslatio2d, new Rotation2d(Units.degreesToRadians(180)));
 
     Pose2d pose = swerve.getPose();
     PathPoint robotPose = new PathPoint(

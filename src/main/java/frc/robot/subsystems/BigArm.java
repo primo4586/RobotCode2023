@@ -70,6 +70,8 @@ public class BigArm extends SubsystemBase {
     bigArmMotor.configReverseSoftLimitThreshold(BigConstants.softLimitReverse);
     bigArmMotor.configForwardSoftLimitEnable(true);
     bigArmMotor.configReverseSoftLimitEnable(true);
+
+    LilArm.CTREMotorLowerStatusFrames(bigArmMotor);
   }
 
   public void zeroEncoderForMiddleOfBot() {

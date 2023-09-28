@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.commands.actions.AutoCollectCube;
 import frc.robot.commands.actions.Ground;
 import frc.robot.commands.actions.GroundOnlyArms;
 import frc.robot.commands.actions.PutItemInTheMiddle;
@@ -45,13 +44,8 @@ public class Bump2Piece extends SequentialCommandGroup {
         () -> areWeBlue);
 
     ConditionalCommand returnTraj = new ConditionalCommand(
-        swerve.followTrajectory(PathPlanner.loadPath("blueLowerReturn", AutoConstants.pathConstraints), false),
-        swerve.followTrajectory(PathPlanner.loadPath("redLowerReturn", AutoConstants.pathConstraints), false),
-            () -> areWeBlue);
-
-    ConditionalCommand secondDriveBack = new ConditionalCommand(
-            swerve.followTrajectory(PathPlanner.loadPath("blueLowerCubeTwo", AutoConstants.pathConstraints), false),
-            swerve.followTrajectory(PathPlanner.loadPath("redLowerCubeTwo", AutoConstants.pathConstraints), false),
+        swerve.followTrajectory(PathPlanner.loadPath("blueLowerCubeReturn", AutoConstants.pathConstraints), false),
+        swerve.followTrajectory(PathPlanner.loadPath("redLowerCubeReturn", AutoConstants.pathConstraints), false),
             () -> areWeBlue);
         
     BooleanSupplier communityClosenesCheck = () -> Math
@@ -87,7 +81,7 @@ public class Bump2Piece extends SequentialCommandGroup {
         communityCheck.asProxy(),
         putSecondPiece,
         eject,
-        secondDriveBack.alongWith(new Ground(gripper, lilArm, bigArm, telescopicArm)),
-        new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm, limeLight));
+        new Ground(gripper, lilArm, bigArm, telescopicArm)
+        );
   }
 }

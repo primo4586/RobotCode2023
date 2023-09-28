@@ -6,13 +6,11 @@ package frc.robot.commands.actions.gripper;
 
 import java.util.function.BooleanSupplier;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Gripper;
 
 public class Collect extends CommandBase {
   Gripper gripper;
-  Timer timer = new Timer();
   BooleanSupplier stalled;
 
   public Collect(Gripper gripper) {
@@ -23,7 +21,6 @@ public class Collect extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.restart();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -46,6 +43,6 @@ public class Collect extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return gripper.isStalled.getAsBoolean()&&timer.hasElapsed(2);
+    return gripper.isStalled.getAsBoolean();
   }
 }
