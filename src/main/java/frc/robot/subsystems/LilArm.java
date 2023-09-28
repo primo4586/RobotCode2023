@@ -36,31 +36,28 @@ public class LilArm extends SubsystemBase {
     setupLilArmMotor();
   }  public static void CTREMotorLowerStatusFrames(TalonSRX mDriveMotor)
   {
-    //mDriveMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_6_Misc, 1000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 100000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 100000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_6_Misc, 100000);
     mDriveMotor.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 500);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 1000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 100000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 100000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 100000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 100000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 100000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 100000);
   }
   public static void CTREMotorLowerStatusFrames(TalonFX mDriveMotor)
   {
-    //mDriveMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_6_Misc, 1000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 100000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_6_Misc, 100000);
     mDriveMotor.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 500);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 1000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 1000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 100000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 100000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 100000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 100000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 100000);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 100000);
   }
   public void setupLilArmMotor() {
 

@@ -14,17 +14,18 @@ import frc.lib.util.CTREModuleState;
 import frc.lib.util.Conversions;
 import frc.lib.util.SwerveModuleConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.LilArm;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.revrobotics.CANSparkMax;
@@ -32,6 +33,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 public class SwerveModule {
     
@@ -62,9 +64,12 @@ public class SwerveModule {
         /* Config all motors and encoders */
         configDriveMotor();
 
+
         configAngleEncoder();
         configAngleMotor();
 
+        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 1000000);
+        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 1000000);
         lastAngle = getState().angle.getDegrees();
 
     }
@@ -173,7 +178,12 @@ public class SwerveModule {
     private void configAngleMotor() {
         integratedEncoder = mAngleMotor.getEncoder();
         pidController = mAngleMotor.getPIDController();
-        
+
+        mAngleMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 100000);
+        mAngleMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 100000);
+        mAngleMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 100000);
+        mAngleMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 100000);
+        //System.out.println(mAngleMotor.restoreFactoryDefaults().toString()+"reset");
         System.out.println(mAngleMotor.setSmartCurrentLimit(SwerveConstants.angleContinuousCurrentLimit).toString()+"current");
         mAngleMotor.setInverted(SwerveConstants.angleMotorInvert);
         System.out.println(mAngleMotor.setIdleMode(SwerveConstants.angleNeutralMode)+"neutral");
@@ -206,7 +216,16 @@ public class SwerveModule {
         swerveDriveFXConfig.openloopRamp = SwerveConstants.openLoopRamp;
         swerveDriveFXConfig.closedloopRamp = SwerveConstants.closedLoopRamp;
         swerveDriveFXConfig.voltageCompSaturation = 12;
-        LilArm.CTREMotorLowerStatusFrames(mDriveMotor);
+        mDriveMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 100000);
+        mDriveMotor.setStatusFramePeriod(StatusFrame.Status_6_Misc, 100000);
+        mDriveMotor.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 500);
+        mDriveMotor.setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 100000);
+        mDriveMotor.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 100000);
+        mDriveMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 100000);
+        mDriveMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 100000);
+        mDriveMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 100000);
+        mDriveMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 100000);
+        mDriveMotor.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 100000);
 
         code = mDriveMotor.configAllSettings(swerveDriveFXConfig);
         assert(ErrorCode.OK == code);

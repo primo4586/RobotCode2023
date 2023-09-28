@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
@@ -64,6 +65,16 @@ public class TelescopicArm extends SubsystemBase {
     telesMotor.configReverseSoftLimitThreshold(TelescopicArmConstants.softLimitReverse);
     telesMotor.configForwardSoftLimitEnable(true);
     telesMotor.configReverseSoftLimitEnable(true);
+    
+    telesMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 100000);
+    telesMotor.setStatusFramePeriod(StatusFrame.Status_6_Misc, 100000);
+    telesMotor.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 500);
+    telesMotor.setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 100000);
+    telesMotor.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 100000);
+    telesMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 100000);
+    telesMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 100000);
+    telesMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 100000);
+    telesMotor.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 100000);
   }
 
   @Override

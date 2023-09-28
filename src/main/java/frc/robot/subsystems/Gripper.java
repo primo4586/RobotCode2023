@@ -30,6 +30,7 @@ public class Gripper extends SubsystemBase {
     gripperMotor = new WPI_TalonFX(8);
     gripperMotor.setInverted(true);
     setDefaultCommand(new Hold(this));
+    LilArm.CTREMotorLowerStatusFrames(gripperMotor);
   }
 
   @Override
