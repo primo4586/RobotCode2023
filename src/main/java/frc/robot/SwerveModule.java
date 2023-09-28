@@ -40,7 +40,7 @@ public class SwerveModule {
     private double lastAngle;
     private SwerveModuleConstants moduleConstants;
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(SwerveConstants.driveKS,
-        SwerveConstants.driveKV);
+        SwerveConstants.driveKV, SwerveConstants.driveKA);
 
     private TalonFX mDriveMotor;
     private CANCoder angleEncoder;
@@ -77,16 +77,6 @@ public class SwerveModule {
 
     }
 
-    // public void runCharacterization(double volts) {
-
-    //     mDriveMotor.setVoltage(volts);
-    // }
-
-    public double getCharacterizationVelocity() {
-        return Conversions.falconToMPS(mDriveMotor.getSelectedSensorVelocity(),
-        Constants.SwerveConstants.wheelCircumference, Constants.SwerveConstants.driveGearRatio)/Units.inchesToMeters(4);
-    }
-
     public void align(){
         angleController.setReference(0, ControlType.kPosition);
     }
@@ -113,8 +103,9 @@ public class SwerveModule {
             mDriveMotor.set(ControlMode.PercentOutput, percentOutput);
         } else {
             // Conversion from meter per second to falcon tick speeds.
-            double velocity = (desiredState.speedMetersPerSecond*Constants.SwerveConstants.driveGearRatio)/Constants.SwerveConstants.wheelCircumference;
-            mDriveMotor.set(ControlMode.Velocity, velocity*2048/10, DemandType.ArbitraryFeedForward,
+            double velocity = Conversions.MPSToFalcon(desiredState.speedMetersPerSecond,
+                    Constants.SwerveConstants.wheelCircumference, Constants.SwerveConstants.driveGearRatio);
+            mDriveMotor.set(ControlMode.Velocity, velocity, DemandType.ArbitraryFeedForward,
                     feedforward.calculate(desiredState.speedMetersPerSecond)/12);
 
         }
@@ -223,8 +214,6 @@ public class SwerveModule {
         swerveDriveFXConfig.voltageCompSaturation = 12;
 
         ErrorCode code;
-        code = mDriveMotor.configFactoryDefault();
-        System.out.println("Module " + moduleNumber + " Drive Factory Default: " + code);
         code = mDriveMotor.configAllSettings(swerveDriveFXConfig);
         System.out.println("Module " + moduleNumber + " Angle Settings: " + code);
         mDriveMotor.setInverted(moduleConstants.driveInvert);

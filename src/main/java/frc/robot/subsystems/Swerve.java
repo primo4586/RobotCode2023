@@ -96,17 +96,8 @@ public class Swerve extends SubsystemBase {
 
     currentVelocity = mSwerveMods[0].getVelocity();
 
-    for (SwerveModule module : mSwerveMods) {
-      if(module.getVelocity()>maxSpeed)
-        maxSpeed = module.getVelocity();
-    }
-    SmartDashboard.putNumber("swerve max speed", maxSpeed);
     SmartDashboard.putNumber("swerve current speed", Math.abs(currentVelocity));
 
-        //  for (SwerveModule mod : mSwerveMods) {
-        //      mod.align();
-        //      mod.runCharacterization(characterizationVolts);
-        //  }
     updateOdometry();
     SmartDashboard.putNumber("roll", gyro.getRoll());
   }
