@@ -35,9 +35,8 @@ public class DriveToCube extends CommandBase {
   @Override
   public void execute() {
     if (limeLight.cubeExist()) {
-      swerve.drive(new Translation2d(-limeLight.getCubeX() + -SwerveConstants.minAutoCollectSpeed, 0),
-          limeLight.getCubeY() + limeLight.getCubeY() < 0 ? SwerveConstants.minAutoCollectRotation
-              : -SwerveConstants.minAutoCollectRotation,
+      swerve.drive(new Translation2d(Math.abs(limeLight.getCubeX()) < 5 ? -limeLight.getCubeY() + -SwerveConstants.minAutoCollectSpeed:0, 0),
+      -limeLight.getCubeX(),
           false, false);
     }
   }
