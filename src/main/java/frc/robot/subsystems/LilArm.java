@@ -8,8 +8,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
@@ -33,37 +32,30 @@ public class LilArm extends SubsystemBase {
 
     lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     CTREMotorLowerStatusFrames(lilArmEncoder);
+    CTREMotorLowerStatusFrames(lilArmMotor);
     setupLilArmMotor();
-  }  public static void CTREMotorLowerStatusFrames(TalonSRX mDriveMotor)
+  }  
+
+  public static void CTREMotorLowerStatusFrames(BaseTalon mDriveMotor)
   {
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 100000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 100000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_6_Misc, 100000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 500);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 100000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 100000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 100000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 100000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 100000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 100000);
+    int slow_period = 100;
+
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_6_Misc, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, slow_period / 2);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_17_Targets1, slow_period);
   }
-  public static void CTREMotorLowerStatusFrames(TalonFX mDriveMotor)
-  {
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 100000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_6_Misc, 100000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 500);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 100000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 100000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 100000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 100000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 100000);
-    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 100000);
-  }
+
   public void setupLilArmMotor() {
 
     lilArmMotor.setInverted(false);
     lilArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
-    CTREMotorLowerStatusFrames(lilArmMotor);
     lilArmMotor.setNeutralMode(NeutralMode.Brake);
 
     lilArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, LilConstants.kPIDLoopIdx,

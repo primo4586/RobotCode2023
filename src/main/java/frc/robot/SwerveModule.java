@@ -14,6 +14,7 @@ import frc.lib.util.CTREModuleState;
 import frc.lib.util.Conversions;
 import frc.lib.util.SwerveModuleConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.subsystems.LilArm;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -51,6 +52,17 @@ public class SwerveModule {
     private SparkMaxPIDController pidController;
     private RelativeEncoder integratedEncoder;
 
+    public static void SlowStatusFramesSPARKMAX(CANSparkMax m)
+    {
+        int slow_period = 200;
+        m.setPeriodicFramePeriod(PeriodicFrame.kStatus0, slow_period);
+        m.setPeriodicFramePeriod(PeriodicFrame.kStatus1, slow_period);
+        m.setPeriodicFramePeriod(PeriodicFrame.kStatus2, slow_period);
+        m.setPeriodicFramePeriod(PeriodicFrame.kStatus3, slow_period);
+        m.setPeriodicFramePeriod(PeriodicFrame.kStatus4, slow_period);
+        m.setPeriodicFramePeriod(PeriodicFrame.kStatus5, slow_period);
+        m.setControlFramePeriodMs(0);
+    }
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
         this.moduleNumber = moduleNumber;
         angleOffset = moduleConstants.angleOffset;
@@ -60,7 +72,8 @@ public class SwerveModule {
         angleEncoder = new CANCoder(moduleConstants.cancoderID);
         mAngleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
         mDriveMotor = new WPI_TalonFX(moduleConstants.driveMotorID);
-        
+        SlowStatusFramesSPARKMAX(mAngleMotor);
+        LilArm.CTREMotorLowerStatusFrames(mDriveMotor);
         /* Config all motors and encoders */
         configDriveMotor();
 

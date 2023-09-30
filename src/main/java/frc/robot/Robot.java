@@ -61,11 +61,13 @@ public class Robot extends TimedRobot {
     Timer.delay(1);
     swerve = new Swerve();
     Timer.delay(1);
+    System.out.println("HERE1");
     PathPlannerServer.startServer(5813);
     bigArm = new BigArm();
     lilArm = new LilArm();
     telescopicArm = new TelescopicArm();
     limeLight = new LimeLight();
+    System.out.println("HERE2");
 
     new RobotContainer(swerve, gripper ,lilArm, bigArm, objective, telescopicArm);
 
