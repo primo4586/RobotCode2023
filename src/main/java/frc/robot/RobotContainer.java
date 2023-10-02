@@ -1,4 +1,3 @@
-
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -24,6 +23,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.actions.CoolScore;
 import frc.robot.commands.actions.CoolScoreDrive;
+import frc.robot.commands.actions.CoolScoreDriveSimple;
 import frc.robot.commands.actions.EmergencyStopArms;
 import frc.robot.commands.actions.HighIntake;
 import frc.robot.commands.actions.Ground;
@@ -107,7 +107,7 @@ public class RobotContainer {
     //driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilConstants.autoStartPoint));
     //driverController.back().onTrue(lilArm.zeroLilArm());
     driverController.x().whileTrue(new Eject(gripper));
-    driverController.b().onTrue(new CoolScoreDrive(swerve, objective));
+    driverController.b().onTrue(new CoolScoreDrive(swerve, objective).asProxy());
     driverController.pov(0).onTrue(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy());
     
     driverController.povCenter().onTrue(swerve.stopModulescCommand());
@@ -121,9 +121,8 @@ public class RobotContainer {
     driverController.povUpRight().onTrue(swerve.stopModulescCommand());
     
     /* Operator Buttons */
-
     operatorController.rightBumper().onTrue(gripper.changeWhatWeGrip());
-    operatorController.leftBumper().onTrue(new Collect(gripper));
+    operatorController.leftBumper().whileTrue(new Collect(gripper));
     operatorController.y().onTrue(putItemInTheUpper);
     operatorController.a().onTrue(putItemInTheMiddle);
     operatorController.b().onTrue(new MiddleOfBot(lilArm, bigArm, telescopicArm, gripper));

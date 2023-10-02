@@ -73,7 +73,7 @@ public class SwerveModule {
         mAngleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
         mDriveMotor = new WPI_TalonFX(moduleConstants.driveMotorID);
         SlowStatusFramesSPARKMAX(mAngleMotor);
-        LilArm.CTREMotorLowerStatusFrames(mDriveMotor);
+        //LilArm.CTREMotorLowerStatusFrames(mDriveMotor);
         /* Config all motors and encoders */
         configDriveMotor();
 

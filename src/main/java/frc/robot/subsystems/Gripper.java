@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import java.util.function.BooleanSupplier;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -21,34 +23,40 @@ public class Gripper extends SubsystemBase {
   public boolean shouldGripCone,
       isHolding,
       stallCheck;
-  
+
+  private SupplyCurrentLimitConfiguration driveSupplyLimit;
   Timer timer = new Timer();
 
-  public BooleanSupplier isStalled = ()-> timer.hasElapsed(0.2);
+  public BooleanSupplier isStalled = () -> timer.hasElapsed(0.2);
 
   public Gripper() {
     gripperMotor = new WPI_TalonFX(8);
     gripperMotor.setInverted(true);
     setDefaultCommand(new Hold(this));
-    LilArm.CTREMotorLowerStatusFrames(gripperMotor);
+    // LilArm.CTREMotorLowerStatusFrames(gripperMotor);
+    gripperMotor.setNeutralMode(NeutralMode.Brake);
+    driveSupplyLimit = new SupplyCurrentLimitConfiguration(
+        true, 30, 35, 0.1);
+    gripperMotor.configSupplyCurrentLimit(driveSupplyLimit);
+
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber( "gripper Speed" , gripperMotor.getSelectedSensorVelocity());
+    // SmartDashboard.putNumber( "gripper Speed" ,
+    // gripperMotor.getSelectedSensorVelocity());
 
-    if(Math.abs(gripperMotor.getSelectedSensorVelocity())>60){
+    if (Math.abs(gripperMotor.getSelectedSensorVelocity()) > 60) {
       stallCheck = true;
       timer.stop();
-    }
-    else if(stallCheck){
+    } else if (stallCheck) {
       stallCheck = false;
       timer.restart();
     }
   }
 
-  public double getSpeed(){
+  public double getSpeed() {
     return gripperMotor.getSelectedSensorVelocity();
   }
 
@@ -56,18 +64,18 @@ public class Gripper extends SubsystemBase {
    * @return a command that stops the gripper
    */
   public Command stop() {
-    return run(()->setSpeed(0.0));
+    return run(() -> setSpeed(0.0));
   }
 
   public Command setSpeedCommand(double speed) {
-    return runOnce(()->setSpeed(speed));
+    return runOnce(() -> setSpeed(speed));
   }
 
   public void setSpeed(double speed) {
-      gripperMotor.set(speed);
+    gripperMotor.set(speed);
   }
 
-  public double getCurrentRead(){
+  public double getCurrentRead() {
     return gripperMotor.getStatorCurrent();
   }
 

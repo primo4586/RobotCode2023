@@ -31,10 +31,8 @@ public class LilArm extends SubsystemBase {
     lilArmMotor = new WPI_TalonFX(LilConstants.lilArmMotorID);
 
     lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-    CTREMotorLowerStatusFrames(lilArmEncoder);
-    CTREMotorLowerStatusFrames(lilArmMotor);
     setupLilArmMotor();
-  }  
+  }
 
   public static void CTREMotorLowerStatusFrames(BaseTalon mDriveMotor)
   {

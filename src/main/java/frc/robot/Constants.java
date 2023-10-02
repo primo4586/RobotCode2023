@@ -74,7 +74,7 @@ public final class Constants {
 
         public static final double ks =0.61094;
         public static final double kv =2.4998;
-        public static final double ka =0.13149;
+        public static final double ka =0.13149 + 0.05;
         
         public static final double maxSpeed = 3.42*25*2048/10;
         public static final double maxAcceleration = (((12) / ka)*25*2048)/10;
@@ -97,7 +97,7 @@ public final class Constants {
         public static final double wheelDiameter = Units.inchesToMeters(4);
         public static final double wheelCircumference = wheelDiameter * Math.PI;
 
-        public static final double openLoopRamp = 0.25;
+        public static final double openLoopRamp = 0.4;
         public static final double closedLoopRamp = 0.0;
 
         /* Gear Ratios (Changes Per Module) */
@@ -116,8 +116,8 @@ public final class Constants {
         public static final double anglePeakCurrentDuration = 0.1;
         public static final boolean angleEnableCurrentLimit = true;
 
-        public static final int driveContinuousCurrentLimit = 50;
-        public static final int drivePeakCurrentLimit = 60;
+        public static final int driveContinuousCurrentLimit = 30;
+        public static final int drivePeakCurrentLimit = 40;
         public static final double drivePeakCurrentDuration = 0.1;
         public static final boolean driveEnableCurrentLimit = true;
         public static final SupplyCurrentLimitConfiguration driveSupplyLimit = new SupplyCurrentLimitConfiguration(
@@ -332,7 +332,7 @@ public final class Constants {
         public static final double cubeLowerSetPoint = -56326;
 
         public static final double highIntakeSetpoint = 28099;
-        public static final double middleOfRobotSetPoint = 1100;
+        public static final double middleOfRobotSetPoint = 7000;
         public static final double groundSetPoint = 22728;
 
         public static final double softLimitForward = 48000;
