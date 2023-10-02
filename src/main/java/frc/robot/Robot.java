@@ -24,6 +24,7 @@ import frc.robot.commands.actions.HighIntake;
 import frc.robot.commands.actions.MiddleOfBot;
 import frc.robot.subsystems.BigArm;
 import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.LilArm;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.TelescopicArm;
@@ -51,6 +52,8 @@ public class Robot extends TimedRobot {
   private PneumaticsControlModule pcm;
   public final Objective objective = new Objective(gripper);
 
+  private Leds leds;
+
   //private PowerDistribution PDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
 
   /**
@@ -67,8 +70,10 @@ public class Robot extends TimedRobot {
     swerve = new Swerve();
     telescopicArm = new TelescopicArm();
     limeLight = new LimeLight();
+    leds = new Leds(0, 52, gripper);
 
-    new RobotContainer(swerve, gripper ,lilArm, bigArm, objective, telescopicArm);
+
+    new RobotContainer(swerve, gripper ,lilArm, bigArm, objective, telescopicArm, leds);
 
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm, telescopicArm,limeLight);
     PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper);//, CameraServer.startAutomaticCapture("ground",0));

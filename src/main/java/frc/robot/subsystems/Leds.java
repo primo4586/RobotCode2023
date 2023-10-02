@@ -12,9 +12,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Leds extends SubsystemBase {
   private AddressableLED m_led;
   private static AddressableLEDBuffer m_ledBuffer;
+  private Gripper gripper;
 
   /** Creates a new Leds. */
-  public Leds(int port, int length) {
+  public Leds(int port, int length, Gripper gripper) {
+  this.gripper = gripper;
+
     m_led = new AddressableLED(port);
     m_ledBuffer = new AddressableLEDBuffer(length);
 
@@ -40,7 +43,11 @@ public class Leds extends SubsystemBase {
 
     //Extreme Colors
     WHITE(255, 255, 255),
-    OFF(0, 0, 0);
+    OFF(0, 0, 0),
+
+    //Season Colors
+    CUBE_PURPLE(180,31,235),
+    CONE_YELLOW(255, 100, 0);
     
     final int red;
     final int green;
@@ -123,6 +130,12 @@ public class Leds extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (gripper.getShouldGripCone()){
+      setLedsColor(ColorsRGBLeds.CONE_YELLOW);
+    }
+    else{
+      setLedsColor(ColorsRGBLeds.CUBE_PURPLE);
+    }
     m_led.setData(m_ledBuffer);
     m_led.start();
   }
