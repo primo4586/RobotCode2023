@@ -1,11 +1,8 @@
-
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-
-import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.Objective;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import com.pathplanner.lib.PathConstraints;
@@ -22,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.*;
-import frc.robot.commands.actions.CoolScore;
 import frc.robot.commands.actions.EmergencyStopArms;
 import frc.robot.commands.actions.HighIntake;
 import frc.robot.commands.actions.Ground;
@@ -81,7 +77,7 @@ public class RobotContainer {
         fieldRelative, openLoop, () -> driverController.getRightTriggerAxis() > 0.5));
 
     // Configure the button bindings
-    configureButtonBindings(swerve, gripper, lilArm, bigArm, objective, telescopicArm);
+    configureButtonBindings(swerve, gripper, lilArm, bigArm, telescopicArm);
     //if (Robot.isReal()) {
     //buildCameras();
     //}
@@ -96,19 +92,19 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm,
-      Objective objective, TelescopicArm telescopicArm) {
+  TelescopicArm telescopicArm) {
 
     PutItemInTheUpper putItemInTheUpper = new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm);
     PutItemInTheMiddle putItemInTheMiddle =  new PutItemInTheMiddle(lilArm, bigArm, gripper, telescopicArm);
     HighIntake highIntake = new HighIntake(bigArm, lilArm, gripper, telescopicArm);
-    Ground groundIntake = new Ground(gripper, lilArm, bigArm, telescopicArm);
 
     /* Driver Buttons */
     driverController.y().onTrue(new InstantCommand(() -> swerve.zeroTeleopGyro(), swerve));
     //driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilConstants.autoStartPoint));
-    driverController.back().onTrue(lilArm.zeroLilArm());
+    //driverController.back().onTrue(lilArm.zeroLilArm());
     driverController.x().whileTrue(new Eject(gripper));
-    driverController.pov(0).onTrue(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy());
+    // driverController.b().onTrue(new CoolScoreDriveSimple(swerve, objective).asProxy());
+    // driverController.pov(0).onTrue(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy());
     
     driverController.povCenter().onTrue(swerve.stopModulescCommand());
     driverController.povDown().onTrue(swerve.stopModulescCommand());
@@ -121,9 +117,8 @@ public class RobotContainer {
     driverController.povUpRight().onTrue(swerve.stopModulescCommand());
     
     /* Operator Buttons */
-
     operatorController.rightBumper().onTrue(gripper.changeWhatWeGrip());
-    operatorController.leftBumper().onTrue(new Collect(gripper));
+    operatorController.leftBumper().whileTrue(new Collect(gripper));
     operatorController.y().onTrue(putItemInTheUpper);
     operatorController.a().onTrue(putItemInTheMiddle);
     operatorController.b().onTrue(new MiddleOfBot(lilArm, bigArm, telescopicArm, gripper));
@@ -131,15 +126,15 @@ public class RobotContainer {
     operatorController.start().onTrue(new EmergencyStopArms(lilArm, bigArm, telescopicArm, gripper));
     operatorController.back().onTrue(lilArm.zeroLilArm().andThen(telescopicArm.Home()).andThen(bigArm.Home()));//(bigArm.Home());
 
-    operatorController.povCenter().onTrue(groundIntake);
-    operatorController.povDown().onTrue(groundIntake);
-    operatorController.povDownLeft().onTrue(groundIntake);
-    operatorController.povDownRight().onTrue(groundIntake);
-    operatorController.povLeft().onTrue(groundIntake);
-    operatorController.povRight().onTrue(groundIntake);
-    operatorController.povUp().onTrue(groundIntake);
-    operatorController.povUpLeft().onTrue(groundIntake);
-    operatorController.povUpRight().onTrue(groundIntake);
+    operatorController.povCenter().onTrue(new Ground(gripper, lilArm, bigArm, telescopicArm));
+    operatorController.povDown().onTrue(new Ground(gripper, lilArm, bigArm, telescopicArm));
+    operatorController.povDownLeft().onTrue(new Ground(gripper, lilArm, bigArm, telescopicArm));
+    operatorController.povDownRight().onTrue(new Ground(gripper, lilArm, bigArm, telescopicArm));
+    operatorController.povLeft().onTrue(new Ground(gripper, lilArm, bigArm, telescopicArm));
+    operatorController.povRight().onTrue(new Ground(gripper, lilArm, bigArm, telescopicArm));
+    operatorController.povUp().onTrue(new Ground(gripper, lilArm, bigArm, telescopicArm));
+    operatorController.povUpLeft().onTrue(new Ground(gripper, lilArm, bigArm, telescopicArm));
+    operatorController.povUpRight().onTrue(new Ground(gripper, lilArm, bigArm, telescopicArm));
 
     operatorController.leftTrigger().whileTrue(telescopicArm.setMotorSpeed(-0.1));
     operatorController.rightTrigger().whileTrue(telescopicArm.setMotorSpeed(0.1));

@@ -7,6 +7,7 @@ import frc.robot.subsystems.Swerve;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -27,6 +28,7 @@ public class TeleopSwerve extends CommandBase {
 
     // Should the swerve drive slower than before or not
     private BooleanSupplier slowMode; 
+    double x = 0;
 
     /**
      * Driver control
@@ -56,13 +58,16 @@ public class TeleopSwerve extends CommandBase {
         double xAxis = -controller.getRawAxis(forwardAxis); // Postive X value means forward / into the field
         double yAxis = -controller.getRawAxis(leftAxis); // Positive Y value means to the left side of the field 
         double rAxis = -controller.getRawAxis(rotationAxis); // Positive value means CCW rotation
-        
         /* Deadbands */
 
         yAxis = (Math.abs(yAxis) < Misc.stickDeadband) ? 0 : yAxis;
         xAxis = (Math.abs(xAxis) < Misc.stickDeadband) ? 0 : xAxis;
         rAxis = (Math.abs(rAxis) < Misc.stickDeadband) ? 0 : rAxis;
-        
+        SmartDashboard.putNumber("xAxis", xAxis);
+        SmartDashboard.putNumber("yAxis", yAxis);
+        SmartDashboard.putNumber("rAxis", rAxis);
+        x++;
+        SmartDashboard.putNumber("drive check", x);
         
         
         if(!slowMode.getAsBoolean()){
@@ -76,15 +81,5 @@ public class TeleopSwerve extends CommandBase {
             rotation = rAxis * SwerveConstants.slowModeAngularVelocity;
             swerve.drive(translation, rotation, fieldRelative, openLoop);
         } 
-    }
-
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        swerve.drive(new Translation2d(0, 0),0,true,true);
     }
 }

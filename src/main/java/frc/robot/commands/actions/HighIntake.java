@@ -25,6 +25,7 @@ public class HighIntake extends SequentialCommandGroup {
       bigArm.TurnBigArmToSetpoint(BigConstants.highIntakeSetpoint),
       lilArm.TurnLilArmToSetpoint(LilConstants.highIntakeSetpoint));
     addCommands(
+      gripper.setShouldGripConeCommand(true),
       telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
       moveArms,
       telescopicArm.putTelesInSetpoint(TelescopicArmConstants.highIntakeSetpoint).alongWith(collect)

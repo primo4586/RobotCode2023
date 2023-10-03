@@ -59,7 +59,7 @@ public final class Constants {
         public static final double intakeReturnSetPoint = 37000;
         public static final double intakeReturnDeadZone = 48839;
 
-        public static final double highIntakeSetpoint = 13626;
+        public static final double highIntakeSetpoint = 32697;
 
         public static final double middleOfRobotSetPoint = 0.0;
         public static final double groundSetPoint = -12082;
@@ -74,7 +74,7 @@ public final class Constants {
 
         public static final double ks =0.61094;
         public static final double kv =2.4998;
-        public static final double ka =0.13149;
+        public static final double ka =0.13149 + 0.05;
         
         public static final double maxSpeed = 3.42*25*2048/10;
         public static final double maxAcceleration = (((12) / ka)*25*2048)/10;
@@ -97,7 +97,7 @@ public final class Constants {
         public static final double wheelDiameter = Units.inchesToMeters(4);
         public static final double wheelCircumference = wheelDiameter * Math.PI;
 
-        public static final double openLoopRamp = 0.25;
+        public static final double openLoopRamp = 0.4;
         public static final double closedLoopRamp = 0.0;
 
         /* Gear Ratios (Changes Per Module) */
@@ -116,8 +116,8 @@ public final class Constants {
         public static final double anglePeakCurrentDuration = 0.1;
         public static final boolean angleEnableCurrentLimit = true;
 
-        public static final int driveContinuousCurrentLimit = 50;
-        public static final int drivePeakCurrentLimit = 60;
+        public static final int driveContinuousCurrentLimit = 30;
+        public static final int drivePeakCurrentLimit = 40;
         public static final double drivePeakCurrentDuration = 0.1;
         public static final boolean driveEnableCurrentLimit = true;
         public static final SupplyCurrentLimitConfiguration driveSupplyLimit = new SupplyCurrentLimitConfiguration(
@@ -276,14 +276,14 @@ public final class Constants {
         public static final double cubeLowerSetPoint = -56326;
 
         public static final double middleOfRobotSetPoint = 175000;
-        public static final double highIntakeSetpoint = 65037;
+        public static final double highIntakeSetpoint = 47896;
         public static final double groundSetPoint =  -185997;
         public static final double autoStartPoint = -136;
 
         public static final double resetPoint = -30;
         
-        public static final double softLimitForward = 213000;
-        public static final double softLimitReverse = -242499;
+        public static final double softLimitForward = 2130000;
+        public static final double softLimitReverse = -2424990;
 
         public static int kTimeoutMs = 30;
         public static int kSlotIdx = 0;
@@ -331,9 +331,11 @@ public final class Constants {
         public static final double cubeMiddleSetPoint = 24239;
         public static final double cubeLowerSetPoint = -56326;
 
-        public static final double highIntakeSetpoint = 28099;
-        public static final double middleOfRobotSetPoint = 1100;
-        public static final double groundSetPoint = 22728;
+        public static final double 
+        
+        highIntakeSetpoint = 15545;
+        public static final double middleOfRobotSetPoint = 7000;
+        public static final double groundSetPoint = 35771;
 
         public static final double softLimitForward = 48000;
         public static final double softLimitReverse = 1000;
@@ -360,10 +362,10 @@ public final class Constants {
          */
         public static final Transform3d rightRobotToCam =
                 new Transform3d(
-                        new Translation3d( 0.317,-217, 0.235),
+                        new Translation3d( -0.317,0.217, 0.235),
                         new Rotation3d(
                                 0, 0,
-                                Units.degreesToRadians(4)));
+                                Units.degreesToRadians(-4+180)));
                                 
         public static final Transform3d leftRobotToCam =
         new Transform3d(

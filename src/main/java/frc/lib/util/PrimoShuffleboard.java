@@ -46,13 +46,13 @@ public class PrimoShuffleboard {
         return PrimoShuffleboard.getInstance().getPrimoTab("Competition Dashboard");
     }
 
-    public void initDashboard(Swerve swerve, LilArm lilArm, BigArm bigArm, Gripper gripper){//, VideoSource camera) {
+    public void initDashboard(Swerve swerve, LilArm lilArm, BigArm bigArm, Gripper gripper) {
         PrimoTab tab = getCompetitonBoard();
 
         try {
-            // if (camera != null) {
-            //     tab.getTab().add("POV: You are Itzik", camera).withPosition(2, 0).withSize(7, 4);
-            // }
+            //  if (camera != null) {
+            //      tab.getTab().add("POV: You are Itzik", camera).withPosition(2, 0).withSize(7, 4);
+            //  }
             tab.getTab().addBoolean("Cone?", () -> gripper.getShouldGripCone()).withPosition(9, 0).withSize(1, 4);
             tab.getTab().addDouble("Time left", () -> Timer.getMatchTime()).withPosition(0, 0).withSize(2, 1);
 

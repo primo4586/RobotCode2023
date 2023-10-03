@@ -12,25 +12,28 @@ import frc.robot.subsystems.Gripper;
 
 public class Collect extends CommandBase {
   Gripper gripper;
-  Timer timer = new Timer();
   BooleanSupplier stalled;
+  Timer timer;
 
   public Collect(Gripper gripper) {
     this.gripper = gripper;
+    timer = new Timer();
     addRequirements(gripper);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.restart();
+    timer.reset();
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
     if(gripper.shouldGripCone){
-      gripper.setSpeed(0.5);
+      gripper.setSpeed(0.8);
     }
     else{
       gripper.setSpeed(-0.5);
@@ -46,6 +49,6 @@ public class Collect extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return gripper.isStalled.getAsBoolean()&&timer.hasElapsed(2);
+    return false;
   }
 }

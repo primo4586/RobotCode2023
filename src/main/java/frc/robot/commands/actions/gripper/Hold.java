@@ -9,7 +9,7 @@ import frc.robot.subsystems.Gripper;
 
 public class Hold extends CommandBase {
   Gripper gripper;
-
+  private static final double holdSpeed = 0.1;
   public Hold(Gripper gripper) {
     this.gripper = gripper;
     addRequirements(gripper);
@@ -22,12 +22,8 @@ public class Hold extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(gripper.shouldGripCone){
-      gripper.setSpeed(0.1);
-    }
-    else{
-      gripper.setSpeed(-0.1);
-    }
+    double holdSpeedMultiplier = gripper.shouldGripCone ? 1 : -1;
+    gripper.setSpeed(holdSpeed * holdSpeedMultiplier);
   }
 
   // Called once the command ends or is interrupted.

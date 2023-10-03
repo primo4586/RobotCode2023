@@ -11,7 +11,8 @@ import frc.robot.subsystems.Gripper;
 public class Eject extends CommandBase {
   Gripper gripper;
   Timer timer = new Timer();
-  public Eject(Gripper gripper) {
+  public 
+  Eject(Gripper gripper) {
     addRequirements(gripper);
     this.gripper = gripper;
   }

@@ -5,14 +5,12 @@
 package frc.robot;
 
 
-import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.Objective;
-
 import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -49,8 +47,6 @@ public class Robot extends TimedRobot {
   private Gripper gripper = new Gripper();
   private Swerve swerve;
   private LimeLight limeLight;
-  private PneumaticsControlModule pcm;
-  public final Objective objective = new Objective(gripper);
 
   private Leds leds;
 
@@ -62,12 +58,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    Timer.delay(1);
+    swerve = new Swerve();
+    Timer.delay(1);
+    System.out.println("HERE1");
     PathPlannerServer.startServer(5813);
-    pcm = new PneumaticsControlModule(44);
-    pcm.enableCompressorDigital();
     bigArm = new BigArm();
     lilArm = new LilArm();
-    swerve = new Swerve();
     telescopicArm = new TelescopicArm();
     limeLight = new LimeLight();
     leds = new Leds(0, 52, gripper);
@@ -76,10 +73,10 @@ public class Robot extends TimedRobot {
     new RobotContainer(swerve, gripper ,lilArm, bigArm, objective, telescopicArm, leds);
 
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm, telescopicArm,limeLight);
-    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper);//, CameraServer.startAutomaticCapture("ground",0));
+    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper);
     //PPSwerveControllerCommand.setLoggingCallbacks((v) -> {}, (v) -> {}, (v) -> {}, (v, v2) -> {});
-    objective.updateInputs();
     SmartDashboard.putBoolean("wheels aligned", true);
+    //Leds leds= new Leds(0, 81);
   }
 
 
@@ -98,7 +95,7 @@ public class Robot extends TimedRobot {
       telescopicArm.zeroTeles();
     }
 
-    swerve.checkWheelsAlignment();
+    //swerve.checkWheelsAlignment();
 
   }
   
@@ -121,7 +118,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper);//, CameraServer.startAutomaticCapture("ground",0));
+    PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper);
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -140,17 +137,17 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    objective.updateInputs();
-    checkNodeSelectorButtons();
-  }
+    System.out.println(swerve.getCurrentCommand());
 
+    //objective.updateInputs();
+    //checkNodeSelectorButtons();
+  }
   @Override
   public void testInit() {
+    
+    swerve.setGyro(0);   
     //lilArm.zeroEncoderForIntake();
     LiveWindow.disableAllTelemetry();
-    lilArm.zeroEncoderForAuto();
-    bigArm.zeroEncoderForMiddleOfBot();
-    swerve.drive(new Translation2d(0,0), 0, false, false);
     // Cancels all running commands at the start of test mode.
     // CommandScheduler.getInstance().cancelAll();.
 
@@ -161,24 +158,24 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
   
-  public void checkNodeSelectorButtons() {
-    if (objective.middleOfBotSubscriber.getAsBoolean()) {
-      objective.middleOfBotPublisher.set(false);
-      CommandScheduler.getInstance().schedule(new MiddleOfBot(lilArm, bigArm, telescopicArm, gripper));
-    }
-    if (objective.highIntakeSubscriber.getAsBoolean()) {
-      objective.highIntakePublisher.set(false);
-      CommandScheduler.getInstance().schedule(new HighIntake(bigArm, lilArm, gripper, telescopicArm));
-    }
-    if (objective.groundSubscriber.getAsBoolean()) {
-      objective.groundPublisher.set(false);
-      if (objective.groundDoubleClickSubscriber.getAsBoolean()) {
-        objective.groundDoubleClickPublisher.set(false);
-        CommandScheduler.getInstance().schedule(new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm,limeLight));
-      }
-      else {
-      CommandScheduler.getInstance().schedule(new Ground(gripper, lilArm, bigArm, telescopicArm));
-      }
-    }
-  }
+  // public void checkNodeSelectorButtons() {
+  //   if (objective.middleOfBotSubscriber.getAsBoolean()) {
+  //     objective.middleOfBotPublisher.set(false);
+  //     CommandScheduler.getInstance().schedule(new MiddleOfBot(lilArm, bigArm, telescopicArm, gripper));
+  //   }
+  //   if (objective.highIntakeSubscriber.getAsBoolean()) {
+  //     objective.highIntakePublisher.set(false);
+  //     CommandScheduler.getInstance().schedule(new HighIntake(bigArm, lilArm, gripper, telescopicArm));
+  //   }
+  //   if (objective.groundSubscriber.getAsBoolean()) {
+  //     objective.groundPublisher.set(false);
+  //     if (objective.groundDoubleClickSubscriber.getAsBoolean()) {
+  //       objective.groundDoubleClickPublisher.set(false);
+  //       CommandScheduler.getInstance().schedule(new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm,limeLight));
+  //     }
+  //     else {
+  //     CommandScheduler.getInstance().schedule(new Ground(gripper, lilArm, bigArm, telescopicArm));
+  //     }
+  //   }
+  // }
 }

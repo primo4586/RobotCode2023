@@ -4,9 +4,11 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
@@ -29,15 +31,29 @@ public class LilArm extends SubsystemBase {
     lilArmMotor = new WPI_TalonFX(LilConstants.lilArmMotorID);
 
     lilArmEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-
     setupLilArmMotor();
+  }
+
+  public static void CTREMotorLowerStatusFrames(BaseTalon mDriveMotor)
+  {
+    int slow_period = 100;
+
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_6_Misc, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, slow_period / 2);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, slow_period);
+    mDriveMotor.setStatusFramePeriod(StatusFrame.Status_17_Targets1, slow_period);
   }
 
   public void setupLilArmMotor() {
 
     lilArmMotor.setInverted(false);
     lilArmMotor.configSupplyCurrentLimit(Constants.ARM_MOTOR_SUPPLY_CONFIG);
-
     lilArmMotor.setNeutralMode(NeutralMode.Brake);
 
     lilArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, LilConstants.kPIDLoopIdx,
@@ -64,7 +80,7 @@ public class LilArm extends SubsystemBase {
     lilArmMotor.config_kD(LilConstants.kSlotIdx, LilConstants.lilArmMotorsKD, LilConstants.kTimeoutMs);
 
     lilArmMotor.configMotionCruiseVelocity(LilConstants.maxSpeed / 1.5, LilConstants.kTimeoutMs);
-    lilArmMotor.configMotionAcceleration(LilConstants.maxAcceleration, LilConstants.kTimeoutMs);
+    lilArmMotor.configMotionAcceleration(LilConstants.maxAcceleration/1.5, LilConstants.kTimeoutMs);
 
     lilArmMotor.setSelectedSensorPosition(
         lilArmEncoder.getSensorCollection().getPulseWidthPosition() / 2 * LilConstants.lilMotorGearRatio,

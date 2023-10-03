@@ -25,8 +25,7 @@ public class MiddleOfBot extends SequentialCommandGroup {
     
     addCommands(
         //hold,
-      gripper.setSpeedCommand(gripper.shouldGripCone ? 0.1 : -0.1)
-        .raceWith(telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint)),
+      (telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint)),
       new Hold(gripper).raceWith(moveArms)
     );
   }

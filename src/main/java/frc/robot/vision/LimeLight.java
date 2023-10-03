@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StringSubscriber;
 
 public class LimeLight {
     // limelight
@@ -18,7 +19,7 @@ public class LimeLight {
     private DoubleSubscriber x = table.getDoubleTopic("tx").subscribe(0.0);
     private DoubleSubscriber y = table.getDoubleTopic("ty").subscribe(0.0);
     private DoubleSubscriber targetExist = table.getDoubleTopic("tv").subscribe(0.0);
-    private DoubleSubscriber targetClass = table.getDoubleTopic("tclass").subscribe(0);
+    private StringSubscriber targetClass = table.getStringTopic("tclass").subscribe("");
     private DoublePublisher camMode = table.getDoubleTopic("camMode").publish();
 
     public LimeLight() {
@@ -46,11 +47,11 @@ public class LimeLight {
         return targetExist.getAsDouble() == 1;
     }
 
-    public double getTargetClass() {
-        return targetExist.getAsDouble() == 1 ? targetClass.getAsDouble() : null;
+    public String getTargetClass() {
+        return targetExist.getAsDouble() == 1 ? targetClass.get() : null;
     }
     
     public boolean cubeExist() {
-        return targetExist.getAsDouble() == 1 && targetClass.getAsDouble() == 0;
+        return targetExist.getAsDouble() == 1 && targetClass.get() == "cube";
     }
 }

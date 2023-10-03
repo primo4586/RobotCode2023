@@ -35,11 +35,11 @@ public class DriveToCube extends CommandBase {
   @Override
   public void execute() {
     if (limeLight.cubeExist()) {
-      swerve.drive(new Translation2d(-limeLight.getCubeX() + -SwerveConstants.minAutoCollectSpeed, 0),
-          limeLight.getCubeY() + limeLight.getCubeY() < 0 ? SwerveConstants.minAutoCollectRotation
-              : -SwerveConstants.minAutoCollectRotation,
+      swerve.drive(new Translation2d(Math.abs(limeLight.getCubeX()) < 5 ? -limeLight.getCubeY() + -SwerveConstants.minAutoCollectSpeed:1, 0),
+      -limeLight.getCubeX(),
           false, false);
     }
+    System.out.println("drive");
   }
 
   // Called once the command ends or is interrupted.
@@ -52,6 +52,6 @@ public class DriveToCube extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return gripper.isHolding() || !limeLight.getTargetExist(); 
+    return gripper.isHolding(); 
   }
 }
