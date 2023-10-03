@@ -3,8 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-
-import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.Objective;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import com.pathplanner.lib.PathConstraints;
@@ -21,9 +19,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.*;
-import frc.robot.commands.actions.CoolScore;
-import frc.robot.commands.actions.CoolScoreDrive;
-import frc.robot.commands.actions.CoolScoreDriveSimple;
 import frc.robot.commands.actions.EmergencyStopArms;
 import frc.robot.commands.actions.HighIntake;
 import frc.robot.commands.actions.Ground;
@@ -62,7 +57,7 @@ public class RobotContainer {
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm, Objective objective,
+  public RobotContainer(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm,
       TelescopicArm telescopicArm) {
 
     this.swerve = swerve;
@@ -81,7 +76,7 @@ public class RobotContainer {
         fieldRelative, openLoop, () -> driverController.getRightTriggerAxis() > 0.5));
 
     // Configure the button bindings
-    configureButtonBindings(swerve, gripper, lilArm, bigArm, objective, telescopicArm);
+    configureButtonBindings(swerve, gripper, lilArm, bigArm, telescopicArm);
     //if (Robot.isReal()) {
     //buildCameras();
     //}
@@ -96,7 +91,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings(Swerve swerve, Gripper gripper, LilArm lilArm, BigArm bigArm,
-      Objective objective, TelescopicArm telescopicArm) {
+  TelescopicArm telescopicArm) {
 
     PutItemInTheUpper putItemInTheUpper = new PutItemInTheUpper(bigArm, lilArm, gripper, telescopicArm);
     PutItemInTheMiddle putItemInTheMiddle =  new PutItemInTheMiddle(lilArm, bigArm, gripper, telescopicArm);
@@ -107,8 +102,8 @@ public class RobotContainer {
     //driverController.start().onTrue(lilArm.TurnLilArmToSetpoint(LilConstants.autoStartPoint));
     //driverController.back().onTrue(lilArm.zeroLilArm());
     driverController.x().whileTrue(new Eject(gripper));
-    driverController.b().onTrue(new CoolScoreDrive(swerve, objective).asProxy());
-    driverController.pov(0).onTrue(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy());
+    // driverController.b().onTrue(new CoolScoreDriveSimple(swerve, objective).asProxy());
+    // driverController.pov(0).onTrue(new CoolScore(swerve, bigArm, lilArm, gripper, objective, telescopicArm).asProxy());
     
     driverController.povCenter().onTrue(swerve.stopModulescCommand());
     driverController.povDown().onTrue(swerve.stopModulescCommand());

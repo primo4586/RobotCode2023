@@ -36,7 +36,7 @@ public class VisionPoseEstimatorLimeLight {
 
             // Uses the given pose strategy to take the data from the vision camera and
             // according to the strategy, gives the estimated position from vision data.
-            frontRightPoseEstimator = new PhotonPoseEstimator(apriltagLayout, strategy, frontRightCam, VisionConstants.limeLightRobotToCam);
+            frontRightPoseEstimator = new PhotonPoseEstimator(apriltagLayout, strategy, frontRightCam, VisionConstants.rightRobotToCam);
 
         } catch (IOException e) {
             apriltagLayout = null;

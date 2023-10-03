@@ -20,6 +20,7 @@ public class Ground extends SequentialCommandGroup {
     
 
     addCommands(
+      gripper.setShouldGripConeCommand(false),
       telescopicArm.putTelesInSetpoint(TelescopicArmConstants.middleOfRobotSetPoint),
       moveArms.raceWith(gripper.setSpeedCommand(gripper.shouldGripCone?0.5:-0.5)),
 

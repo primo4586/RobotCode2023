@@ -5,8 +5,6 @@
 package frc.robot;
 
 
-import org.littletonrobotics.frc2023.subsystems.objectivetracker.NodeSelectorIO.Objective;
-
 import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -48,7 +46,6 @@ public class Robot extends TimedRobot {
   private Gripper gripper = new Gripper();
   private Swerve swerve;
   private LimeLight limeLight;
-  public final Objective objective = new Objective(gripper);
 
   //private PowerDistribution PDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
 
@@ -69,7 +66,7 @@ public class Robot extends TimedRobot {
     limeLight = new LimeLight();
     System.out.println("HERE2");
 
-    new RobotContainer(swerve, gripper ,lilArm, bigArm, objective, telescopicArm);
+    new RobotContainer(swerve, gripper ,lilArm, bigArm, telescopicArm);
 
     autoContainer = new AutoContainer(swerve, gripper, bigArm, lilArm, telescopicArm,limeLight);
     PrimoShuffleboard.getInstance().initDashboard(swerve, lilArm, bigArm, gripper);
@@ -136,17 +133,17 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    objective.updateInputs();
-    checkNodeSelectorButtons();
-  }
+    System.out.println(swerve.getCurrentCommand());
 
+    //objective.updateInputs();
+    //checkNodeSelectorButtons();
+  }
   @Override
   public void testInit() {
+    
+    swerve.setGyro(0);   
     //lilArm.zeroEncoderForIntake();
     LiveWindow.disableAllTelemetry();
-    lilArm.zeroEncoderForAuto();
-    bigArm.zeroEncoderForMiddleOfBot();
-    swerve.drive(new Translation2d(0,0), 0, false, false);
     // Cancels all running commands at the start of test mode.
     // CommandScheduler.getInstance().cancelAll();.
 
@@ -157,24 +154,24 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
   
-  public void checkNodeSelectorButtons() {
-    if (objective.middleOfBotSubscriber.getAsBoolean()) {
-      objective.middleOfBotPublisher.set(false);
-      CommandScheduler.getInstance().schedule(new MiddleOfBot(lilArm, bigArm, telescopicArm, gripper));
-    }
-    if (objective.highIntakeSubscriber.getAsBoolean()) {
-      objective.highIntakePublisher.set(false);
-      CommandScheduler.getInstance().schedule(new HighIntake(bigArm, lilArm, gripper, telescopicArm));
-    }
-    if (objective.groundSubscriber.getAsBoolean()) {
-      objective.groundPublisher.set(false);
-      if (objective.groundDoubleClickSubscriber.getAsBoolean()) {
-        objective.groundDoubleClickPublisher.set(false);
-        CommandScheduler.getInstance().schedule(new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm,limeLight));
-      }
-      else {
-      CommandScheduler.getInstance().schedule(new Ground(gripper, lilArm, bigArm, telescopicArm));
-      }
-    }
-  }
+  // public void checkNodeSelectorButtons() {
+  //   if (objective.middleOfBotSubscriber.getAsBoolean()) {
+  //     objective.middleOfBotPublisher.set(false);
+  //     CommandScheduler.getInstance().schedule(new MiddleOfBot(lilArm, bigArm, telescopicArm, gripper));
+  //   }
+  //   if (objective.highIntakeSubscriber.getAsBoolean()) {
+  //     objective.highIntakePublisher.set(false);
+  //     CommandScheduler.getInstance().schedule(new HighIntake(bigArm, lilArm, gripper, telescopicArm));
+  //   }
+  //   if (objective.groundSubscriber.getAsBoolean()) {
+  //     objective.groundPublisher.set(false);
+  //     if (objective.groundDoubleClickSubscriber.getAsBoolean()) {
+  //       objective.groundDoubleClickPublisher.set(false);
+  //       CommandScheduler.getInstance().schedule(new AutoCollectCube(swerve, gripper, lilArm, bigArm, telescopicArm,limeLight));
+  //     }
+  //     else {
+  //     CommandScheduler.getInstance().schedule(new Ground(gripper, lilArm, bigArm, telescopicArm));
+  //     }
+  //   }
+  // }
 }

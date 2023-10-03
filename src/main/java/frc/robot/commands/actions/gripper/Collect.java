@@ -33,7 +33,7 @@ public class Collect extends CommandBase {
   public void execute() {
 
     if(gripper.shouldGripCone){
-      gripper.setSpeed(0.5);
+      gripper.setSpeed(0.8);
     }
     else{
       gripper.setSpeed(-0.5);
